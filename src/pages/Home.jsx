@@ -135,13 +135,24 @@ export default function Home() {
 
       <style>{`
         @media(max-width:768px){
-          .hero-grid{grid-template-columns:1fr !important;text-align:center}
+          .hero-grid{grid-template-columns:1fr !important;text-align:center;gap:2rem !important}
           .hero-grid > div:first-child{order:2}
           .hero-grid > div:last-child{order:1}
-          .hero-grid img{width:200px !important;height:200px !important}
+          .hero-grid img{width:180px !important;height:180px !important}
           .hero-grid .btn{justify-content:center}
           .hero-grid div[style*="gap: 0.75rem"]{justify-content:center}
           .hero-grid div[style*="gap: 1rem"]{justify-content:center}
+          .hero-grid p[style*="max-width"]{margin-left:auto !important;margin-right:auto !important}
+        }
+        @media(max-width:480px){
+          .hero-grid{gap:1.5rem !important}
+          .hero-grid img{width:150px !important;height:150px !important}
+          .hero-grid h1{font-size:1.85rem !important}
+          .hero-grid p.mono{font-size:0.8rem !important}
+          .hero-grid > div:first-child p[style*="fontSize"]{font-size:0.95rem !important}
+        }
+        @media(max-width:360px){
+          .hero-grid img{width:130px !important;height:130px !important}
         }
       `}</style>
     </>

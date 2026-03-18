@@ -202,7 +202,7 @@ export default function Chatbot() {
       </button>
 
       {/* Chat Window */}
-      <div style={{
+      <div className="chatbot-window" style={{
         position: 'fixed', bottom: 92, right: 24, zIndex: 1099,
         width: 380, maxWidth: 'calc(100vw - 48px)',
         height: open ? 520 : 0,
@@ -339,6 +339,14 @@ export default function Chatbot() {
         @keyframes typingBounce {
           0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
           30% { transform: translateY(-4px); opacity: 1; }
+        }
+        @media(max-width:480px){
+          .chatbot-window{
+            right:0 !important;left:0 !important;bottom:72px !important;
+            width:100% !important;max-width:100% !important;
+            border-radius:16px 16px 0 0 !important;
+            max-height:70vh !important;
+          }
         }
       `}</style>
     </>

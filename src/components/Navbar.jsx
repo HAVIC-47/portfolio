@@ -131,6 +131,10 @@ export default function Navbar() {
           .nav-links{display:none !important}
           .hamburger{display:flex !important}
         }
+        @media(max-width:480px){
+          .nav-inner{padding:0 1rem !important}
+          .mobile-nav{padding:0.75rem 1rem !important}
+        }
       `}</style>
     </>
   )
