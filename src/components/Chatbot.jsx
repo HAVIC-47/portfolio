@@ -30,23 +30,16 @@ const KNOWLEDGE = {
 function getResponse(input) {
   const q = input.toLowerCase().trim()
 
-  // Greetings
   if (/^(hi|hello|hey|yo|sup|greetings|assalamu|salam)/i.test(q)) {
     return `Hey there! 👋 I'm ${BOT_NAME}, Faisal's virtual assistant. I can tell you about his skills, projects, education, or how to contact him. What would you like to know?`
   }
-
-  // Name / who
   if (/who (is|are)|your name|about (faisal|him|you)|tell me about/i.test(q)) {
     return `**${KNOWLEDGE.name}** is an ${KNOWLEDGE.role} from ${KNOWLEDGE.location}. He's passionate about building real-world applications — from AI-powered games to web platforms. He's currently pursuing a BSc in Computer Science & Engineering.`
   }
-
-  // Projects
   if (/project|built|portfolio|work|made|create/i.test(q)) {
     const list = KNOWLEDGE.projects.map(p => `• **${p.name}** — ${p.desc}`).join('\n')
     return `Here are Faisal's key projects:\n\n${list}\n\nWant details on any specific one?`
   }
-
-  // Specific project queries
   if (/machine.?strike|board.?game|horizon/i.test(q)) {
     return `**Machine Strike** is a recreation of the Horizon Forbidden West in-game board game. It features an AI opponent built with minimax and alpha-beta pruning algorithms in Python. It's a deep dive into game theory and adversarial search! 🎮`
   }
@@ -62,68 +55,43 @@ function getResponse(input) {
   if (/compiler/i.test(q)) {
     return `Faisal built a **Compiler** in Python that explores lexical analysis, parsing, and code generation — essentially understanding how programming languages work under the hood! 🔧`
   }
-
-  // Skills / languages / tech
   if (/skill|language|tech|stack|know|proficien|tools|framework/i.test(q)) {
     return `Faisal's tech stack:\n\n**Languages:** ${KNOWLEDGE.languages.join(', ')}\n**Frameworks:** ${KNOWLEDGE.frameworks.join(', ')}\n**Tools:** ${KNOWLEDGE.tools.join(', ')}\n**Concepts:** ${KNOWLEDGE.concepts.join(', ')}\n\nPython is his strongest language — he's working toward becoming a full-stack Python developer.`
   }
-
-  // Python specific
   if (/python/i.test(q)) {
     return `Python is Faisal's primary language! He uses it for web development (Django), AI/ML projects, game development (Machine Strike), compiler design, and OS concepts. He's on a path to becoming a **Python full-stack developer**. 🐍`
   }
-
-  // Education
   if (/educat|study|university|college|degree|school|cgpa|gpa/i.test(q)) {
     return `Faisal is currently pursuing a **BSc in Computer Science & Engineering**. His coursework includes Operating Systems, AI, Compiler Design, Data Structures, and DBMS. He's been coding since 2023 and has built 15+ projects since then. 🎓`
   }
-
-  // Contact / social
   if (/contact|reach|email|social|connect|hire|message/i.test(q)) {
     return `You can reach Faisal through:\n\n• **GitHub:** [HAVIC-47](${KNOWLEDGE.github})\n• **Facebook:** [HAVIC47](${KNOWLEDGE.facebook})\n• **Instagram:** [@visuals_of_faisal](${KNOWLEDGE.instagram})\n• **Discord:** [Join server](${KNOWLEDGE.discord})\n\nOr use the **Contact page** to send him a message directly!`
   }
-
-  // Location
   if (/where|location|country|live|from/i.test(q)) {
     return `Faisal is from **${KNOWLEDGE.location}**. He's a CS student there, building projects and growing as a developer. 🌍`
   }
-
-  // AI / ML
   if (/\bai\b|artificial|machine.?learn|deep.?learn|neural/i.test(q)) {
     return `Faisal is deeply interested in AI & ML! He's built:\n\n• **Machine Strike** — AI game with minimax/alpha-beta pruning\n• **Life Expectancy Prediction** — ML predictive modeling\n• **AI Lab Projects** — Logic programming in Prolog\n\nHe's currently expanding into deep learning and neural networks. 🤖`
   }
-
-  // Photography / Instagram
   if (/photo|instagram|visual|camera/i.test(q)) {
     return `Beyond coding, Faisal is into **visual storytelling** and photography! Check out his work on Instagram: [@visuals_of_faisal](${KNOWLEDGE.instagram}) 📸`
   }
-
-  // Experience / years
   if (/experience|year|how long|journey/i.test(q)) {
     return `Faisal has been coding for **3+ years** (since 2023). He started with C and Python, expanded into web dev with Django, then dove into ML and AI. He's built **15+ projects** across multiple domains — from games to web apps to ML models.`
   }
-
-  // Hiring / freelance
   if (/hire|freelance|avail|open to|looking for/i.test(q)) {
     return `Faisal is always open to interesting opportunities and collaborations! Whether it's a project, internship, or just a tech conversation — reach out through the **Contact page** or connect on his socials. 🤝`
   }
-
-  // Thanks
   if (/thank|thanks|thx|appreciate/i.test(q)) {
     return `You're welcome! 😊 Feel free to ask me anything else about Faisal, or head over to the **Contact page** to get in touch directly.`
   }
-
-  // Goodbye
   if (/bye|goodbye|see ya|later|cya/i.test(q)) {
     return `See you later! 👋 Don't forget to check out Faisal's projects and connect with him. Have a great day!`
   }
-
-  // Help
   if (/help|what can you|what do you/i.test(q)) {
     return `I can help you learn about:\n\n• 🧑 **Who Faisal is** — background & education\n• 💻 **His projects** — Machine Strike, NoteSwap, and more\n• 🛠️ **Tech skills** — languages, frameworks, tools\n• 📬 **Contact info** — socials & how to reach him\n• 🤖 **AI/ML work** — his AI projects\n• 📸 **Photography** — his visual work\n\nJust ask away!`
   }
 
-  // Fallback
   const fallbacks = [
     `Hmm, I'm not sure about that! I know all about Faisal's **projects**, **skills**, **education**, and **contact info**. Try asking about one of those!`,
     `That's a bit outside my knowledge 😅 But I can tell you about Faisal's tech stack, projects, or how to contact him. What interests you?`,
@@ -132,7 +100,6 @@ function getResponse(input) {
   return fallbacks[Math.floor(Math.random() * fallbacks.length)]
 }
 
-// Simple markdown-like rendering
 function renderMessage(text) {
   return text
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -147,16 +114,35 @@ export default function Chatbot() {
   ])
   const [input, setInput] = useState('')
   const [typing, setTyping] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const messagesEnd = useRef(null)
   const inputRef = useRef(null)
+
+  // Detect mobile
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 640)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
+  // Lock body scroll on mobile when chat is open
+  useEffect(() => {
+    if (isMobile && open) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [open, isMobile])
 
   useEffect(() => {
     messagesEnd.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, typing])
 
   useEffect(() => {
-    if (open) inputRef.current?.focus()
-  }, [open])
+    if (open && !isMobile) inputRef.current?.focus()
+  }, [open, isMobile])
 
   function send() {
     const text = input.trim()
@@ -165,7 +151,6 @@ export default function Chatbot() {
     setInput('')
     setTyping(true)
 
-    // Simulate thinking delay
     const delay = 400 + Math.random() * 800
     setTimeout(() => {
       const response = getResponse(text)
@@ -181,58 +166,135 @@ export default function Chatbot() {
     }
   }
 
+  // --- Styles ---
+  const toggleBtnStyle = {
+    position: 'fixed',
+    bottom: isMobile ? 16 : 24,
+    right: isMobile ? 16 : 24,
+    zIndex: 1100,
+    width: isMobile ? 50 : 56,
+    height: isMobile ? 50 : 56,
+    borderRadius: '50%',
+    background: 'var(--accent)', color: '#fff', border: 'none',
+    cursor: 'pointer', fontSize: isMobile ? '1.2rem' : '1.4rem',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    boxShadow: '0 4px 20px rgba(108,99,255,0.4)',
+    transition: 'all 0.3s ease',
+    transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+    WebkitTapHighlightColor: 'transparent',
+  }
+
+  const windowStyle = isMobile ? {
+    // Mobile: full-screen overlay
+    position: 'fixed',
+    inset: 0,
+    zIndex: 1099,
+    width: '100%',
+    height: open ? '100%' : 0,
+    maxWidth: '100%',
+    maxHeight: '100%',
+    background: 'var(--bg-secondary)',
+    border: 'none',
+    borderRadius: 0,
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    boxShadow: 'none',
+    transition: 'height 0.3s cubic-bezier(0.4,0,0.2,1)',
+    opacity: open ? 1 : 0,
+    pointerEvents: open ? 'auto' : 'none',
+  } : {
+    // Desktop: floating window
+    position: 'fixed',
+    bottom: 92,
+    right: 24,
+    zIndex: 1099,
+    width: 380,
+    maxWidth: 'calc(100vw - 48px)',
+    height: open ? 520 : 0,
+    maxHeight: 'calc(100vh - 120px)',
+    background: 'var(--bg-secondary)',
+    border: open ? '1px solid var(--border)' : 'none',
+    borderRadius: 16,
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    boxShadow: open ? '0 12px 40px rgba(0,0,0,0.3)' : 'none',
+    transition: 'height 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s ease',
+    opacity: open ? 1 : 0,
+    pointerEvents: open ? 'auto' : 'none',
+  }
+
+  const headerStyle = {
+    padding: isMobile ? '0.85rem 1rem' : '1rem 1.25rem',
+    background: 'var(--bg-card)',
+    borderBottom: '1px solid var(--border)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.75rem',
+    flexShrink: 0,
+  }
+
+  const messagesAreaStyle = {
+    flex: 1,
+    overflowY: 'auto',
+    padding: isMobile ? '0.75rem' : '1rem',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+    WebkitOverflowScrolling: 'touch',
+  }
+
+  const inputAreaStyle = {
+    padding: isMobile ? '0.6rem 0.75rem' : '0.75rem 1rem',
+    paddingBottom: isMobile ? 'calc(0.6rem + env(safe-area-inset-bottom, 0px))' : '0.75rem',
+    borderTop: '1px solid var(--border)',
+    background: 'var(--bg-card)',
+    display: 'flex',
+    gap: '0.5rem',
+    alignItems: 'center',
+    flexShrink: 0,
+  }
+
   return (
     <>
-      {/* Chat Toggle Button */}
-      <button
-        onClick={() => setOpen(!open)}
-        aria-label="Toggle chat"
-        style={{
-          position: 'fixed', bottom: 24, right: 24, zIndex: 1100,
-          width: 56, height: 56, borderRadius: '50%',
-          background: 'var(--accent)', color: '#fff', border: 'none',
-          cursor: 'pointer', fontSize: '1.4rem',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 4px 20px rgba(108,99,255,0.4)',
-          transition: 'all 0.3s ease',
-          transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-        }}
-      >
-        <i className={open ? 'ri-close-line' : 'ri-robot-2-line'}></i>
-      </button>
+      {/* Chat Toggle Button — hidden on mobile when chat is open */}
+      {!(isMobile && open) && (
+        <button onClick={() => setOpen(!open)} aria-label="Toggle chat" style={toggleBtnStyle}>
+          <i className={open ? 'ri-close-line' : 'ri-robot-2-line'}></i>
+        </button>
+      )}
 
       {/* Chat Window */}
-      <div className="chatbot-window" style={{
-        position: 'fixed', bottom: 92, right: 24, zIndex: 1099,
-        width: 380, maxWidth: 'calc(100vw - 48px)',
-        height: open ? 520 : 0,
-        maxHeight: 'calc(100vh - 120px)',
-        background: 'var(--bg-secondary)',
-        border: open ? '1px solid var(--border)' : 'none',
-        borderRadius: 16,
-        overflow: 'hidden',
-        display: 'flex', flexDirection: 'column',
-        boxShadow: open ? '0 12px 40px rgba(0,0,0,0.3)' : 'none',
-        transition: 'height 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s ease',
-        opacity: open ? 1 : 0,
-      }}>
+      <div style={windowStyle}>
         {/* Header */}
-        <div style={{
-          padding: '1rem 1.25rem',
-          background: 'var(--bg-card)',
-          borderBottom: '1px solid var(--border)',
-          display: 'flex', alignItems: 'center', gap: '0.75rem',
-          flexShrink: 0,
-        }}>
+        <div style={headerStyle}>
+          {/* Close button on mobile */}
+          {isMobile && (
+            <button
+              onClick={() => setOpen(false)}
+              aria-label="Close chat"
+              style={{
+                width: 36, height: 36, borderRadius: 10,
+                background: 'transparent', border: '1px solid var(--border)',
+                color: 'var(--text-secondary)', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '1.1rem', flexShrink: 0, marginRight: 4,
+                WebkitTapHighlightColor: 'transparent',
+              }}
+            >
+              <i className="ri-arrow-left-s-line"></i>
+            </button>
+          )}
           <div style={{
             width: 36, height: 36, borderRadius: '50%',
             background: 'var(--accent-glow)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: 'var(--accent)', fontSize: '1.1rem',
+            color: 'var(--accent)', fontSize: '1.1rem', flexShrink: 0,
           }}>
             <i className="ri-robot-2-fill"></i>
           </div>
-          <div>
+          <div style={{ minWidth: 0 }}>
             <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: '0.95rem' }}>
               {BOT_NAME}
             </div>
@@ -244,22 +306,19 @@ export default function Chatbot() {
         </div>
 
         {/* Messages */}
-        <div style={{
-          flex: 1, overflowY: 'auto', padding: '1rem',
-          display: 'flex', flexDirection: 'column', gap: '0.75rem',
-        }}>
+        <div style={messagesAreaStyle}>
           {messages.map((msg, i) => (
             <div key={i} style={{
               display: 'flex',
               justifyContent: msg.from === 'user' ? 'flex-end' : 'flex-start',
             }}>
               <div style={{
-                maxWidth: '85%',
-                padding: '0.65rem 1rem',
+                maxWidth: isMobile ? '90%' : '85%',
+                padding: isMobile ? '0.6rem 0.85rem' : '0.65rem 1rem',
                 borderRadius: msg.from === 'user' ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
                 background: msg.from === 'user' ? 'var(--accent)' : 'var(--bg-card)',
                 color: msg.from === 'user' ? '#fff' : 'var(--text-primary)',
-                fontSize: '0.875rem',
+                fontSize: isMobile ? '0.85rem' : '0.875rem',
                 lineHeight: 1.55,
                 border: msg.from === 'bot' ? '1px solid var(--border)' : 'none',
                 wordBreak: 'break-word',
@@ -287,13 +346,7 @@ export default function Chatbot() {
         </div>
 
         {/* Input */}
-        <div style={{
-          padding: '0.75rem 1rem',
-          borderTop: '1px solid var(--border)',
-          background: 'var(--bg-card)',
-          display: 'flex', gap: '0.5rem', alignItems: 'center',
-          flexShrink: 0,
-        }}>
+        <div style={inputAreaStyle}>
           <input
             ref={inputRef}
             type="text"
@@ -302,12 +355,14 @@ export default function Chatbot() {
             onKeyDown={handleKey}
             placeholder="Ask about Faisal..."
             style={{
-              flex: 1, padding: '0.6rem 0.85rem',
+              flex: 1, padding: isMobile ? '0.65rem 0.75rem' : '0.6rem 0.85rem',
               background: 'var(--bg-secondary)',
               border: '1px solid var(--border)',
               borderRadius: 10, color: 'var(--text-primary)',
-              fontFamily: 'var(--font-body)', fontSize: '0.85rem',
+              fontFamily: 'var(--font-body)',
+              fontSize: isMobile ? '16px' : '0.85rem', // 16px prevents iOS zoom
               outline: 'none', transition: 'border-color 0.2s',
+              WebkitAppearance: 'none',
             }}
             onFocus={e => e.target.style.borderColor = 'var(--accent)'}
             onBlur={e => e.target.style.borderColor = 'var(--border)'}
@@ -316,13 +371,16 @@ export default function Chatbot() {
             onClick={send}
             disabled={!input.trim()}
             style={{
-              width: 38, height: 38, borderRadius: 10,
+              width: isMobile ? 42 : 38,
+              height: isMobile ? 42 : 38,
+              borderRadius: 10,
               background: input.trim() ? 'var(--accent)' : 'var(--bg-secondary)',
               color: input.trim() ? '#fff' : 'var(--text-muted)',
               border: 'none', cursor: input.trim() ? 'pointer' : 'default',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '1rem', transition: 'all 0.2s ease',
               flexShrink: 0,
+              WebkitTapHighlightColor: 'transparent',
             }}
           >
             <i className="ri-send-plane-fill"></i>
@@ -339,14 +397,6 @@ export default function Chatbot() {
         @keyframes typingBounce {
           0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
           30% { transform: translateY(-4px); opacity: 1; }
-        }
-        @media(max-width:480px){
-          .chatbot-window{
-            right:0 !important;left:0 !important;bottom:72px !important;
-            width:100% !important;max-width:100% !important;
-            border-radius:16px 16px 0 0 !important;
-            max-height:70vh !important;
-          }
         }
       `}</style>
     </>
