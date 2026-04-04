@@ -19,7 +19,7 @@ export default function Projects() {
       <div className="page-header">
         <div className="container">
           <span className="section-label">My Work</span>
-          <h1>All <span className="gradient-text">Projects</span></h1>
+          <h1>All <span className="accent-text">Projects</span></h1>
           <p style={{ color: 'var(--text-secondary)', marginTop: '0.75rem', maxWidth: 500, marginLeft: 'auto', marginRight: 'auto' }}>
             From AI-powered games to web platforms — a collection of everything I've built.
           </p>

@@ -69,7 +69,7 @@ export default function Skills() {
       <div className="page-header">
         <div className="container">
           <span className="section-label">What I Work With</span>
-          <h1>Skills & <span className="gradient-text">Technologies</span></h1>
+          <h1>Skills & <span className="accent-text">Technologies</span></h1>
           <p style={{ color: 'var(--text-secondary)', marginTop: '0.75rem', maxWidth: 500, marginLeft: 'auto', marginRight: 'auto' }}>
             The tools, languages, and frameworks I use to bring ideas to life.
           </p>

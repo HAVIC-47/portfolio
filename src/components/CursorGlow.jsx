@@ -29,7 +29,7 @@ export default function CursorGlow() {
     <div ref={ref} style={{
       position: 'fixed', width: 300, height: 300, borderRadius: '50%',
       background: 'radial-gradient(circle, var(--accent-glow), transparent 70%)',
-      pointerEvents: 'none', zIndex: 0, transform: 'translate(-50%, -50%)',
+      pointerEvents: 'none', zIndex: 9998, transform: 'translate(-50%, -50%)',
       transition: 'opacity 0.3s', opacity: 0
     }} />
   )

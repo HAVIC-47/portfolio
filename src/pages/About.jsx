@@ -21,7 +21,7 @@ export default function About() {
       <div className="page-header">
         <div className="container">
           <span className="section-label">Get to Know Me</span>
-          <h1>About <span className="gradient-text">Me</span></h1>
+          <h1>About <span className="accent-text">Me</span></h1>
         </div>
       </div>
 
@@ -38,7 +38,7 @@ export default function About() {
             </ScrollReveal>
             <div className="about-content">
               <ScrollReveal>
-                <h2>A developer driven by <span className="gradient-text">curiosity</span></h2>
+                <h2>A developer driven by <span className="accent-text">curiosity</span></h2>
               </ScrollReveal>
               <ScrollReveal>
                 <p>Hey there! I'm Faisal Hossain, an amateur programmer with a clear goal — to become a skilled Python full-stack developer. I'm passionate about building things that solve real problems, from web applications to AI-powered tools.</p>

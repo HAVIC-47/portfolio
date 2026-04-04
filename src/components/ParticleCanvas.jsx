@@ -12,23 +12,24 @@ export default function ParticleCanvas() {
     let animId
 
     function resize() {
-      canvas.width = canvas.parentElement.offsetWidth
-      canvas.height = canvas.parentElement.offsetHeight
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
     }
 
     resize()
-    window.addEventListener('resize', resize)
 
-    canvas.addEventListener('mousemove', (e) => {
-      const rect = canvas.getBoundingClientRect()
-      mouse.x = e.clientX - rect.left
-      mouse.y = e.clientY - rect.top
-    })
-
-    canvas.addEventListener('mouseleave', () => {
+    // Use window-level mouse tracking so it works even when
+    // other elements are layered on top via z-index
+    function onMouseMove(e) {
+      mouse.x = e.clientX
+      mouse.y = e.clientY
+    }
+    function onMouseLeave() {
       mouse.x = null
       mouse.y = null
-    })
+    }
+    window.addEventListener('mousemove', onMouseMove)
+    document.addEventListener('mouseleave', onMouseLeave)
 
     class Particle {
       constructor() {
@@ -59,7 +60,7 @@ export default function ParticleCanvas() {
       }
       draw() {
         const theme = document.documentElement.getAttribute('data-theme')
-        const c = theme === 'light' ? '90,82,213' : '108,99,255'
+        const c = theme === 'light' ? '160,125,80' : '201,168,124'
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
         ctx.fillStyle = `rgba(${c},${this.opacity})`
@@ -74,7 +75,7 @@ export default function ParticleCanvas() {
 
     function drawConnections() {
       const theme = document.documentElement.getAttribute('data-theme')
-      const c = theme === 'light' ? '90,82,213' : '108,99,255'
+      const c = theme === 'light' ? '160,125,80' : '201,168,124'
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x
@@ -102,12 +103,13 @@ export default function ParticleCanvas() {
     init()
     animate()
 
-    const onResize = () => { resize(); init() }
+    function onResize() { resize(); init() }
     window.addEventListener('resize', onResize)
 
     return () => {
       cancelAnimationFrame(animId)
-      window.removeEventListener('resize', resize)
+      window.removeEventListener('mousemove', onMouseMove)
+      document.removeEventListener('mouseleave', onMouseLeave)
       window.removeEventListener('resize', onResize)
     }
   }, [])

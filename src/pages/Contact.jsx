@@ -33,7 +33,7 @@ export default function Contact() {
       <div className="page-header">
         <div className="container">
           <span className="section-label">Let's Connect</span>
-          <h1>Get in <span className="gradient-text">Touch</span></h1>
+          <h1>Get in <span className="accent-text">Touch</span></h1>
           <p style={{ color: 'var(--text-secondary)', marginTop: '0.75rem', maxWidth: 500, marginLeft: 'auto', marginRight: 'auto' }}>
             Have a project idea, question, or just want to say hello? I'd love to hear from you.
           </p>
@@ -65,11 +65,11 @@ export default function Contact() {
               <form className="contact-form" onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="name">Your Name</label>
-                  <input type="text" id="name" placeholder="John Doe" required />
+                  <input type="text" id="name" placeholder="Your full name" required />
                 </div>
                 <div className="form-group">
                   <label htmlFor="email">Email Address</label>
-                  <input type="email" id="email" placeholder="john@example.com" required />
+                  <input type="email" id="email" placeholder="you@example.com" required />
                 </div>
                 <div className="form-group">
                   <label htmlFor="subject">Subject</label>
@@ -84,7 +84,7 @@ export default function Contact() {
                   className="btn btn-primary"
                   style={{
                     width: '100%', justifyContent: 'center',
-                    background: sent ? '#22c55e' : undefined
+                    background: sent ? '#3b9b74' : undefined
                   }}
                 >
                   <i className={sent ? 'ri-check-line' : 'ri-send-plane-line'}></i>
