@@ -894,23 +894,27 @@ export default function Home() {
         }
 
         /* ===== RESPONSIVE ===== */
+
+        /* Tablet */
         @media (max-width: 1024px) {
-          .fp-code { width: 200px; left: 5%; }
-          .fp-ui { width: 170px; }
-          .fp-db { right: 5%; }
-          .fp-terminal { width: 150px; right: 10%; }
-          .fp-mobile { right: 3%; }
-          .monitor-bezel { width: 240px; height: 155px; }
+          .workspace-layer { transform: scale(0.85); }
+          .energy-burst { transform: translate(-50%, -50%) scale(0.85); }
+          .portal-ring { transform: translate(50%, -50%) scale(0.85); }
           .avatar-img { width: 260px; height: 260px; }
           .avatar-glow-ring { width: 280px; height: 280px; }
           .hero-grid { gap: 2.5rem; }
         }
 
+        /* Small tablet / large phone landscape */
         @media (max-width: 768px) {
+          .workspace-layer { transform: scale(0.65); }
+          .energy-burst { transform: translate(-50%, -50%) scale(0.65); }
+          .portal-ring { transform: translate(50%, -50%) scale(0.65); }
+
           .hero-grid {
             grid-template-columns: 1fr !important;
             text-align: center;
-            gap: 2rem !important;
+            gap: 1.5rem !important;
           }
           .hero-grid > .hero-text-col { order: 2; }
           .hero-grid > .hero-avatar-col { order: 1; }
@@ -922,47 +926,41 @@ export default function Home() {
           .hero-orb--warm { width: 300px; height: 300px; }
           .hero-orb--cool { width: 250px; height: 250px; }
           .hero-content-wrap { padding-top: 56px; }
-
-          /* Workspace scales */
-          .monitor-bezel { width: 200px; height: 130px; }
-          .fp-code { width: 160px; left: 3%; top: 20%; }
-          .fp-ui { width: 140px; left: 30%; }
-          .fp-chart { width: 120px; right: 15%; }
-          .fp-db { width: 120px; right: 3%; }
-          .fp-terminal { width: 130px; right: 8%; bottom: 20%; }
-          .fp-mobile { width: 70px; right: 2%; bottom: 22%; }
-          .fp-code-body { font-size: 0.45rem; max-height: 120px; }
-          .portal-ring { width: 180px; height: 180px; }
         }
 
+        /* Mobile portrait */
         @media (max-width: 480px) {
-          .hero-grid { gap: 1.5rem !important; }
-          .avatar-img { width: 160px !important; height: 160px !important; }
-          .avatar-glow-ring { width: 175px !important; height: 175px !important; }
+          .workspace-layer { transform: scale(0.48); }
+          .energy-burst { transform: translate(-50%, -50%) scale(0.5); }
+          .portal-ring { transform: translate(50%, -50%) scale(0.5); }
+
+          .hero-grid { gap: 1.25rem !important; }
+          .avatar-img { width: 150px !important; height: 150px !important; }
+          .avatar-glow-ring { width: 165px !important; height: 165px !important; }
           .hero-heading { font-size: 1.85rem !important; }
           .hero-mono { font-size: 0.8rem !important; }
           .hero-desc { font-size: 0.92rem !important; max-width: 90vw; }
           .hero-content-wrap { padding-top: 48px; }
-
-          .monitor-bezel { width: 160px; height: 105px; }
-          .fp-code { width: 130px; top: 22%; left: 2%; }
-          .fp-code-body { font-size: 0.4rem; max-height: 90px; }
-          .fp-ui { width: 110px; left: 28%; top: 15%; }
-          .fp-chart { width: 95px; right: 10%; }
-          .fp-db { display: none; }
-          .fp-terminal { width: 110px; bottom: 18%; right: 5%; }
-          .fp-mobile { display: none; }
-          .portal-ring { width: 140px; height: 140px; }
         }
 
+        /* Small phones */
         @media (max-width: 360px) {
+          .workspace-layer { transform: scale(0.38); }
+          .energy-burst { transform: translate(-50%, -50%) scale(0.4); }
+          .portal-ring { transform: translate(50%, -50%) scale(0.4); }
+
           .avatar-img { width: 130px !important; height: 130px !important; }
           .avatar-glow-ring { width: 145px !important; height: 145px !important; }
           .hero-heading { font-size: 1.6rem !important; }
           .hero-buttons .btn { padding: 0.6rem 1rem; font-size: 0.8rem; }
         }
 
+        /* Landscape phones */
         @media (max-height: 500px) and (orientation: landscape) {
+          .workspace-layer { transform: scale(0.55); }
+          .energy-burst { transform: translate(-50%, -50%) scale(0.55); }
+          .portal-ring { transform: translate(50%, -50%) scale(0.55); }
+
           .hero-grid {
             grid-template-columns: 1fr 1fr !important;
             gap: 1.5rem !important;
@@ -979,8 +977,6 @@ export default function Home() {
           .hero-buttons .btn { padding: 0.5rem 1rem; font-size: 0.8rem; }
           .hero-socials { margin-top: 0.75rem; gap: 0.5rem; }
           .hero-content-wrap { padding-top: 40px; }
-          .monitor-bezel { width: 160px; height: 100px; }
-          .floating-panel { transform: scale(0.75); }
         }
       `}</style>
     </div>
