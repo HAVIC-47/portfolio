@@ -1,21 +1,34 @@
 import { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
 
 const navLinks = [
-  { path: '/', label: 'Home' },
-  { path: '/about', label: 'About' },
-  { path: '/projects', label: 'Projects' },
-  { path: '/skills', label: 'Skills' },
-  { path: '/contact', label: 'Contact' },
+  { href: '#home', label: 'Home' },
+  { href: '#about', label: 'About' },
+  { href: '#projects', label: 'Projects' },
+  { href: '#skills', label: 'Skills' },
+  { href: '#contact', label: 'Contact' },
 ]
 
 export default function Navbar() {
-  const { pathname } = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [activeSection, setActiveSection] = useState('#home')
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50)
+    const onScroll = () => {
+      setScrolled(window.scrollY > 50)
+
+      // Determine active section based on scroll position
+      const sections = navLinks.map(l => l.href.slice(1))
+      let current = '#home'
+      for (const id of sections) {
+        const el = document.getElementById(id)
+        if (el) {
+          const rect = el.getBoundingClientRect()
+          if (rect.top <= 150) current = '#' + id
+        }
+      }
+      setActiveSection(current)
+    }
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -33,9 +46,14 @@ export default function Navbar() {
     document.documentElement.setAttribute('data-theme', saved)
   }, [])
 
-  const theme = typeof document !== 'undefined'
-    ? document.documentElement.getAttribute('data-theme')
-    : 'dark'
+  function handleNavClick(e, href) {
+    e.preventDefault()
+    setMenuOpen(false)
+    const el = document.querySelector(href)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
 
   return (
     <>
@@ -44,31 +62,32 @@ export default function Navbar() {
           maxWidth: 1100, margin: '0 auto', padding: '0 2rem',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64
         }}>
-          <Link to="/" className="nav-logo" style={{
+          <a href="#home" onClick={(e) => handleNavClick(e, '#home')} className="nav-logo" style={{
             fontFamily: 'var(--font-display)', fontSize: '1.25rem',
             fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.03em'
           }}>
             faisal<span style={{ color: 'var(--accent)' }}>.</span>
-          </Link>
+          </a>
 
           <ul className="nav-links" style={{
             display: 'flex', alignItems: 'center', gap: '0.25rem', listStyle: 'none'
           }}>
-            {navLinks.map(({ path, label }) => (
-              <li key={path}>
-                <Link
-                  to={path}
-                  className={pathname === path ? 'active' : ''}
+            {navLinks.map(({ href, label }) => (
+              <li key={href}>
+                <a
+                  href={href}
+                  onClick={(e) => handleNavClick(e, href)}
+                  className={activeSection === href ? 'active' : ''}
                   style={{
-                    color: pathname === path ? 'var(--text-primary)' : 'var(--text-secondary)',
+                    color: activeSection === href ? 'var(--text-primary)' : 'var(--text-secondary)',
                     fontSize: '0.9rem', fontWeight: 500, padding: '0.5rem 1rem',
                     borderRadius: 8, transition: 'all var(--transition)',
-                    background: pathname === path ? 'var(--accent-glow)' : 'transparent',
+                    background: activeSection === href ? 'var(--accent-glow)' : 'transparent',
                     display: 'block'
                   }}
                 >
                   {label}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
@@ -108,20 +127,20 @@ export default function Navbar() {
         borderBottom: '1px solid var(--border)', padding: '1rem 2rem',
         zIndex: 999, flexDirection: 'column', gap: '0.25rem'
       }}>
-        {navLinks.map(({ path, label }) => (
-          <Link
-            key={path}
-            to={path}
-            onClick={() => setMenuOpen(false)}
+        {navLinks.map(({ href, label }) => (
+          <a
+            key={href}
+            href={href}
+            onClick={(e) => handleNavClick(e, href)}
             style={{
-              color: pathname === path ? 'var(--text-primary)' : 'var(--text-secondary)',
+              color: activeSection === href ? 'var(--text-primary)' : 'var(--text-secondary)',
               fontSize: '0.95rem', fontWeight: 500, padding: '0.75rem 1rem',
               borderRadius: 8, display: 'block', transition: 'all var(--transition)',
-              background: pathname === path ? 'var(--accent-glow)' : 'transparent'
+              background: activeSection === href ? 'var(--accent-glow)' : 'transparent'
             }}
           >
             {label}
-          </Link>
+          </a>
         ))}
       </div>
 

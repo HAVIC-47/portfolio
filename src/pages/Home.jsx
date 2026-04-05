@@ -1,36 +1,8 @@
-import { useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
 import ParticleCanvas from '../components/ParticleCanvas'
 import ScrollReveal from '../components/ScrollReveal'
 import TiltCard from '../components/TiltCard'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
-
-const featuredProjects = [
-  {
-    icon: 'ri-gamepad-line',
-    title: 'Machine Strike',
-    desc: 'Recreation of the Horizon Forbidden West in-game board game using Python with minimax and alpha-beta pruning AI.',
-    tags: ['Python', 'AI', 'Game Dev'],
-    link: 'https://github.com/HAVIC-47/Machine-Strike',
-  },
-  {
-    icon: 'ri-swap-line',
-    title: 'NoteSwap',
-    desc: 'A web application for sharing and exchanging notes with fellow students, built through multiple iterations.',
-    tags: ['Python', 'CSS', 'Web App'],
-    link: 'https://github.com/HAVIC-47/final_NoteSwap',
-  },
-  {
-    icon: 'ri-line-chart-line',
-    title: 'Life Expectancy Prediction',
-    desc: 'Machine learning project that predicts life expectancy using data analysis and predictive modeling techniques.',
-    tags: ['Jupyter', 'ML', 'Data Science'],
-    link: 'https://github.com/HAVIC-47/Life-expectancy-prediction-project',
-  },
-]
 
 /* Fake code lines for the code editor panel */
 const codeLines = [
@@ -53,35 +25,141 @@ const codeLines = [
   { indent: 1, rest: '}' },
 ]
 
+/* All projects */
+const allProjects = [
+  { icon: 'ri-gamepad-line', title: 'Machine Strike', desc: 'Recreation of the Horizon Forbidden West board game with minimax and alpha-beta pruning AI opponent. A deep dive into game theory and adversarial search.', tags: ['Python', 'AI', 'Minimax', 'Game Dev'], link: 'https://github.com/HAVIC-47/Machine-Strike' },
+  { icon: 'ri-swap-line', title: 'NoteSwap', desc: 'A student-focused web app for sharing and exchanging notes. Went through three iterations from prototype to final product.', tags: ['Python', 'Django', 'CSS', 'Web App'], link: 'https://github.com/HAVIC-47/final_NoteSwap' },
+  { icon: 'ri-line-chart-line', title: 'Life Expectancy Prediction', desc: 'Machine learning project using data analysis and predictive modeling to estimate life expectancy based on health and economic indicators.', tags: ['Jupyter', 'Machine Learning', 'Data Science'], link: 'https://github.com/HAVIC-47/Life-expectancy-prediction-project' },
+  { icon: 'ri-calendar-event-line', title: 'EventEase', desc: 'An event management web application for organizing, tracking, and managing events with a clean user interface.', tags: ['HTML', 'CSS', 'JavaScript'], link: 'https://github.com/HAVIC-47/EventEase' },
+  { icon: 'ri-code-box-line', title: 'Compiler', desc: 'A compiler implementation exploring lexical analysis, parsing, and code generation — understanding how programming languages work under the hood.', tags: ['Python', 'Compiler Design'], link: 'https://github.com/HAVIC-47/Compiler-' },
+  { icon: 'ri-terminal-box-line', title: 'OS Scheduling Algorithms', desc: 'Implementation of FCFS and SJF CPU scheduling algorithms — exploring how operating systems manage process execution.', tags: ['Python', 'OS Concepts', 'Algorithms'], link: 'https://github.com/HAVIC-47/OS-LAB-1' },
+  { icon: 'ri-robot-2-line', title: 'AI Lab Projects', desc: 'Collection of AI coursework projects exploring logic programming, search algorithms, and knowledge representation in Prolog.', tags: ['Prolog', 'AI', 'Logic Programming'], link: 'https://github.com/HAVIC-47/AI_LAB_projects' },
+  { icon: 'ri-refresh-line', title: 'Updated NoteSwap', desc: 'Revised version of NoteSwap with improved features, better UX, and refined codebase based on learnings from the original build.', tags: ['Python', 'Web App', 'Iteration'], link: 'https://github.com/HAVIC-47/Updated_NoteSwap' },
+  { icon: 'ri-computer-line', title: 'OS Projects', desc: 'Operating systems coursework — implementations covering process management, memory allocation, and system-level programming concepts.', tags: ['Python', 'Operating Systems'], link: 'https://github.com/HAVIC-47/OS' },
+]
+
+/* Skills */
+const skillCategories = [
+  {
+    icon: 'ri-code-s-slash-line', title: 'Languages',
+    items: [
+      { icon: 'ri-code-line', label: 'Python' },
+      { icon: 'ri-code-line', label: 'C' },
+      { icon: 'ri-code-line', label: 'Java' },
+      { icon: 'ri-code-line', label: 'Prolog' },
+      { icon: 'ri-code-line', label: 'HTML' },
+      { icon: 'ri-code-line', label: 'CSS' },
+      { icon: 'ri-code-line', label: 'JavaScript' },
+    ]
+  },
+  {
+    icon: 'ri-stack-line', title: 'Frameworks',
+    items: [
+      { icon: 'ri-global-line', label: 'Django' },
+      { icon: 'ri-server-line', label: 'Apache' },
+    ]
+  },
+  {
+    icon: 'ri-database-2-line', title: 'Databases',
+    items: [
+      { icon: 'ri-database-line', label: 'MySQL' },
+    ]
+  },
+  {
+    icon: 'ri-tools-line', title: 'Tools & Platforms',
+    items: [
+      { icon: 'ri-git-merge-line', label: 'Git' },
+      { icon: 'ri-github-fill', label: 'GitHub' },
+      { icon: 'ri-file-list-3-line', label: 'Notion' },
+      { icon: 'ri-palette-line', label: 'Canva' },
+      { icon: 'ri-shield-keyhole-line', label: 'Tor' },
+    ]
+  },
+  {
+    icon: 'ri-robot-2-line', title: 'AI & Data Science',
+    items: [
+      { icon: 'ri-brain-line', label: 'Machine Learning' },
+      { icon: 'ri-bar-chart-grouped-line', label: 'Data Analysis' },
+      { icon: 'ri-file-code-line', label: 'Jupyter Notebooks' },
+      { icon: 'ri-search-eye-line', label: 'Minimax / Alpha-Beta' },
+    ]
+  },
+  {
+    icon: 'ri-lightbulb-line', title: 'Concepts',
+    items: [
+      { icon: 'ri-flow-chart', label: 'Algorithms' },
+      { icon: 'ri-terminal-box-line', label: 'OS Concepts' },
+      { icon: 'ri-code-box-line', label: 'Compiler Design' },
+      { icon: 'ri-global-line', label: 'Web Development' },
+      { icon: 'ri-database-2-line', label: 'DBMS' },
+    ]
+  },
+]
+
+const learning = [
+  { icon: 'ri-server-line', title: 'Full-Stack Development', desc: 'Deepening Django skills and exploring modern frontend frameworks to become a complete full-stack developer.' },
+  { icon: 'ri-brain-line', title: 'Advanced AI/ML', desc: 'Expanding machine learning knowledge with deep learning, neural networks, and more complex AI architectures.' },
+]
+
+/* About timeline */
+const timeline = [
+  { date: '2023 — Present', title: 'Computer Science Student', desc: 'Pursuing BSc in Computer Science & Engineering. Coursework includes OS, AI, compiler design, and data structures.' },
+  { date: '2023', title: 'Started GitHub Journey', desc: 'Created my GitHub account and began building projects in Python, starting with coursework and evolving into personal projects.' },
+  { date: '2024', title: 'Web Development with NoteSwap', desc: 'Built NoteSwap — a web application for students to share and exchange notes — through multiple iterations, learning Django and frontend development.' },
+  { date: '2025', title: 'AI & Machine Learning Projects', desc: 'Dove into machine learning with the Life Expectancy Prediction project, and created Machine Strike — an AI-powered board game using minimax algorithm.' },
+  { date: '2026', title: 'Full-Stack Aspirations', desc: 'Continuing to build, learn, and grow — working towards becoming a full-stack Python developer with a strong foundation in AI and systems programming.' },
+]
+
+const interests = [
+  { icon: 'ri-robot-2-line', title: 'Artificial Intelligence', desc: 'Fascinated by how machines can learn, reason, and make decisions. From minimax algorithms to ML models.' },
+  { icon: 'ri-terminal-box-line', title: 'Systems Programming', desc: 'Understanding how things work under the hood — OS scheduling, compilers, and low-level system design.' },
+  { icon: 'ri-camera-lens-line', title: 'Visual Storytelling', desc: 'Capturing moments through photography — check out my Instagram @visuals_of_faisal for my visual work.' },
+]
+
+/* Contact */
+const contacts = [
+  { icon: 'ri-github-fill', title: 'GitHub', value: 'github.com/HAVIC-47', link: 'https://github.com/HAVIC-47' },
+  { icon: 'ri-facebook-fill', title: 'Facebook', value: 'facebook.com/HAVIC47', link: 'https://www.facebook.com/HAVIC47' },
+  { icon: 'ri-instagram-line', title: 'Instagram', value: '@visuals_of_faisal', link: 'https://www.instagram.com/visuals_of_faisal' },
+  { icon: 'ri-discord-fill', title: 'Discord', value: 'Join my server', link: 'https://discord.gg/pgakM24PEs' },
+  { icon: 'ri-map-pin-line', title: 'Location', value: 'Bangladesh', link: null },
+]
+
+const socials = [
+  { icon: 'ri-github-fill', link: 'https://github.com/HAVIC-47' },
+  { icon: 'ri-facebook-fill', link: 'https://www.facebook.com/HAVIC47' },
+  { icon: 'ri-instagram-line', link: 'https://www.instagram.com/visuals_of_faisal' },
+  { icon: 'ri-discord-fill', link: 'https://discord.gg/pgakM24PEs' },
+]
+
 export default function Home() {
   const heroRef = useRef(null)
+  const [sent, setSent] = useState(false)
+
+  function handleSubmit(e) {
+    e.preventDefault()
+    setSent(true)
+    setTimeout(() => {
+      setSent(false)
+      e.target.reset()
+    }, 2500)
+  }
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: 'top top',
-          end: '+=250%',
-          pin: true,
-          scrub: 1.5,
-          anticipatePin: 1,
-        },
-      })
+      // Auto-playing timeline — ~2s total, smooth power2.inOut easing throughout
+      const tl = gsap.timeline({ delay: 0.15 })
 
       /* ============================================
-         PHASE 1: Workspace scene (0 → 0.35)
-         Panels float outward from monitor
+         PHASE 1: Workspace scene (0s → 0.6s)
          ============================================ */
 
-      // Monitor subtle drift
       tl.fromTo('.ws-monitor',
         { y: 0 },
-        { y: -15, duration: 0.35, ease: 'none' },
+        { y: -15, duration: 0.6, ease: 'power2.inOut' },
         0
       )
 
-      // Floating panels — they start clustered near monitor, drift outward
       const panelDrifts = [
         { sel: '.fp-code',    x: -40,  y: -30,  r: -2  },
         { sel: '.fp-ui',      x: 15,   y: -35,  r: 1   },
@@ -94,23 +172,20 @@ export default function Home() {
       panelDrifts.forEach(p => {
         tl.to(p.sel, {
           x: p.x, y: p.y, rotation: p.r,
-          duration: 0.35, ease: 'power1.out',
+          duration: 0.6, ease: 'power2.inOut',
         }, 0)
       })
 
-      // Glow pulse on monitor screen during workspace phase
       tl.fromTo('.monitor-glow',
         { opacity: 0.3 },
-        { opacity: 0.6, duration: 0.2, ease: 'sine.inOut', yoyo: true, repeat: 1 },
+        { opacity: 0.6, duration: 0.3, ease: 'sine.inOut', yoyo: true, repeat: 1 },
         0.1
       )
 
       /* ============================================
-         PHASE 2: Collapse + transition (0.35 → 0.55)
-         Panels fly away, monitor shifts, energy burst
+         PHASE 2: Collapse + transition (0.6s → 1.05s)
          ============================================ */
 
-      // Panels scatter and fade
       const panelScatters = [
         { sel: '.fp-code',     x: -300, y: -200, r: -15, s: 0.3 },
         { sel: '.fp-ui',       x: -100, y: -350, r: 10,  s: 0.2 },
@@ -123,116 +198,101 @@ export default function Home() {
       panelScatters.forEach(p => {
         tl.to(p.sel, {
           x: p.x, y: p.y, rotation: p.r, scale: p.s, opacity: 0,
-          duration: 0.2, ease: 'power3.in',
-        }, 0.35)
+          duration: 0.25, ease: 'power2.in',
+        }, 0.6)
       })
 
-      // Monitor shrinks and fades
       tl.to('.ws-monitor', {
         scale: 0.6, opacity: 0, y: 80,
-        duration: 0.18, ease: 'power3.in',
-      }, 0.38)
+        duration: 0.2, ease: 'power2.in',
+      }, 0.65)
 
-      // Desk fades
       tl.to('.ws-desk', {
         opacity: 0, y: 40,
-        duration: 0.12, ease: 'power2.in',
-      }, 0.38)
+        duration: 0.15, ease: 'power2.in',
+      }, 0.65)
 
-      // Energy burst flash
       tl.fromTo('.energy-burst',
         { opacity: 0, scale: 0.2 },
-        { opacity: 1, scale: 1.5, duration: 0.1, ease: 'power2.out' },
-        0.42
+        { opacity: 1, scale: 1.5, duration: 0.12, ease: 'power2.out' },
+        0.78
       )
       tl.to('.energy-burst', {
         opacity: 0, scale: 3,
-        duration: 0.12, ease: 'power2.in',
-      }, 0.50)
+        duration: 0.15, ease: 'power2.inOut',
+      }, 0.9)
 
-      // Portal ring appears
       tl.fromTo('.portal-ring',
         { opacity: 0, scale: 0.3, rotation: -90 },
-        { opacity: 1, scale: 1, rotation: 0, duration: 0.15, ease: 'power3.out' },
-        0.44
+        { opacity: 1, scale: 1, rotation: 0, duration: 0.2, ease: 'power2.out' },
+        0.8
       )
       tl.to('.portal-ring', {
         opacity: 0, scale: 2,
-        duration: 0.1, ease: 'power2.in',
-      }, 0.56
-      )
+        duration: 0.15, ease: 'power2.inOut',
+      }, 1.0)
 
       /* ============================================
-         PHASE 3: Hero resolve (0.55 → 1.0)
-         Particles, text, avatar all appear
+         PHASE 3: Hero resolve (1.05s → 2.0s)
          ============================================ */
 
-      // Ambient orbs
       tl.fromTo('.hero-orb--warm',
         { opacity: 0, scale: 0.5 },
-        { opacity: 0.15, scale: 1, duration: 0.2, ease: 'power2.out' },
-        0.55
+        { opacity: 0.15, scale: 1, duration: 0.25, ease: 'power2.out' },
+        1.05
       )
       tl.fromTo('.hero-orb--cool',
         { opacity: 0, scale: 0.5 },
-        { opacity: 0.1, scale: 1, duration: 0.2, ease: 'power2.out' },
-        0.58
+        { opacity: 0.1, scale: 1, duration: 0.25, ease: 'power2.out' },
+        1.1
       )
 
-      // "// hello, world"
       tl.fromTo('.hero-mono',
-        { opacity: 0, x: -40 },
-        { opacity: 1, x: 0, duration: 0.1, ease: 'power3.out' },
-        0.60
+        { opacity: 0, x: -30 },
+        { opacity: 1, x: 0, duration: 0.2, ease: 'power2.out' },
+        1.1
       )
 
-      // "I'm Faisal Hossain" — blur reveal
       tl.fromTo('.hero-heading',
-        { opacity: 0, y: 50, filter: 'blur(10px)' },
-        { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.15, ease: 'power3.out' },
-        0.64
+        { opacity: 0, y: 30, filter: 'blur(8px)' },
+        { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.3, ease: 'power2.out' },
+        1.2
       )
 
-      // Description
       tl.fromTo('.hero-desc',
-        { opacity: 0, y: 35 },
-        { opacity: 1, y: 0, duration: 0.12, ease: 'power3.out' },
-        0.72
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' },
+        1.4
       )
 
-      // Buttons
       tl.fromTo('.hero-btn',
-        { opacity: 0, y: 25, scale: 0.9 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.08, ease: 'back.out(1.5)', stagger: 0.03 },
-        0.78
+        { opacity: 0, y: 15, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.2, ease: 'power2.out', stagger: 0.05 },
+        1.55
       )
 
-      // Social icons
       tl.fromTo('.hero-social-icon',
-        { opacity: 0, y: 15, scale: 0.7 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.06, ease: 'back.out(2)', stagger: 0.02 },
-        0.84
+        { opacity: 0, y: 10, scale: 0.8 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.15, ease: 'power2.out', stagger: 0.04 },
+        1.7
       )
 
-      // Avatar glow ring
       tl.fromTo('.avatar-glow-ring',
-        { opacity: 0, scale: 0.5, rotation: -180 },
-        { opacity: 1, scale: 1, rotation: 0, duration: 0.2, ease: 'power3.out' },
-        0.62
+        { opacity: 0, scale: 0.6, rotation: -120 },
+        { opacity: 1, scale: 1, rotation: 0, duration: 0.35, ease: 'power2.out' },
+        1.15
       )
 
-      // Avatar image — blur to sharp
       tl.fromTo('.avatar-img',
-        { opacity: 0, scale: 0.6, filter: 'blur(15px)' },
-        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.18, ease: 'power3.out' },
-        0.66
+        { opacity: 0, scale: 0.7, filter: 'blur(10px)' },
+        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.3, ease: 'power2.out' },
+        1.25
       )
 
-      // Avatar glow ring settles (cyan → border color)
       tl.to('.avatar-glow-ring', {
         opacity: 0.5, boxShadow: '0 0 40px var(--accent-glow)',
-        duration: 0.15, ease: 'power1.inOut',
-      }, 0.85)
+        duration: 0.25, ease: 'power2.inOut',
+      }, 1.8)
 
     }, heroRef)
 
@@ -248,7 +308,10 @@ export default function Home() {
       <div className="page-orb page-orb--warm" />
       <div className="page-orb page-orb--cool" />
 
-      <section ref={heroRef} className="hero-scroll-section">
+      {/* ═══════════════════════════════════════════
+          HERO SECTION (scroll animation)
+          ═══════════════════════════════════════════ */}
+      <section id="home" ref={heroRef} className="hero-scroll-section">
 
         {/* ── WORKSPACE SCENE ── */}
         <div className="workspace-layer">
@@ -415,12 +478,12 @@ export default function Home() {
                 An aspiring <strong>Python full-stack developer</strong> who loves turning ideas into real-world applications — from AI projects to web platforms.
               </p>
               <div className="hero-buttons" style={{ opacity: 0 }}>
-                <Link to="/projects" className="btn btn-primary hero-btn">
+                <a href="#projects" className="btn btn-primary hero-btn">
                   <i className="ri-code-s-slash-line"></i> View Projects
-                </Link>
-                <Link to="/about" className="btn btn-outline hero-btn">
+                </a>
+                <a href="#about" className="btn btn-outline hero-btn">
                   <i className="ri-user-line"></i> About Me
-                </Link>
+                </a>
               </div>
               <div className="hero-socials">
                 <a href="https://github.com/HAVIC-47" target="_blank" rel="noopener noreferrer" className="social-icon hero-social-icon" style={{ opacity: 0 }}><i className="ri-github-fill"></i></a>
@@ -444,55 +507,307 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="stats-section">
-        <div className="container">
-          <ScrollReveal>
-            <div className="about-stats">
-              <div className="stat-item"><div className="stat-number">15+</div><div className="stat-label">Projects Built</div></div>
-              <div className="stat-item"><div className="stat-number">6+</div><div className="stat-label">Technologies</div></div>
-              <div className="stat-item"><div className="stat-number">3+</div><div className="stat-label">Years Coding</div></div>
+      {/* ═══════════════════════════════════════════
+          ABOUT SECTION
+          ═══════════════════════════════════════════ */}
+      <section id="about" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="section-divider">
+          <div className="container">
+            <span className="section-label">Get to Know Me</span>
+            <h2>About <span className="accent-text">Me</span></h2>
+          </div>
+        </div>
+
+        {/* Bio */}
+        <div style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+          <div className="container">
+            <div className="about-grid">
+              <ScrollReveal className="about-image-container">
+                <img
+                  src="https://avatars.githubusercontent.com/u/123256888?v=4"
+                  alt="Faisal Hossain"
+                  className="about-image"
+                />
+              </ScrollReveal>
+              <div className="about-content">
+                <ScrollReveal>
+                  <h2>A developer driven by <span className="accent-text">curiosity</span></h2>
+                </ScrollReveal>
+                <ScrollReveal>
+                  <p>Hey there! I'm Faisal Hossain, an amateur programmer with a clear goal — to become a skilled Python full-stack developer. I'm passionate about building things that solve real problems, from web applications to AI-powered tools.</p>
+                </ScrollReveal>
+                <ScrollReveal>
+                  <p>My journey started with C and Python, and has since expanded into web development with Django, machine learning, and even game development. I love exploring the intersection of AI and practical applications.</p>
+                </ScrollReveal>
+                <ScrollReveal>
+                  <p>Beyond coding, I'm interested in operating systems, compiler design, and artificial intelligence — topics I actively explore through coursework and personal projects. I believe in learning by building.</p>
+                </ScrollReveal>
+                <ScrollReveal>
+                  <div className="about-stats">
+                    <div className="stat-item"><div className="stat-number">15+</div><div className="stat-label">Repositories</div></div>
+                    <div className="stat-item"><div className="stat-number">3+</div><div className="stat-label">Years Coding</div></div>
+                    <div className="stat-item"><div className="stat-number">6+</div><div className="stat-label">Languages</div></div>
+                  </div>
+                </ScrollReveal>
+              </div>
             </div>
-          </ScrollReveal>
+          </div>
+        </div>
+
+        {/* Timeline */}
+        <div style={{ padding: '4rem 0' }}>
+          <div className="container">
+            <ScrollReveal>
+              <div className="section-header">
+                <span className="section-label">My Journey</span>
+                <h2>Education & Experience</h2>
+              </div>
+            </ScrollReveal>
+            <div style={{ maxWidth: 650, margin: '0 auto' }}>
+              <div className="timeline">
+                {timeline.map((item, i) => (
+                  <ScrollReveal key={i} delay={0.1 * i}>
+                    <div className="timeline-item">
+                      <div className="timeline-date">{item.date}</div>
+                      <div className="timeline-title">{item.title}</div>
+                      <div className="timeline-desc">{item.desc}</div>
+                    </div>
+                  </ScrollReveal>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Interests */}
+        <div style={{ padding: '4rem 0' }}>
+          <div className="container">
+            <ScrollReveal>
+              <div className="section-header">
+                <span className="section-label">Beyond Code</span>
+                <h2>What Drives Me</h2>
+              </div>
+            </ScrollReveal>
+            <div className="projects-grid">
+              {interests.map((item, i) => (
+                <ScrollReveal key={item.title} delay={0.1 * (i + 1)}>
+                  <TiltCard>
+                    <div style={{ textAlign: 'center' }}>
+                      <div className="project-icon" style={{ margin: '0 auto 1rem' }}>
+                        <i className={item.icon}></i>
+                      </div>
+                      <h3>{item.title}</h3>
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.5rem' }}>{item.desc}</p>
+                    </div>
+                  </TiltCard>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Featured Projects */}
-      <section style={{ padding: '4rem 0', position: 'relative', zIndex: 1 }}>
-        <div className="container">
-          <ScrollReveal>
-            <div className="section-header">
-              <span className="section-label">Featured Work</span>
-              <h2>Recent Projects</h2>
-              <p>A few highlights from my portfolio</p>
-            </div>
-          </ScrollReveal>
-          <div className="projects-grid">
-            {featuredProjects.map((p, i) => (
-              <ScrollReveal key={p.title} delay={0.1 * (i + 1)}>
-                <TiltCard className="project-card">
-                  <div className="project-top">
-                    <div className="project-icon"><i className={p.icon}></i></div>
-                    <div className="project-links">
-                      <a href={p.link} target="_blank" rel="noopener noreferrer"><i className="ri-github-fill"></i></a>
-                    </div>
-                  </div>
-                  <h3>{p.title}</h3>
-                  <p>{p.desc}</p>
-                  <div className="project-tags">
-                    {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
-                  </div>
-                </TiltCard>
-              </ScrollReveal>
-            ))}
+      {/* ═══════════════════════════════════════════
+          PROJECTS SECTION
+          ═══════════════════════════════════════════ */}
+      <section id="projects" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="section-divider">
+          <div className="container">
+            <span className="section-label">My Work</span>
+            <h2>All <span className="accent-text">Projects</span></h2>
+            <p style={{ color: 'var(--text-secondary)', marginTop: '0.75rem', maxWidth: 500, marginLeft: 'auto', marginRight: 'auto' }}>
+              From AI-powered games to web platforms — a collection of everything I've built.
+            </p>
           </div>
-          <ScrollReveal>
-            <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-              <Link to="/projects" className="btn btn-outline">
-                View All Projects <i className="ri-arrow-right-line"></i>
-              </Link>
+        </div>
+
+        <div style={{ paddingTop: '1rem', paddingBottom: '4rem' }}>
+          <div className="container">
+            <div className="projects-grid">
+              {allProjects.map((p, i) => (
+                <ScrollReveal key={p.title} delay={0.1 * ((i % 3) + 1)}>
+                  <TiltCard className="project-card">
+                    <div className="project-top">
+                      <div className="project-icon"><i className={p.icon}></i></div>
+                      <div className="project-links">
+                        <a href={p.link} target="_blank" rel="noopener noreferrer"><i className="ri-github-fill"></i></a>
+                      </div>
+                    </div>
+                    <h3>{p.title}</h3>
+                    <p>{p.desc}</p>
+                    <div className="project-tags">
+                      {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
+                    </div>
+                  </TiltCard>
+                </ScrollReveal>
+              ))}
             </div>
-          </ScrollReveal>
+
+            <ScrollReveal>
+              <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>Want to see more? Check out my full GitHub profile.</p>
+                <a href="https://github.com/HAVIC-47" target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                  <i className="ri-github-fill"></i> View GitHub Profile
+                </a>
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          SKILLS SECTION
+          ═══════════════════════════════════════════ */}
+      <section id="skills" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="section-divider">
+          <div className="container">
+            <span className="section-label">What I Work With</span>
+            <h2>Skills & <span className="accent-text">Technologies</span></h2>
+            <p style={{ color: 'var(--text-secondary)', marginTop: '0.75rem', maxWidth: 500, marginLeft: 'auto', marginRight: 'auto' }}>
+              The tools, languages, and frameworks I use to bring ideas to life.
+            </p>
+          </div>
+        </div>
+
+        <div style={{ paddingTop: '1rem', paddingBottom: '4rem' }}>
+          <div className="container">
+            <div className="skills-grid">
+              {skillCategories.map((cat, i) => (
+                <ScrollReveal key={cat.title} delay={0.1 * ((i % 3) + 1)}>
+                  <TiltCard className="skill-category">
+                    <h3>
+                      <i className={cat.icon} style={{ color: 'var(--accent)' }}></i>
+                      {cat.title}
+                    </h3>
+                    <div className="skill-items">
+                      {cat.items.map(item => (
+                        <div key={item.label} className="skill-item">
+                          <i className={item.icon}></i> {item.label}
+                        </div>
+                      ))}
+                    </div>
+                  </TiltCard>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Currently Learning */}
+        <div style={{ padding: '4rem 0' }}>
+          <div className="container">
+            <ScrollReveal>
+              <div className="section-header">
+                <span className="section-label">Always Growing</span>
+                <h2>Currently Learning</h2>
+              </div>
+            </ScrollReveal>
+            <div className="projects-grid" style={{ maxWidth: 700, margin: '0 auto' }}>
+              {learning.map((item, i) => (
+                <ScrollReveal key={item.title} delay={0.1 * (i + 1)}>
+                  <TiltCard>
+                    <div style={{ textAlign: 'center' }}>
+                      <div className="project-icon" style={{ margin: '0 auto 1rem' }}>
+                        <i className={item.icon}></i>
+                      </div>
+                      <h3>{item.title}</h3>
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.5rem' }}>{item.desc}</p>
+                    </div>
+                  </TiltCard>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          CONTACT SECTION
+          ═══════════════════════════════════════════ */}
+      <section id="contact" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="section-divider">
+          <div className="container">
+            <span className="section-label">Let's Connect</span>
+            <h2>Get in <span className="accent-text">Touch</span></h2>
+            <p style={{ color: 'var(--text-secondary)', marginTop: '0.75rem', maxWidth: 500, marginLeft: 'auto', marginRight: 'auto' }}>
+              Have a project idea, question, or just want to say hello? I'd love to hear from you.
+            </p>
+          </div>
+        </div>
+
+        <div style={{ paddingTop: '1rem', paddingBottom: '4rem' }}>
+          <div className="container">
+            <div className="contact-grid">
+              <div className="contact-info">
+                {contacts.map((c, i) => (
+                  <ScrollReveal key={c.title} delay={0.1 * i}>
+                    <div className="contact-item">
+                      <div className="contact-item-icon"><i className={c.icon}></i></div>
+                      <div>
+                        <h4>{c.title}</h4>
+                        {c.link ? (
+                          <p><a href={c.link} target="_blank" rel="noopener noreferrer">{c.value}</a></p>
+                        ) : (
+                          <p style={{ color: 'var(--text-secondary)' }}>{c.value}</p>
+                        )}
+                      </div>
+                    </div>
+                  </ScrollReveal>
+                ))}
+              </div>
+
+              <ScrollReveal delay={0.1}>
+                <form className="contact-form" onSubmit={handleSubmit}>
+                  <div className="form-group">
+                    <label htmlFor="name">Your Name</label>
+                    <input type="text" id="name" placeholder="Your full name" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="email">Email Address</label>
+                    <input type="email" id="email" placeholder="you@example.com" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="subject">Subject</label>
+                    <input type="text" id="subject" placeholder="Project Collaboration" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="message">Message</label>
+                    <textarea id="message" placeholder="Tell me about your idea..." required></textarea>
+                  </div>
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    style={{
+                      width: '100%', justifyContent: 'center',
+                      background: sent ? '#3b9b74' : undefined
+                    }}
+                  >
+                    <i className={sent ? 'ri-check-line' : 'ri-send-plane-line'}></i>
+                    {sent ? 'Message Sent!' : 'Send Message'}
+                  </button>
+                </form>
+              </ScrollReveal>
+            </div>
+          </div>
+        </div>
+
+        {/* Social Banner */}
+        <div style={{ padding: '4rem 0' }}>
+          <div className="container">
+            <ScrollReveal>
+              <div className="card" style={{ textAlign: 'center', padding: '3rem 2rem' }}>
+                <h3 style={{ marginBottom: '0.5rem' }}>Let's build something together</h3>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>Find me on these platforms</p>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                  {socials.map(s => (
+                    <a key={s.icon} href={s.link} target="_blank" rel="noopener noreferrer" className="social-icon">
+                      <i className={s.icon}></i>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
         </div>
       </section>
 
@@ -539,6 +854,13 @@ export default function Home() {
           animation: pulse 4s ease-in-out infinite 2s;
         }
 
+        /* Section dividers — replaces page-header for inline sections */
+        .section-divider {
+          padding-top: 6rem;
+          padding-bottom: 2rem;
+          text-align: center;
+        }
+
         /* All sections transparent so particles show through */
         .stats-section {
           padding-top: 2rem;
@@ -547,12 +869,13 @@ export default function Home() {
           z-index: 1;
         }
 
-        /* ===== HERO SCROLL SECTION ===== */
+        /* ===== HERO SECTION ===== */
         .hero-scroll-section {
-          height: 100vh;
+          min-height: 100vh;
           position: relative;
           perspective: 1200px;
           z-index: 1;
+          overflow: hidden;
         }
 
         /* ===== WORKSPACE LAYER ===== */
@@ -926,6 +1249,7 @@ export default function Home() {
           .hero-orb--warm { width: 300px; height: 300px; }
           .hero-orb--cool { width: 250px; height: 250px; }
           .hero-content-wrap { padding-top: 56px; }
+          .section-divider { padding-top: 4rem; }
         }
 
         /* Mobile portrait */
@@ -941,6 +1265,7 @@ export default function Home() {
           .hero-mono { font-size: 0.8rem !important; }
           .hero-desc { font-size: 0.92rem !important; max-width: 90vw; }
           .hero-content-wrap { padding-top: 48px; }
+          .section-divider { padding-top: 3rem; }
         }
 
         /* Small phones */
