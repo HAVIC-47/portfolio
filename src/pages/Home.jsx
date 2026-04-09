@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import ParticleCanvas from '../components/ParticleCanvas'
 import ScrollReveal from '../components/ScrollReveal'
 import TiltCard from '../components/TiltCard'
+import ProjectShowcase from '../components/ProjectShowcase'
+import SkillsShowcase from '../components/SkillsShowcase'
 import gsap from 'gsap'
 
 /* Fake code lines for the code editor panel */
@@ -610,115 +612,15 @@ export default function Home() {
       {/* ═══════════════════════════════════════════
           PROJECTS SECTION
           ═══════════════════════════════════════════ */}
-      <section id="projects" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="section-divider">
-          <div className="container">
-            <span className="section-label">My Work</span>
-            <h2>All <span className="accent-text">Projects</span></h2>
-            <p style={{ color: 'var(--text-secondary)', marginTop: '0.75rem', maxWidth: 500, marginLeft: 'auto', marginRight: 'auto' }}>
-              From AI-powered games to web platforms — a collection of everything I've built.
-            </p>
-          </div>
-        </div>
-
-        <div style={{ paddingTop: '1rem', paddingBottom: '4rem' }}>
-          <div className="container">
-            <div className="projects-grid">
-              {allProjects.map((p, i) => (
-                <ScrollReveal key={p.title} delay={0.1 * ((i % 3) + 1)}>
-                  <TiltCard className="project-card">
-                    <div className="project-top">
-                      <div className="project-icon"><i className={p.icon}></i></div>
-                      <div className="project-links">
-                        <a href={p.link} target="_blank" rel="noopener noreferrer"><i className="ri-github-fill"></i></a>
-                      </div>
-                    </div>
-                    <h3>{p.title}</h3>
-                    <p>{p.desc}</p>
-                    <div className="project-tags">
-                      {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
-                    </div>
-                  </TiltCard>
-                </ScrollReveal>
-              ))}
-            </div>
-
-            <ScrollReveal>
-              <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-                <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>Want to see more? Check out my full GitHub profile.</p>
-                <a href="https://github.com/HAVIC-47" target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-                  <i className="ri-github-fill"></i> View GitHub Profile
-                </a>
-              </div>
-            </ScrollReveal>
-          </div>
-        </div>
+      <section id="projects" style={{ position: 'relative', zIndex: 2 }}>
+        <ProjectShowcase />
       </section>
 
       {/* ═══════════════════════════════════════════
           SKILLS SECTION
           ═══════════════════════════════════════════ */}
       <section id="skills" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="section-divider">
-          <div className="container">
-            <span className="section-label">What I Work With</span>
-            <h2>Skills & <span className="accent-text">Technologies</span></h2>
-            <p style={{ color: 'var(--text-secondary)', marginTop: '0.75rem', maxWidth: 500, marginLeft: 'auto', marginRight: 'auto' }}>
-              The tools, languages, and frameworks I use to bring ideas to life.
-            </p>
-          </div>
-        </div>
-
-        <div style={{ paddingTop: '1rem', paddingBottom: '4rem' }}>
-          <div className="container">
-            <div className="skills-grid">
-              {skillCategories.map((cat, i) => (
-                <ScrollReveal key={cat.title} delay={0.1 * ((i % 3) + 1)}>
-                  <TiltCard className="skill-category">
-                    <h3>
-                      <i className={cat.icon} style={{ color: 'var(--accent)' }}></i>
-                      {cat.title}
-                    </h3>
-                    <div className="skill-items">
-                      {cat.items.map(item => (
-                        <div key={item.label} className="skill-item">
-                          <i className={item.icon}></i> {item.label}
-                        </div>
-                      ))}
-                    </div>
-                  </TiltCard>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Currently Learning */}
-        <div style={{ padding: '4rem 0' }}>
-          <div className="container">
-            <ScrollReveal>
-              <div className="section-header">
-                <span className="section-label">Always Growing</span>
-                <h2>Currently Learning</h2>
-              </div>
-            </ScrollReveal>
-            <div className="projects-grid" style={{ maxWidth: 700, margin: '0 auto' }}>
-              {learning.map((item, i) => (
-                <ScrollReveal key={item.title} delay={0.1 * (i + 1)}>
-                  <TiltCard>
-                    <div style={{ textAlign: 'center' }}>
-                      <div className="project-icon" style={{ margin: '0 auto 1rem' }}>
-                        <i className={item.icon}></i>
-                      </div>
-                      <h3>{item.title}</h3>
-                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.5rem' }}>{item.desc}</p>
-                    </div>
-                  </TiltCard>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </div>
+        <SkillsShowcase />
       </section>
 
       {/* ═══════════════════════════════════════════
@@ -1302,6 +1204,80 @@ export default function Home() {
           .hero-buttons .btn { padding: 0.5rem 1rem; font-size: 0.8rem; }
           .hero-socials { margin-top: 0.75rem; gap: 0.5rem; }
           .hero-content-wrap { padding-top: 40px; }
+        }
+        /* ═══════════════════════════════════════════
+           LIGHT MODE OVERRIDES
+           All hardcoded dark-only colors adapted for
+           the light theme. Panels, monitors, code
+           syntax, floating panels, glass effects.
+           ═══════════════════════════════════════════ */
+        [data-theme="light"] .ws-desk {
+          background: linear-gradient(90deg, transparent, rgba(28,25,23,0.1) 30%, rgba(28,25,23,0.1) 70%, transparent);
+        }
+        [data-theme="light"] .monitor-bezel {
+          background: #E7E5E4;
+          border-color: #D6D3D1;
+        }
+        [data-theme="light"] .monitor-screen {
+          background: linear-gradient(135deg, #FAFAF9 0%, #F5F5F4 100%);
+        }
+        [data-theme="light"] .monitor-glow {
+          background: radial-gradient(ellipse at 40% 40%, rgba(146,64,14,0.12), transparent 60%);
+        }
+        [data-theme="light"] .monitor-stand {
+          background: linear-gradient(to bottom, #D6D3D1, #E7E5E4);
+        }
+        [data-theme="light"] .monitor-base {
+          background: #D6D3D1;
+        }
+        [data-theme="light"] .floating-panel {
+          background: rgba(255, 255, 255, 0.88);
+          backdrop-filter: blur(16px);
+          border: 1px solid rgba(146, 64, 14, 0.12);
+          box-shadow: 0 8px 32px rgba(28,25,23,0.1), 0 0 0 1px rgba(0,0,0,0.04);
+        }
+        [data-theme="light"] .fp-header {
+          background: rgba(28,25,23,0.03);
+          border-bottom-color: rgba(28,25,23,0.06);
+        }
+        [data-theme="light"] .code-line { color: #44403C; }
+        [data-theme="light"] .ck { color: #92400E; }
+        [data-theme="light"] .cs { color: #166534; }
+        [data-theme="light"] .ct { color: #44403C; }
+        [data-theme="light"] .fp-term-body { color: #44403C; }
+        [data-theme="light"] .term-g { color: #166534; }
+        [data-theme="light"] .ui-nav-item { background: rgba(28,25,23,0.08); }
+        [data-theme="light"] .ui-bar {
+          background: linear-gradient(to top, var(--accent), rgba(146,64,14,0.25));
+        }
+        [data-theme="light"] .ui-btn-mock.outline {
+          border-color: rgba(28,25,23,0.12);
+        }
+        [data-theme="light"] .fp-stat-pill { background: rgba(28,25,23,0.06); }
+        [data-theme="light"] .db-node {
+          color: var(--text-secondary);
+          background: rgba(28,25,23,0.04);
+        }
+        [data-theme="light"] .mob-header { background: rgba(28,25,23,0.08); }
+        [data-theme="light"] .mob-line { background: rgba(28,25,23,0.05); }
+        [data-theme="light"] .mob-card {
+          background: rgba(28,25,23,0.03);
+          border-color: rgba(28,25,23,0.06);
+        }
+        [data-theme="light"] .energy-burst {
+          background: radial-gradient(circle, rgba(146,64,14,0.3) 0%, rgba(146,64,14,0.12) 40%, transparent 70%);
+        }
+        [data-theme="light"] .portal-ring {
+          border-color: rgba(146,64,14,0.35);
+          box-shadow: 0 0 40px rgba(146,64,14,0.15), inset 0 0 40px rgba(146,64,14,0.06);
+        }
+        [data-theme="light"] .avatar-glow-ring {
+          border-color: rgba(146, 64, 14, 0.3);
+          box-shadow: 0 0 60px rgba(146,64,14,0.12), inset 0 0 60px rgba(146,64,14,0.04);
+        }
+        [data-theme="light"] .avatar-img {
+          border-color: var(--border);
+          box-shadow: 0 0 40px rgba(146,64,14,0.08);
         }
       `}</style>
     </div>
