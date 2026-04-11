@@ -1,7 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 
 const AUTOPLAY_DELAY = 2200
 const WHEEL_COOLDOWN = 350
+
+function formatTime(t) {
+  if (!Number.isFinite(t) || t < 0) return '0:00'
+  const m = Math.floor(t / 60)
+  const s = Math.floor(t % 60)
+  return `${m}:${s.toString().padStart(2, '0')}`
+}
 
 export default function ProjectSlideshow({ media, color }) {
   const [current, setCurrent] = useState(0)
@@ -11,6 +19,8 @@ export default function ProjectSlideshow({ media, color }) {
   const containerRef = useRef(null)
   const videoRef = useRef(null)
   const total = media.length
+  const currentItem = media[current]
+  const isVideoSlide = currentItem?.type === 'video'
 
   const advance = useCallback((dir = 1) => {
     setCurrent(prev => (prev + dir + total) % total)
@@ -20,9 +30,7 @@ export default function ProjectSlideshow({ media, color }) {
   useEffect(() => {
     if (isPaused) return
     const item = media[current]
-    /* Don't auto-advance while a video is playing */
     if (item.type === 'video') return
-
     timerRef.current = setTimeout(() => advance(1), AUTOPLAY_DELAY)
     return () => clearTimeout(timerRef.current)
   }, [current, isPaused, media, advance])
@@ -31,7 +39,6 @@ export default function ProjectSlideshow({ media, color }) {
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
-
     function onWheel(e) {
       e.preventDefault()
       e.stopPropagation()
@@ -40,7 +47,6 @@ export default function ProjectSlideshow({ media, color }) {
       advance(e.deltaY > 0 ? 1 : -1)
       setTimeout(() => { cooldownRef.current = false }, WHEEL_COOLDOWN)
     }
-
     el.addEventListener('wheel', onWheel, { passive: false })
     return () => el.removeEventListener('wheel', onWheel)
   }, [advance])
@@ -64,15 +70,12 @@ export default function ProjectSlideshow({ media, color }) {
           className={`ps-slideshow-item${i === current ? ' active' : ''}`}
         >
           {item.type === 'video' ? (
-            <video
-              ref={i === current ? videoRef : null}
+            <VideoPlayer
               src={item.src}
-              autoPlay={i === current}
-              controls
-              playsInline
-              muted
+              isActive={i === current}
+              videoRef={i === current ? videoRef : null}
               onEnded={handleVideoEnded}
-              className="ps-slideshow-media"
+              accent={color}
             />
           ) : (
             <img
@@ -85,8 +88,8 @@ export default function ProjectSlideshow({ media, color }) {
         </div>
       ))}
 
-      {/* Progress indicator */}
-      {showDots ? (
+      {/* Progress indicator — hidden on video slides so the player bar is unobstructed */}
+      {!isVideoSlide && (showDots ? (
         <div className="ps-slideshow-dots">
           {media.map((_, i) => (
             <button
@@ -107,9 +110,8 @@ export default function ProjectSlideshow({ media, color }) {
             }}
           />
         </div>
-      )}
+      ))}
 
-      {/* Slide counter */}
       <div className="ps-slideshow-counter">
         {current + 1} / {total}
       </div>
@@ -149,10 +151,6 @@ export default function ProjectSlideshow({ media, color }) {
           display: block;
         }
 
-        video.ps-slideshow-media {
-          background: #000;
-        }
-
         .ps-slideshow-dots {
           position: absolute;
           bottom: 14px;
@@ -174,13 +172,8 @@ export default function ProjectSlideshow({ media, color }) {
           transition: background 0.3s, transform 0.2s;
         }
 
-        .ps-slideshow-dot:hover {
-          background: rgba(255, 255, 255, 0.6);
-        }
-
-        .ps-slideshow-dot.active {
-          transform: scale(1.25);
-        }
+        .ps-slideshow-dot:hover { background: rgba(255, 255, 255, 0.6); }
+        .ps-slideshow-dot.active { transform: scale(1.25); }
 
         .ps-slideshow-progress {
           position: absolute;
@@ -204,41 +197,418 @@ export default function ProjectSlideshow({ media, color }) {
           right: 14px;
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
-          color: rgba(255, 255, 255, 0.5);
-          background: rgba(0, 0, 0, 0.4);
+          color: rgba(255, 255, 255, 0.7);
+          background: rgba(0, 0, 0, 0.55);
           padding: 3px 8px;
           border-radius: 6px;
-          z-index: 2;
+          z-index: 4;
           letter-spacing: 0.05em;
         }
 
-        [data-theme="light"] .ps-slideshow {
-          background: rgba(245, 245, 244, 0.92);
-        }
-
+        [data-theme="light"] .ps-slideshow { background: rgba(245, 245, 244, 0.92); }
         [data-theme="light"] .ps-slideshow-counter {
-          color: rgba(28, 25, 23, 0.5);
-          background: rgba(255, 255, 255, 0.7);
+          color: rgba(28, 25, 23, 0.7);
+          background: rgba(255, 255, 255, 0.85);
+        }
+        [data-theme="light"] .ps-slideshow-dot { background: rgba(28, 25, 23, 0.2); }
+        [data-theme="light"] .ps-slideshow-dot:hover { background: rgba(28, 25, 23, 0.5); }
+        [data-theme="light"] .ps-slideshow-progress { background: rgba(28, 25, 23, 0.06); }
+
+        /* ===== Custom video player ===== */
+        .ps-vp {
+          position: relative;
+          width: 100%;
+          background: #000;
+          display: block;
         }
 
-        [data-theme="light"] .ps-slideshow-dot {
-          background: rgba(28, 25, 23, 0.2);
+        .ps-vp video {
+          width: 100%;
+          height: auto;
+          display: block;
         }
 
-        [data-theme="light"] .ps-slideshow-dot:hover {
-          background: rgba(28, 25, 23, 0.5);
+        .ps-vp-overlay {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          z-index: 2;
         }
 
-        [data-theme="light"] .ps-slideshow-progress {
-          background: rgba(28, 25, 23, 0.06);
+        .ps-vp-bigplay {
+          width: 72px;
+          height: 72px;
+          border-radius: 50%;
+          background: rgba(0, 0, 0, 0.55);
+          backdrop-filter: blur(6px);
+          border: 1.5px solid rgba(255, 255, 255, 0.4);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+          opacity: 0;
+          transform: scale(0.9);
+          transition: opacity 0.25s ease, transform 0.25s ease;
+          pointer-events: none;
         }
+
+        .ps-vp.is-paused .ps-vp-bigplay,
+        .ps-vp:hover .ps-vp-bigplay {
+          opacity: 1;
+          transform: scale(1);
+        }
+
+        .ps-vp-bar {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          padding: 32px 18px 14px;
+          background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.65) 55%, rgba(0,0,0,0) 100%);
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          z-index: 3;
+          will-change: transform, opacity;
+        }
+
+        .ps-vp-hairline {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 3px;
+          background: rgba(0, 0, 0, 0.45);
+          z-index: 2;
+          pointer-events: none;
+        }
+
+        .ps-vp-hairline-fill {
+          height: 100%;
+          background: var(--ps-vp-accent, #fff);
+          box-shadow: 0 0 8px var(--ps-vp-accent, #fff);
+          transition: width 0.1s linear;
+        }
+
+        .ps-vp-seek {
+          position: relative;
+          height: 18px;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          touch-action: none;
+        }
+
+        .ps-vp-seek-track {
+          position: relative;
+          width: 100%;
+          height: 5px;
+          background: rgba(255, 255, 255, 0.32);
+          border-radius: 3px;
+          overflow: hidden;
+          box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.4);
+          transition: height 0.18s ease;
+        }
+
+        .ps-vp-seek:hover .ps-vp-seek-track,
+        .ps-vp.is-seeking .ps-vp-seek-track {
+          height: 8px;
+        }
+
+        .ps-vp-seek-buffered {
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          background: rgba(255, 255, 255, 0.45);
+          border-radius: 3px;
+        }
+
+        .ps-vp-seek-fill {
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          background: var(--ps-vp-accent, #fff);
+          border-radius: 3px;
+          box-shadow: 0 0 10px var(--ps-vp-accent, #fff);
+          transition: width 0.08s linear;
+        }
+
+        .ps-vp-seek-thumb {
+          position: absolute;
+          top: 50%;
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background: #fff;
+          transform: translate(-50%, -50%) scale(1);
+          box-shadow: 0 0 0 3px var(--ps-vp-accent, #fff), 0 2px 10px rgba(0, 0, 0, 0.7);
+          transition: transform 0.18s ease;
+          pointer-events: none;
+        }
+
+        .ps-vp-seek:hover .ps-vp-seek-thumb,
+        .ps-vp.is-seeking .ps-vp-seek-thumb {
+          transform: translate(-50%, -50%) scale(1.15);
+        }
+
+        .ps-vp-controls {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: #fff;
+          font-family: var(--font-mono, monospace);
+          font-size: 0.78rem;
+        }
+
+        .ps-vp-btn {
+          background: rgba(0, 0, 0, 0.45);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          color: #fff;
+          padding: 6px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 6px;
+          transition: background 0.2s, transform 0.15s, border-color 0.2s;
+          backdrop-filter: blur(4px);
+        }
+
+        .ps-vp-btn:hover {
+          background: rgba(255, 255, 255, 0.18);
+          border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .ps-vp-btn:active { transform: scale(0.93); }
+
+        .ps-vp-time {
+          letter-spacing: 0.04em;
+          color: #fff;
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+          padding: 0 4px;
+        }
+
+        .ps-vp-spacer { flex: 1; }
 
         @media (max-width: 768px) {
-          .ps-slideshow {
-            max-height: 45vh;
-          }
+          .ps-slideshow { max-height: 45vh; }
+          .ps-vp-bigplay { width: 56px; height: 56px; }
+          .ps-vp-bar { padding: 10px 12px 8px; }
         }
       `}</style>
+    </div>
+  )
+}
+
+function VideoPlayer({ src, isActive, videoRef, onEnded, accent }) {
+  const internalRef = useRef(null)
+  const setRefs = (node) => {
+    internalRef.current = node
+    if (videoRef) videoRef.current = node
+  }
+
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [duration, setDuration] = useState(0)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [isMuted, setIsMuted] = useState(true)
+  const [isSeeking, setIsSeeking] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const [buffered, setBuffered] = useState(0)
+  const seekRef = useRef(null)
+  const showBar = hovered || !isPlaying || isSeeking
+
+  /* Auto-play when this slide becomes active, pause+reset when it leaves */
+  useEffect(() => {
+    const v = internalRef.current
+    if (!v) return
+    if (isActive) {
+      v.currentTime = 0
+      const p = v.play()
+      if (p && typeof p.catch === 'function') p.catch(() => {})
+    } else {
+      v.pause()
+      v.currentTime = 0
+    }
+  }, [isActive])
+
+  function togglePlay(e) {
+    if (e) e.stopPropagation()
+    const v = internalRef.current
+    if (!v) return
+    if (v.paused) v.play().catch(() => {})
+    else v.pause()
+  }
+
+  function toggleMute(e) {
+    if (e) e.stopPropagation()
+    const v = internalRef.current
+    if (!v) return
+    v.muted = !v.muted
+    setIsMuted(v.muted)
+  }
+
+  function toggleFullscreen(e) {
+    if (e) e.stopPropagation()
+    const v = internalRef.current
+    if (!v) return
+    if (document.fullscreenElement) document.exitFullscreen?.()
+    else v.requestFullscreen?.()
+  }
+
+  function seekTo(clientX) {
+    const v = internalRef.current
+    const track = seekRef.current
+    if (!v || !track || !v.duration) return
+    const rect = track.getBoundingClientRect()
+    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
+    v.currentTime = ratio * v.duration
+    setCurrentTime(v.currentTime)
+  }
+
+  function onSeekDown(e) {
+    e.stopPropagation()
+    setIsSeeking(true)
+    seekTo(e.clientX)
+    function onMove(ev) { seekTo(ev.clientX) }
+    function onUp() {
+      setIsSeeking(false)
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+    }
+    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointerup', onUp)
+  }
+
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0
+
+  return (
+    <div
+      className={`ps-vp${isPlaying ? '' : ' is-paused'}${isSeeking ? ' is-seeking' : ''}`}
+      style={{ '--ps-vp-accent': accent }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <video
+        ref={setRefs}
+        src={src}
+        autoPlay={isActive}
+        playsInline
+        muted={isMuted}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration || 0)}
+        onTimeUpdate={(e) => { if (!isSeeking) setCurrentTime(e.currentTarget.currentTime) }}
+        onProgress={(e) => {
+          const v = e.currentTarget
+          if (v.buffered.length > 0 && v.duration) {
+            setBuffered((v.buffered.end(v.buffered.length - 1) / v.duration) * 100)
+          }
+        }}
+        onEnded={() => { setIsPlaying(false); onEnded?.() }}
+        onClick={togglePlay}
+      />
+
+      {/* Always-visible progress hairline (hidden when full bar is showing) */}
+      <AnimatePresence>
+        {!showBar && (
+          <motion.div
+            className="ps-vp-hairline"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+          >
+            <div className="ps-vp-hairline-fill" style={{ width: `${progress}%` }} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Big center play/pause */}
+      <AnimatePresence>
+        {(!isPlaying || hovered) && (
+          <motion.div
+            className="ps-vp-overlay"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            onClick={togglePlay}
+          >
+            <div className="ps-vp-bigplay" aria-hidden="true">
+              {isPlaying ? (
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+              ) : (
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Hover-revealed control bar */}
+      <AnimatePresence>
+        {showBar && (
+          <motion.div
+            className="ps-vp-bar"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 14 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="ps-vp-seek"
+              ref={seekRef}
+              onPointerDown={onSeekDown}
+            >
+              <div className="ps-vp-seek-track">
+                <div className="ps-vp-seek-buffered" style={{ width: `${buffered}%` }} />
+                <div className="ps-vp-seek-fill" style={{ width: `${progress}%` }} />
+              </div>
+              <div className="ps-vp-seek-thumb" style={{ left: `${progress}%` }} />
+            </div>
+
+            <div className="ps-vp-controls">
+              <button type="button" className="ps-vp-btn" onClick={togglePlay} aria-label={isPlaying ? 'Pause' : 'Play'}>
+                {isPlaying ? (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                )}
+              </button>
+
+              <button type="button" className="ps-vp-btn" onClick={(e) => { e.stopPropagation(); const v = internalRef.current; if (v) v.currentTime = Math.max(0, v.currentTime - 5) }} aria-label="Back 5 seconds">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 17l-5-5 5-5"/><path d="M18 17l-5-5 5-5"/></svg>
+              </button>
+
+              <button type="button" className="ps-vp-btn" onClick={(e) => { e.stopPropagation(); const v = internalRef.current; if (v) v.currentTime = Math.min(v.duration || 0, v.currentTime + 5) }} aria-label="Forward 5 seconds">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 17l5-5-5-5"/><path d="M6 17l5-5-5-5"/></svg>
+              </button>
+
+              <span className="ps-vp-time">{formatTime(currentTime)} / {formatTime(duration)}</span>
+
+              <span className="ps-vp-spacer" />
+
+              <button type="button" className="ps-vp-btn" onClick={toggleMute} aria-label={isMuted ? 'Unmute' : 'Mute'}>
+                {isMuted ? (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                )}
+              </button>
+
+              <button type="button" className="ps-vp-btn" onClick={toggleFullscreen} aria-label="Fullscreen">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9V3h6"/><path d="M21 9V3h-6"/><path d="M3 15v6h6"/><path d="M21 15v6h-6"/></svg>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
