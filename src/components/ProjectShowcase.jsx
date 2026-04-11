@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import ProjectSlideshow from './ProjectSlideshow'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
@@ -14,126 +15,61 @@ const projects = [
     id: 'noteswap',
     title: 'NoteSwap',
     category: 'EdTech',
-    desc: 'A student-focused web app for sharing and exchanging academic notes. Built to solve a real problem — helping university students access quality study material from peers.',
+    desc: 'University students in Bangladesh struggle to find well-organized, reliable study materials — often relying on incomplete notes from peers, leading to gaps in understanding and heightened exam stress.\n\nNoteSwap provides a centralized hub where students upload, download, and rate academic notes across courses. Features include advanced search by subject and course code, personalized user profiles for tracking contributions, and discussion forums for collaborative learning.\n\nBuilt with Python and Django, the platform handles user authentication, file management, content moderation, and a community-driven rating system that surfaces the best materials.',
     tags: ['Python', 'Django', 'CSS', 'Web App'],
     color: '#4f6ef7',
     link: 'https://github.com/HAVIC-47/final_NoteSwap',
+    thumbnail: '/projects/noteswap/thumbnail.png',
+    media: Array.from({ length: 11 }, (_, i) => ({ type: 'image', src: `/projects/noteswap/${i + 1}.png` })),
   },
   {
     id: 'noteswap2',
     title: 'NoteSwap 2.0',
     category: 'EdTech',
-    desc: 'The evolved version with improved UX, better architecture, and refined features. Built from lessons learned — cleaner code, smoother experience.',
+    desc: 'A ground-up rebuild of NoteSwap, addressing the gaps in global platforms like OneClass, StuDocu, and StudyLib — paywalled content, no local university support, and zero content verification.\n\nIntroduces localized search filters by university, faculty, and course code. A community-driven rating system ensures content accuracy, while all materials remain freely accessible without premium subscriptions.\n\nThe UX was rebuilt from real v1 user feedback — cleaner navigation, faster uploads, and responsive design. Backend restructured for better scalability and performance under load.',
     tags: ['Python', 'Django', 'Web App', 'Iteration'],
     color: '#7c4dff',
     link: 'https://github.com/HAVIC-47/Updated_NoteSwap',
+    thumbnail: '/projects/noteswap2/thumbnail.png',
+    media: Array.from({ length: 29 }, (_, i) => ({ type: 'image', src: `/projects/noteswap2/${i + 1}.png` })),
   },
   {
     id: 'eventease',
     title: 'EventEase',
     category: 'SaaS',
-    desc: 'An event management platform for organizing, tracking, and managing events. Clean UI with intuitive flows for creating and discovering events.',
+    desc: 'Born from the frustration of trying to book Young Stunners concert tickets on a completely disorganized website — no proper information, confusing updates, and tickets sold out before we could act.\n\nEventEase connects users, organizers, and venues in one centralized platform. Features real-time event updates with notifications, intuitive discovery with smart filtering, secure ticket management, and automated alerts for schedule changes.\n\nBuilt with HTML, CSS, and JavaScript, filling the gap left by transaction-only platforms like Tickyfie — handling the full event lifecycle from creation to post-event feedback.',
     tags: ['HTML', 'CSS', 'JavaScript'],
     color: '#10b981',
     link: 'https://github.com/HAVIC-47/EventEase',
+    thumbnail: '/projects/eventease/thumbnail.png',
+    media: [
+      { type: 'video', src: '/projects/eventease/1.mp4' },
+      { type: 'video', src: '/projects/eventease/2.mp4' },
+    ],
   },
   {
     id: 'rootreach',
     title: 'RootReach',
     category: 'E-Commerce',
-    desc: 'An e-commerce platform connecting local producers directly with consumers. Bridging the gap between small businesses and their customers through technology.',
+    desc: 'Rural producers in Bangladesh rely on middlemen who buy goods at unfairly low prices and resell at high margins. RootReach cuts them out with a dedicated e-commerce platform for direct producer-to-consumer sales.\n\nFeatures verified product listings with authenticity guarantees, secure payment gateways replacing cash-only transactions, integrated courier services for nationwide delivery, and multilingual support for non-English-speaking producers.\n\nBuilt with Python and Django, bridging the economic and digital divide that platforms like Amazon, Daraz, and Bikroy fail to address for rural communities.',
     tags: ['Python', 'Django', 'E-Commerce'],
     color: '#f59e0b',
     link: 'https://github.com/HAVIC-47',
+    thumbnail: '/projects/rootreach/thumbnail.png',
+    media: Array.from({ length: 22 }, (_, i) => ({ type: 'image', src: `/projects/rootreach/${i + 1}.png` })),
   },
   {
     id: 'machinestrike',
     title: 'Machine Strike',
     category: 'Board Game · AI',
-    desc: 'Recreation of the Horizon Forbidden West board game with minimax and alpha-beta pruning AI. A deep dive into game theory and adversarial search algorithms.',
+    desc: 'A recreation of the board game from Horizon Forbidden West — a deterministic, zero-sum, perfect-information strategy game on an 8x8 board where terrain modifiers directly affect combat outcomes.\n\nImplements two AI agents: standard Minimax that exhaustively explores all moves, and an optimized Alpha-Beta Pruning version that eliminates unnecessary branches. Each piece has unique attack patterns, health values, and movement ranges.\n\nThe AI evaluates board states using custom heuristics for piece positioning, terrain advantage, and threat assessment. Performance comparison demonstrates how pruning cuts node exploration dramatically while guaranteeing the same optimal result.',
     tags: ['Python', 'AI', 'Minimax', 'Game Dev'],
     color: '#ef4444',
     link: 'https://github.com/HAVIC-47/Machine-Strike',
+    thumbnail: '/projects/machinestrike/thumbnail.png',
+    media: Array.from({ length: 3 }, (_, i) => ({ type: 'image', src: `/projects/machinestrike/${i + 1}.png` })),
   },
 ]
-
-const screenVariants = [
-  ['cards', 'form', 'detail'],
-  ['dash', 'cards', 'form'],
-  ['cards', 'form', 'dash'],
-  ['cards', 'detail', 'form'],
-  ['board', 'detail', 'dash'],
-]
-
-/* ═══════════════════════════════════════════
-   MOCK SCREEN
-   ═══════════════════════════════════════════ */
-
-function MockScreen({ color, variant }) {
-  return (
-    <div className={`ps-screen ps-screen--${variant}`} style={{ '--pc': color }}>
-      <div className="ps-screen-bar">
-        <span className="ps-dot" />
-        <span className="ps-dot" />
-        <span className="ps-dot" />
-        <div className="ps-bar-url" />
-      </div>
-      <div className="ps-screen-body">
-        {variant === 'cards' && (
-          <>
-            <div className="ps-sb-row">
-              <div className="ps-sb-card" />
-              <div className="ps-sb-card" />
-            </div>
-            <div className="ps-sb-row">
-              <div className="ps-sb-card" />
-              <div className="ps-sb-card" />
-            </div>
-          </>
-        )}
-        {variant === 'form' && (
-          <>
-            <div className="ps-sb-input" />
-            <div className="ps-sb-input" />
-            <div className="ps-sb-textarea" />
-            <div className="ps-sb-btn" />
-          </>
-        )}
-        {variant === 'dash' && (
-          <>
-            <div className="ps-sb-stats">
-              <div className="ps-sb-stat" />
-              <div className="ps-sb-stat" />
-              <div className="ps-sb-stat" />
-            </div>
-            <div className="ps-sb-chart" />
-          </>
-        )}
-        {variant === 'board' && (
-          <div className="ps-sb-board">
-            {Array.from({ length: 64 }, (_, i) => (
-              <div
-                key={i}
-                className={`ps-sb-cell${[0, 9, 18, 27, 36, 45, 54, 63, 7, 14, 21, 28].includes(i) ? ' ps-sb-cell--active' : ''}`}
-              />
-            ))}
-          </div>
-        )}
-        {variant === 'detail' && (
-          <>
-            <div className="ps-sb-hero" />
-            <div className="ps-sb-lines">
-              <div />
-              <div />
-              <div className="short" />
-            </div>
-            <div className="ps-sb-btn" />
-          </>
-        )}
-      </div>
-    </div>
-  )
-}
 
 /* ═══════════════════════════════════════════
    TIMELINE CONSTANTS
@@ -602,7 +538,7 @@ export default function ProjectShowcase() {
               <div className="ps-card-caustics" />
               <div className="ps-card-accent" />
               <div className="ps-card-preview">
-                <MockScreen color={p.color} variant={screenVariants[i][0]} />
+                <img src={p.thumbnail} alt={p.title} className="ps-card-thumb" loading="lazy" />
               </div>
               <div className="ps-card-meta">
                 <div className="ps-card-meta-left">
@@ -626,13 +562,10 @@ export default function ProjectShowcase() {
               style={i > 0 ? { opacity: 0, visibility: 'hidden' } : {}}
             >
               <div className="ps-slide-visual">
-                <div className="ps-visual-main">
-                  <MockScreen color={p.color} variant={screenVariants[i][0]} />
-                </div>
-                <div className="ps-visual-row">
-                  <MockScreen color={p.color} variant={screenVariants[i][1]} />
-                  <MockScreen color={p.color} variant={screenVariants[i][2]} />
-                </div>
+                <ProjectSlideshow
+                  media={[{ type: 'image', src: p.thumbnail }, ...p.media]}
+                  color={p.color}
+                />
               </div>
 
               <div className="ps-slide-detail">
@@ -871,16 +804,6 @@ export default function ProjectShowcase() {
           position: relative;
         }
 
-        .ps-card-preview .ps-screen {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 192%;
-          height: 192%;
-          transform: scale(0.52);
-          transform-origin: top left;
-          border-radius: 0;
-        }
 
         .ps-card-meta {
           flex-shrink: 0;
@@ -939,9 +862,9 @@ export default function ProjectShowcase() {
           left: 3%;
           top: 50%;
           transform: translateY(-50%);
-          width: 72%;
-          height: 86%;
-          max-height: 700px;
+          width: 78%;
+          height: 90%;
+          max-height: 780px;
           overflow: hidden;
         }
 
@@ -949,37 +872,18 @@ export default function ProjectShowcase() {
           position: absolute;
           inset: 0;
           display: flex;
-          align-items: center;
-          gap: 2.5rem;
-          padding: 1.5rem 2rem;
+          flex-direction: row;
+          gap: 2rem;
+          padding: 1rem 1.5rem;
           will-change: transform, opacity;
         }
 
         .ps-slide-visual {
-          flex: 0 0 54%;
+          flex: 0 0 72%;
           display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-        }
-
-        .ps-visual-main {
-          border-radius: 14px;
+          align-items: center;
+          border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
-          border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .ps-visual-row {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 0.75rem;
-        }
-
-        .ps-visual-row .ps-screen {
-          border-radius: 10px;
-          overflow: hidden;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-          border: 1px solid rgba(255, 255, 255, 0.04);
         }
 
         .ps-slide-detail {
@@ -988,6 +892,9 @@ export default function ProjectShowcase() {
           flex-direction: column;
           justify-content: center;
           min-width: 0;
+          overflow: hidden;
+          margin-left: auto;
+          padding-left: 1rem;
         }
 
         .ps-cat {
@@ -1000,17 +907,19 @@ export default function ProjectShowcase() {
         }
 
         .ps-slide-detail h3 {
-          font-size: clamp(1.8rem, 3vw, 2.6rem);
+          font-size: clamp(1.4rem, 2.2vw, 2rem);
           font-weight: 700;
-          margin-bottom: 1rem;
+          margin-bottom: 0.75rem;
           line-height: 1.15;
         }
 
         .ps-slide-detail p {
           color: var(--text-secondary);
-          font-size: 0.95rem;
-          line-height: 1.7;
-          margin-bottom: 1.25rem;
+          font-size: 0.8rem;
+          line-height: 1.65;
+          margin-bottom: 0.75rem;
+          text-align: justify;
+          white-space: pre-line;
         }
 
         .ps-tags {
@@ -1130,161 +1039,13 @@ export default function ProjectShowcase() {
           opacity: 0.65;
         }
 
-        /* ===== MOCK SCREENS ===== */
-        .ps-screen {
-          background: linear-gradient(145deg, #111119, #18182a);
-          border-radius: 10px;
-          overflow: hidden;
+        /* ===== THUMBNAIL IN GRID CARDS ===== */
+        .ps-card-thumb {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
         }
-
-        .ps-screen-bar {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          padding: 8px 10px;
-          background: rgba(255, 255, 255, 0.025);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .ps-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.12);
-        }
-        .ps-dot:first-child { background: #ff5f57; }
-        .ps-dot:nth-child(2) { background: #febc2e; }
-        .ps-dot:nth-child(3) { background: #28c840; }
-
-        .ps-bar-url {
-          margin-left: 8px;
-          height: 5px;
-          width: 45%;
-          background: rgba(255, 255, 255, 0.06);
-          border-radius: 3px;
-        }
-
-        .ps-screen-body {
-          padding: 12px;
-          min-height: 120px;
-          position: relative;
-        }
-
-        .ps-sb-row {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 8px;
-          margin-bottom: 8px;
-        }
-        .ps-sb-card {
-          height: 48px;
-          background: rgba(255, 255, 255, 0.035);
-          border: 1px solid rgba(255, 255, 255, 0.05);
-          border-radius: 6px;
-          position: relative;
-          overflow: hidden;
-        }
-        .ps-sb-card::after {
-          content: '';
-          position: absolute;
-          bottom: 0; left: 0; right: 0;
-          height: 2px;
-          background: var(--pc);
-          opacity: 0.5;
-        }
-
-        .ps-sb-input {
-          height: 24px;
-          background: rgba(255, 255, 255, 0.035);
-          border: 1px solid rgba(255, 255, 255, 0.06);
-          border-radius: 5px;
-          margin-bottom: 8px;
-        }
-        .ps-sb-textarea {
-          height: 50px;
-          background: rgba(255, 255, 255, 0.035);
-          border: 1px solid rgba(255, 255, 255, 0.06);
-          border-radius: 5px;
-          margin-bottom: 10px;
-        }
-        .ps-sb-btn {
-          height: 26px;
-          background: var(--pc);
-          border-radius: 5px;
-          opacity: 0.75;
-          width: 40%;
-        }
-
-        .ps-sb-stats {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 6px;
-          margin-bottom: 10px;
-        }
-        .ps-sb-stat {
-          height: 36px;
-          background: rgba(255, 255, 255, 0.035);
-          border: 1px solid rgba(255, 255, 255, 0.05);
-          border-radius: 5px;
-          position: relative;
-        }
-        .ps-sb-stat::before {
-          content: '';
-          position: absolute;
-          top: 6px; left: 8px;
-          width: 16px; height: 10px;
-          background: var(--pc);
-          opacity: 0.3;
-          border-radius: 3px;
-        }
-        .ps-sb-chart {
-          height: 60px;
-          background: rgba(255, 255, 255, 0.025);
-          border: 1px solid rgba(255, 255, 255, 0.05);
-          border-radius: 5px;
-          position: relative;
-          overflow: hidden;
-        }
-        .ps-sb-chart::after {
-          content: '';
-          position: absolute;
-          bottom: 0; left: 0; right: 0;
-          height: 75%;
-          background: linear-gradient(to top, var(--pc), transparent);
-          opacity: 0.1;
-          clip-path: polygon(0% 100%, 8% 55%, 20% 70%, 35% 25%, 50% 45%, 65% 10%, 80% 35%, 100% 5%, 100% 100%);
-        }
-
-        .ps-sb-board {
-          display: grid;
-          grid-template-columns: repeat(8, 1fr);
-          gap: 2px;
-        }
-        .ps-sb-cell {
-          aspect-ratio: 1;
-          background: rgba(255, 255, 255, 0.035);
-          border-radius: 2px;
-        }
-        .ps-sb-cell--active {
-          background: var(--pc);
-          opacity: 0.45;
-          box-shadow: 0 0 4px var(--pc);
-        }
-
-        .ps-sb-hero {
-          height: 55px;
-          background: linear-gradient(135deg, var(--pc), transparent);
-          opacity: 0.12;
-          border-radius: 6px;
-          margin-bottom: 10px;
-        }
-        .ps-sb-lines div {
-          height: 6px;
-          background: rgba(255, 255, 255, 0.06);
-          border-radius: 3px;
-          margin-bottom: 6px;
-        }
-        .ps-sb-lines .short { width: 55%; }
 
         /* ===== REDUCED MOTION ===== */
         @media (prefers-reduced-motion: reduce) {
@@ -1298,6 +1059,7 @@ export default function ProjectShowcase() {
           .ps-slides-wrap {
             width: 68%;
             left: 2%;
+            right: auto;
           }
           .ps-slide {
             gap: 2rem;
@@ -1332,6 +1094,7 @@ export default function ProjectShowcase() {
           .ps-slides-wrap {
             width: 96%;
             left: 2%;
+            right: auto;
             height: calc(100% - 80px);
             max-height: none;
             top: auto;
@@ -1382,13 +1145,29 @@ export default function ProjectShowcase() {
           .ps-card:nth-child(5) { max-width: 168px; }
           .ps-card-meta h4 { font-size: 0.74rem; }
           .ps-card-cat { font-size: 0.54rem; }
-          .ps-screen-body { min-height: 80px; padding: 8px; }
-          .ps-screen-bar { padding: 5px 8px; }
         }
 
         @media (max-width: 360px) {
           .ps-grid-cards { max-width: 300px; }
           .ps-grid-cards { grid-auto-rows: 110px; }
+        }
+
+        /* Desktop: symmetric text-column voids.
+           Widen wrap via right-anchor, lock visual/detail to original
+           pixel widths, margin-left auto absorbs extra to shift text right. */
+        @media (min-width: 1025px) {
+          .ps-slides-wrap {
+            left: 3%;
+            right: calc(9.5vw + 70px);
+            width: auto;
+          }
+          .ps-slide-visual {
+            flex: 0 0 calc(56.16vw - 2.16rem);
+          }
+          .ps-slide-detail {
+            flex: 0 0 calc(21.84vw - 2.84rem);
+            margin-left: auto;
+          }
         }
         /* ═══════════════════════════════════════════
            LIGHT MODE OVERRIDES
@@ -1420,25 +1199,6 @@ export default function ProjectShowcase() {
         [data-theme="light"] .ps-card-meta {
           border-top-color: var(--border);
         }
-        [data-theme="light"] .ps-screen {
-          background: linear-gradient(145deg, #F5F5F4, #FAFAF9);
-        }
-        [data-theme="light"] .ps-screen-bar {
-          background: rgba(28,25,23,0.03);
-          border-bottom-color: var(--border);
-        }
-        [data-theme="light"] .ps-dot { background: rgba(28,25,23,0.1); }
-        [data-theme="light"] .ps-bar-url { background: rgba(28,25,23,0.06); }
-        [data-theme="light"] .ps-sb-card,
-        [data-theme="light"] .ps-sb-stat,
-        [data-theme="light"] .ps-sb-input,
-        [data-theme="light"] .ps-sb-textarea,
-        [data-theme="light"] .ps-sb-chart,
-        [data-theme="light"] .ps-sb-cell {
-          background: rgba(28,25,23,0.03);
-          border-color: var(--border);
-        }
-        [data-theme="light"] .ps-sb-lines div { background: rgba(28,25,23,0.06); }
         [data-theme="light"] .ps-bm {
           background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(250,250,249,0.98));
           border-color: var(--border);
@@ -1446,14 +1206,6 @@ export default function ProjectShowcase() {
         [data-theme="light"] .ps-bm:hover {
           border-color: var(--border-hover);
           box-shadow: 0 4px 20px rgba(28,25,23,0.08), 0 0 0 1px rgba(0,0,0,0.03);
-        }
-        [data-theme="light"] .ps-visual-main {
-          box-shadow: 0 20px 60px rgba(28,25,23,0.12);
-          border-color: var(--border);
-        }
-        [data-theme="light"] .ps-visual-row .ps-screen {
-          box-shadow: 0 10px 30px rgba(28,25,23,0.08);
-          border-color: var(--border);
         }
         [data-theme="light"] .ps-ripple-ring {
           border-color: rgba(146,64,14,0.25);

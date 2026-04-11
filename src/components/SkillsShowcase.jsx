@@ -135,6 +135,8 @@ function GlassSkillCard({ category, index, totalCards }) {
   const glowRef = useRef(null)
   const contentRef = useRef(null)
   const bodyRef = useRef(null)
+  const scrollScaleRef = useRef(1)
+  const hoveredRef = useRef(false)
   const [hovered, setHovered] = useState(false)
 
   useEffect(() => {
@@ -152,11 +154,15 @@ function GlassSkillCard({ category, index, totalCards }) {
       end: 'bottom center',
       scrub: 1,
       onUpdate: (self) => {
-        const scale = gsap.utils.interpolate(1, targetScale, self.progress)
-        gsap.set(card, {
-          scale: Math.max(scale, targetScale),
-          transformOrigin: 'center top',
-        })
+        const scale = Math.max(gsap.utils.interpolate(1, targetScale, self.progress), targetScale)
+        scrollScaleRef.current = scale
+        /* Don't override GSAP tween while user is hovering */
+        if (!hoveredRef.current) {
+          gsap.set(card, {
+            scale,
+            transformOrigin: 'center top',
+          })
+        }
       },
     })
 
@@ -217,23 +223,29 @@ function GlassSkillCard({ category, index, totalCards }) {
   }
 
   function handleMouseEnter() {
+    hoveredRef.current = true
     setHovered(true)
   }
 
   function handleMouseLeave() {
+    hoveredRef.current = false
     setHovered(false)
 
-    /* Reset card tilt + scale */
+    /* Kill ALL in-flight tweens on card before resetting */
+    gsap.killTweensOf(cardRef.current)
+
+    /* Reset card tilt + scale back to scroll-driven value */
     gsap.to(cardRef.current, {
       rotateX: 0,
       rotateY: 0,
-      scale: 1,
+      scale: scrollScaleRef.current,
       duration: 0.5,
       ease: 'power3.out',
     })
 
     /* Reset content depth */
     if (contentRef.current) {
+      gsap.killTweensOf(contentRef.current)
       gsap.to(contentRef.current, {
         z: 0,
         duration: 0.5,
@@ -243,6 +255,7 @@ function GlassSkillCard({ category, index, totalCards }) {
 
     /* Reset glass body depth */
     if (bodyRef.current) {
+      gsap.killTweensOf(bodyRef.current)
       gsap.to(bodyRef.current, {
         z: 0,
         scale: 1,
