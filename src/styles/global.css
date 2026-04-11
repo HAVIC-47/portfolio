@@ -93,12 +93,6 @@ h3{font-size:clamp(1.2rem,2.5vw,1.5rem)}
 .mono{font-family:var(--font-mono);font-size:0.875rem}
 .container{max-width:1100px;margin:0 auto;padding:0 2rem}
 
-/* Progressive container widening on large desktops so content
-   doesn't look marooned in the middle of 1440/1680/1920 displays */
-@media(min-width:1400px){.container{max-width:1280px}}
-@media(min-width:1680px){.container{max-width:1440px;padding:0 2.5rem}}
-@media(min-width:1920px){.container{max-width:1560px;padding:0 3rem}}
-
 .section-header{text-align:center;margin-bottom:4rem}
 .section-header h2{margin-bottom:0.75rem}
 .section-header p{color:var(--text-secondary);max-width:500px;margin:0 auto}
@@ -234,15 +228,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 .animate-delay-4{animation-delay:0.4s}
 
 /* ===== RESPONSIVE ===== */
-
-/* Narrow desktop / tablet landscape — smooth 3-col → 1-col jump */
-@media(max-width:1024px) and (min-width:769px){
-  .projects-grid{grid-template-columns:repeat(2,1fr)}
-  .skills-grid{grid-template-columns:repeat(2,1fr)}
-  .about-grid{grid-template-columns:1fr 1.8fr;gap:2rem}
-  .about-image{max-width:220px}
-  .contact-grid{gap:2rem}
-}
 
 /* Tablet */
 @media(max-width:768px){
