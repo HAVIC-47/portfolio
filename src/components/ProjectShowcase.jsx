@@ -1118,6 +1118,9 @@ export default function ProjectShowcase() {
             transform: translateX(50%);
             flex-direction: row;
             gap: 0.3rem;
+            max-width: calc(100% - 1rem);
+            flex-wrap: nowrap;
+            justify-content: center;
           }
           .ps-bm {
             border-radius: 0 0 8px 8px;
@@ -1125,8 +1128,17 @@ export default function ProjectShowcase() {
             border-top: none;
             width: auto;
             height: auto;
-            padding: 0.4rem 0.6rem;
+            padding: 0.35rem 0.55rem;
+            min-width: 0;
           }
+          .ps-bm-inner { gap: 0; }
+          .ps-bm-top { gap: 0.35rem; }
+          .ps-bm-dot { width: 6px; height: 6px; }
+          .ps-bm-name {
+            font-size: 0.68rem;
+            font-weight: 600;
+          }
+          .ps-bm-cat { display: none; }
           .ps-bm-indicator {
             left: 0; right: 0;
             top: 0; bottom: auto;
@@ -1145,11 +1157,21 @@ export default function ProjectShowcase() {
           .ps-card:nth-child(5) { max-width: 168px; }
           .ps-card-meta h4 { font-size: 0.74rem; }
           .ps-card-cat { font-size: 0.54rem; }
+
+          .ps-bookmarks { top: 48px; gap: 0.3rem; }
+          /* Hide names on phones — dot + color strip always fits in one row */
+          .ps-bm-name { display: none; }
+          .ps-bm { padding: 0.4rem 0.5rem; }
+          .ps-bm-dot { width: 9px; height: 9px; }
         }
 
         @media (max-width: 360px) {
           .ps-grid-cards { max-width: 300px; }
           .ps-grid-cards { grid-auto-rows: 110px; }
+
+          .ps-bookmarks { gap: 0.25rem; }
+          .ps-bm { padding: 0.35rem 0.4rem; }
+          .ps-bm-dot { width: 8px; height: 8px; }
         }
 
         /* Desktop: symmetric text-column voids.

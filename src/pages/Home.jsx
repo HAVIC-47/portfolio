@@ -1120,6 +1120,16 @@ export default function Home() {
 
         /* ===== RESPONSIVE ===== */
 
+        /* Large desktops — give the hero text column more breathing room */
+        @media (min-width: 1400px) {
+          .hero-grid { gap: 5rem; }
+          .hero-desc { max-width: 520px; font-size: 1.2rem; }
+        }
+        @media (min-width: 1680px) {
+          .hero-grid { gap: 6rem; }
+          .hero-desc { max-width: 560px; }
+        }
+
         /* Tablet */
         @media (max-width: 1024px) {
           .workspace-layer { transform: scale(0.85); }
