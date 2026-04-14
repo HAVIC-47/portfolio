@@ -5,6 +5,9 @@ import TiltCard from '../components/TiltCard'
 import ProjectShowcase from '../components/ProjectShowcase'
 import SkillsShowcase from '../components/SkillsShowcase'
 import ContactScrollSequence from '../components/ContactScrollSequence'
+import GetToKnowMe from '../components/GetToKnowMe'
+import WhatDrivesMe from '../components/WhatDrivesMe'
+import FutureInterests from '../components/FutureInterests'
 import gsap from 'gsap'
 
 /* Fake code lines for the code editor panel */
@@ -106,11 +109,11 @@ const learning = [
 
 /* About timeline */
 const timeline = [
-  { date: '2023 — Present', title: 'Computer Science Student', desc: 'Pursuing BSc in Computer Science & Engineering. Coursework includes OS, AI, compiler design, and data structures.' },
-  { date: '2023', title: 'Started GitHub Journey', desc: 'Created my GitHub account and began building projects in Python, starting with coursework and evolving into personal projects.' },
-  { date: '2024', title: 'Web Development with NoteSwap', desc: 'Built NoteSwap — a web application for students to share and exchange notes — through multiple iterations, learning Django and frontend development.' },
-  { date: '2025', title: 'AI & Machine Learning Projects', desc: 'Dove into machine learning with the Life Expectancy Prediction project, and created Machine Strike — an AI-powered board game using minimax algorithm.' },
-  { date: '2026', title: 'Full-Stack Aspirations', desc: 'Continuing to build, learn, and grow — working towards becoming a full-stack Python developer with a strong foundation in AI and systems programming.' },
+  { date: '2026 — Present', title: 'Full-Stack Engineering & Design', desc: 'Building full-stack web applications while refining expertise in dynamic web design and UI/UX. Currently serving as an SQA and UI/UX intern at Utopia IT Limited.' },
+  { date: '2025', title: 'AI, ML & LLM Systems', desc: 'Focused on machine learning, LLMs, and healthcare-oriented AI. Delivered the Life Expectancy Prediction system and built Machine Strike — an AI-powered board game driven by the minimax algorithm.' },
+  { date: '2024', title: 'Full-Stack Development with Django', desc: 'Shipped full-stack Python and Django projects including NoteSwap and EventEase, deepening backend architecture, data modeling, and deployment practices.' },
+  { date: '2023', title: 'Front-End, Back-End & System Design', desc: 'Studied the full web stack — front-end, back-end, and system design fundamentals — and launched my first independent project, NoteSwap v1.' },
+  { date: '2022', title: 'Started BSc in Computer Science', desc: 'Began my Computer Science & Engineering degree at the University of Asia Pacific, laying the foundation in programming, algorithms, and systems.' },
 ]
 
 const interests = [
@@ -121,6 +124,8 @@ const interests = [
 
 /* Contact */
 const contacts = [
+  { icon: 'ri-mail-line', title: 'Email', value: 'faisaladobe666@gmail.com', link: 'mailto:faisaladobe666@gmail.com' },
+  { icon: 'ri-phone-line', title: 'Phone', value: '01829937871', link: 'tel:+8801829937871' },
   { icon: 'ri-github-fill', title: 'GitHub', value: 'github.com/HAVIC-47', link: 'https://github.com/HAVIC-47' },
   { icon: 'ri-facebook-fill', title: 'Facebook', value: 'facebook.com/HAVIC47', link: 'https://www.facebook.com/HAVIC47' },
   { icon: 'ri-instagram-line', title: 'Instagram', value: '@visuals_of_faisal', link: 'https://www.instagram.com/visuals_of_faisal' },
@@ -582,32 +587,11 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Interests */}
-        <div style={{ padding: '4rem 0' }}>
-          <div className="container">
-            <ScrollReveal>
-              <div className="section-header">
-                <span className="section-label">Beyond Code</span>
-                <h2>What Drives Me</h2>
-              </div>
-            </ScrollReveal>
-            <div className="projects-grid">
-              {interests.map((item, i) => (
-                <ScrollReveal key={item.title} delay={0.1 * (i + 1)}>
-                  <TiltCard>
-                    <div style={{ textAlign: 'center' }}>
-                      <div className="project-icon" style={{ margin: '0 auto 1rem' }}>
-                        <i className={item.icon}></i>
-                      </div>
-                      <h3>{item.title}</h3>
-                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.5rem' }}>{item.desc}</p>
-                    </div>
-                  </TiltCard>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </div>
+        {/* Get to Know Me bento */}
+        <GetToKnowMe />
+
+        {/* Interests — flip cards */}
+        <WhatDrivesMe />
       </section>
 
       {/* ═══════════════════════════════════════════
@@ -622,6 +606,13 @@ export default function Home() {
           ═══════════════════════════════════════════ */}
       <section id="skills" style={{ position: 'relative', zIndex: 1 }}>
         <SkillsShowcase />
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          FUTURE FOCUS SECTION
+          ═══════════════════════════════════════════ */}
+      <section id="future" style={{ position: 'relative', zIndex: 1 }}>
+        <FutureInterests />
       </section>
 
       {/* ═══════════════════════════════════════════

@@ -2,11 +2,11 @@ import ScrollReveal from '../components/ScrollReveal'
 import TiltCard from '../components/TiltCard'
 
 const timeline = [
-  { date: '2023 — Present', title: 'Computer Science Student', desc: 'Pursuing BSc in Computer Science & Engineering. Coursework includes OS, AI, compiler design, and data structures.' },
-  { date: '2023', title: 'Started GitHub Journey', desc: 'Created my GitHub account and began building projects in Python, starting with coursework and evolving into personal projects.' },
-  { date: '2024', title: 'Web Development with NoteSwap', desc: 'Built NoteSwap — a web application for students to share and exchange notes — through multiple iterations, learning Django and frontend development.' },
-  { date: '2025', title: 'AI & Machine Learning Projects', desc: 'Dove into machine learning with the Life Expectancy Prediction project, and created Machine Strike — an AI-powered board game using minimax algorithm.' },
-  { date: '2026', title: 'Full-Stack Aspirations', desc: 'Continuing to build, learn, and grow — working towards becoming a full-stack Python developer with a strong foundation in AI and systems programming.' },
+  { date: '2026 — Present', title: 'Full-Stack Engineering & Design', desc: 'Building full-stack web applications while refining expertise in dynamic web design and UI/UX. Currently serving as an SQA and UI/UX intern at Utopia IT Limited.' },
+  { date: '2025', title: 'AI, ML & LLM Systems', desc: 'Focused on machine learning, LLMs, and healthcare-oriented AI. Delivered the Life Expectancy Prediction system and built Machine Strike — an AI-powered board game driven by the minimax algorithm.' },
+  { date: '2024', title: 'Full-Stack Development with Django', desc: 'Shipped full-stack Python and Django projects including NoteSwap and EventEase, deepening backend architecture, data modeling, and deployment practices.' },
+  { date: '2023', title: 'Front-End, Back-End & System Design', desc: 'Studied the full web stack — front-end, back-end, and system design fundamentals — and launched my first independent project, NoteSwap v1.' },
+  { date: '2022', title: 'Started BSc in Computer Science', desc: 'Began my Computer Science & Engineering degree at the University of Asia Pacific, laying the foundation in programming, algorithms, and systems.' },
 ]
 
 const interests = [
