@@ -689,15 +689,15 @@ export default function Home() {
 
       {/* Scroll-driven keyword sequence — final section */}
       <ContactScrollSequence>
-        <h3 style={{ marginBottom: '0.6rem', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', color: '#fff', fontWeight: 800, letterSpacing: '-0.03em' }}>
+        <h3 className="css-outro-title" style={{ marginBottom: '0.6rem', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 800, letterSpacing: '-0.03em' }}>
           Let's build something together
         </h3>
-        <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '1.5rem', fontSize: 'clamp(0.85rem, 1.1vw, 0.95rem)' }}>
+        <p className="css-outro-sub" style={{ marginBottom: '1.5rem', fontSize: 'clamp(0.85rem, 1.1vw, 0.95rem)' }}>
           Find me on these platforms
         </p>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           {socials.map(s => (
-            <a key={s.icon} href={s.link} target="_blank" rel="noopener noreferrer" className="social-icon" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.18)' }}>
+            <a key={s.icon} href={s.link} target="_blank" rel="noopener noreferrer" className="social-icon css-outro-social">
               <i className={s.icon}></i>
             </a>
           ))}
@@ -705,6 +705,14 @@ export default function Home() {
       </ContactScrollSequence>
 
       <style>{`
+        /* Outro section (ContactScrollSequence) — theme-aware */
+        .css-outro-title { color: #fff; }
+        .css-outro-sub { color: rgba(255,255,255,0.6); }
+        .css-outro-social { color: #fff; border-color: rgba(255,255,255,0.18); }
+        [data-theme="light"] .css-outro-title { color: var(--text-primary); }
+        [data-theme="light"] .css-outro-sub { color: var(--text-secondary); }
+        [data-theme="light"] .css-outro-social { color: var(--text-primary); border-color: var(--border); }
+
         /* ===== PAGE WRAPPER ===== */
         .home-page {
           position: relative;

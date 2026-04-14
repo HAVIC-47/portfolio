@@ -57,7 +57,7 @@ export default function BackToTop() {
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: isMobile ? '1.1rem' : '1.25rem',
-            boxShadow: '0 10px 28px -12px rgba(0,0,0,0.55), 0 0 0 1px var(--accent-glow)',
+            boxShadow: 'var(--shadow-card), 0 0 0 1px var(--accent-glow)',
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
             WebkitTapHighlightColor: 'transparent',
