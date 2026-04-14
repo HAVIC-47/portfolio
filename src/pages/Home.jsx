@@ -4,6 +4,7 @@ import ScrollReveal from '../components/ScrollReveal'
 import TiltCard from '../components/TiltCard'
 import ProjectShowcase from '../components/ProjectShowcase'
 import SkillsShowcase from '../components/SkillsShowcase'
+import ContactScrollSequence from '../components/ContactScrollSequence'
 import gsap from 'gsap'
 
 /* Fake code lines for the code editor panel */
@@ -693,25 +694,24 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Social Banner */}
-        <div style={{ padding: '4rem 0' }}>
-          <div className="container">
-            <ScrollReveal>
-              <div className="card" style={{ textAlign: 'center', padding: '3rem 2rem' }}>
-                <h3 style={{ marginBottom: '0.5rem' }}>Let's build something together</h3>
-                <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>Find me on these platforms</p>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                  {socials.map(s => (
-                    <a key={s.icon} href={s.link} target="_blank" rel="noopener noreferrer" className="social-icon">
-                      <i className={s.icon}></i>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </ScrollReveal>
-          </div>
-        </div>
       </section>
+
+      {/* Scroll-driven keyword sequence — final section */}
+      <ContactScrollSequence>
+        <h3 style={{ marginBottom: '0.6rem', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', color: '#fff', fontWeight: 800, letterSpacing: '-0.03em' }}>
+          Let's build something together
+        </h3>
+        <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '1.5rem', fontSize: 'clamp(0.85rem, 1.1vw, 0.95rem)' }}>
+          Find me on these platforms
+        </p>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          {socials.map(s => (
+            <a key={s.icon} href={s.link} target="_blank" rel="noopener noreferrer" className="social-icon" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.18)' }}>
+              <i className={s.icon}></i>
+            </a>
+          ))}
+        </div>
+      </ContactScrollSequence>
 
       <style>{`
         /* ===== PAGE WRAPPER ===== */

@@ -261,27 +261,34 @@ export default function ProjectSlideshow({ media, color }) {
           transform: scale(1);
         }
 
+        /* ===== YouTube-style bottom bar ===== */
         .ps-vp-bar {
           position: absolute;
           left: 0;
           right: 0;
           bottom: 0;
-          padding: 32px 18px 14px;
-          background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.65) 55%, rgba(0,0,0,0) 100%);
+          padding: clamp(28px, 5vw, 44px) clamp(8px, 1.5vw, 16px) clamp(4px, 0.8vw, 8px);
+          background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.85) 0%,
+            rgba(0, 0, 0, 0.55) 45%,
+            rgba(0, 0, 0, 0) 100%
+          );
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          gap: clamp(2px, 0.4vw, 6px);
           z-index: 3;
           will-change: transform, opacity;
         }
 
+        /* Always-on thin progress hairline at very bottom (gray track + accent fill) */
         .ps-vp-hairline {
           position: absolute;
           left: 0;
           right: 0;
           bottom: 0;
           height: 3px;
-          background: rgba(0, 0, 0, 0.45);
+          background: rgba(255, 255, 255, 0.25);
           z-index: 2;
           pointer-events: none;
         }
@@ -289,13 +296,13 @@ export default function ProjectSlideshow({ media, color }) {
         .ps-vp-hairline-fill {
           height: 100%;
           background: var(--ps-vp-accent, #fff);
-          box-shadow: 0 0 8px var(--ps-vp-accent, #fff);
           transition: width 0.1s linear;
         }
 
+        /* ===== Seek bar (YouTube style) ===== */
         .ps-vp-seek {
           position: relative;
-          height: 18px;
+          height: clamp(14px, 2vw, 20px);
           display: flex;
           align-items: center;
           cursor: pointer;
@@ -305,17 +312,16 @@ export default function ProjectSlideshow({ media, color }) {
         .ps-vp-seek-track {
           position: relative;
           width: 100%;
-          height: 5px;
-          background: rgba(255, 255, 255, 0.32);
-          border-radius: 3px;
+          height: 3px;
+          background: rgba(255, 255, 255, 0.28);
+          border-radius: 2px;
           overflow: hidden;
-          box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.4);
-          transition: height 0.18s ease;
+          transition: height 0.15s ease;
         }
 
         .ps-vp-seek:hover .ps-vp-seek-track,
         .ps-vp.is-seeking .ps-vp-seek-track {
-          height: 8px;
+          height: 5px;
         }
 
         .ps-vp-seek-buffered {
@@ -323,8 +329,7 @@ export default function ProjectSlideshow({ media, color }) {
           top: 0;
           left: 0;
           bottom: 0;
-          background: rgba(255, 255, 255, 0.45);
-          border-radius: 3px;
+          background: rgba(255, 255, 255, 0.4);
         }
 
         .ps-vp-seek-fill {
@@ -333,72 +338,90 @@ export default function ProjectSlideshow({ media, color }) {
           left: 0;
           bottom: 0;
           background: var(--ps-vp-accent, #fff);
-          border-radius: 3px;
-          box-shadow: 0 0 10px var(--ps-vp-accent, #fff);
           transition: width 0.08s linear;
         }
 
         .ps-vp-seek-thumb {
           position: absolute;
           top: 50%;
-          width: 14px;
-          height: 14px;
+          width: clamp(12px, 1.4vw, 15px);
+          height: clamp(12px, 1.4vw, 15px);
           border-radius: 50%;
-          background: #fff;
-          transform: translate(-50%, -50%) scale(1);
-          box-shadow: 0 0 0 3px var(--ps-vp-accent, #fff), 0 2px 10px rgba(0, 0, 0, 0.7);
-          transition: transform 0.18s ease;
+          background: var(--ps-vp-accent, #fff);
+          transform: translate(-50%, -50%) scale(0);
+          transition: transform 0.15s ease;
           pointer-events: none;
+          box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.5);
         }
 
         .ps-vp-seek:hover .ps-vp-seek-thumb,
         .ps-vp.is-seeking .ps-vp-seek-thumb {
-          transform: translate(-50%, -50%) scale(1.15);
+          transform: translate(-50%, -50%) scale(1);
         }
 
+        /* ===== Control row ===== */
         .ps-vp-controls {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: clamp(4px, 0.8vw, 10px);
           color: #fff;
           font-family: var(--font-mono, monospace);
-          font-size: 0.78rem;
+          font-size: clamp(0.68rem, 0.9vw, 0.8rem);
         }
 
         .ps-vp-btn {
-          background: rgba(0, 0, 0, 0.45);
-          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: transparent;
+          border: none;
           color: #fff;
-          padding: 6px;
+          padding: clamp(4px, 0.6vw, 8px);
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 6px;
-          transition: background 0.2s, transform 0.15s, border-color 0.2s;
-          backdrop-filter: blur(4px);
+          border-radius: 4px;
+          transition: background 0.18s, transform 0.12s, opacity 0.18s;
+          opacity: 0.92;
+          filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
         }
 
         .ps-vp-btn:hover {
-          background: rgba(255, 255, 255, 0.18);
-          border-color: rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.14);
+          opacity: 1;
         }
 
-        .ps-vp-btn:active { transform: scale(0.93); }
+        .ps-vp-btn:active { transform: scale(0.92); }
+
+        .ps-vp-btn svg {
+          width: clamp(16px, 1.6vw, 20px);
+          height: clamp(16px, 1.6vw, 20px);
+        }
 
         .ps-vp-time {
           letter-spacing: 0.04em;
           color: #fff;
-          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
-          padding: 0 4px;
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+          padding: 0 clamp(2px, 0.4vw, 6px);
+          white-space: nowrap;
+          font-variant-numeric: tabular-nums;
         }
 
         .ps-vp-spacer { flex: 1; }
 
+        /* ===== Responsive tuning ===== */
         @media (max-width: 768px) {
           .ps-slideshow { max-height: 45vh; }
           .ps-vp-bigplay { width: 56px; height: 56px; }
-          .ps-vp-bar { padding: 10px 12px 8px; }
+          .ps-vp-bar { gap: 2px; }
+          .ps-vp-time { font-size: 0.65rem; }
+          .ps-vp-controls { gap: 4px; }
+        }
+
+        @media (max-width: 480px) {
+          .ps-vp-bigplay { width: 48px; height: 48px; }
+          .ps-vp-controls { gap: 2px; }
+          .ps-vp-btn { padding: 5px; }
+          /* Hide skip buttons on very small screens to prevent crowding */
+          .ps-vp-btn[data-skip] { display: none; }
         }
       `}</style>
     </div>
@@ -582,12 +605,12 @@ function VideoPlayer({ src, isActive, videoRef, onEnded, accent }) {
                 )}
               </button>
 
-              <button type="button" className="ps-vp-btn" onClick={(e) => { e.stopPropagation(); const v = internalRef.current; if (v) v.currentTime = Math.max(0, v.currentTime - 5) }} aria-label="Back 5 seconds">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 17l-5-5 5-5"/><path d="M18 17l-5-5 5-5"/></svg>
+              <button type="button" data-skip className="ps-vp-btn" onClick={(e) => { e.stopPropagation(); const v = internalRef.current; if (v) v.currentTime = Math.max(0, v.currentTime - 5) }} aria-label="Back 5 seconds">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 17l-5-5 5-5"/><path d="M18 17l-5-5 5-5"/></svg>
               </button>
 
-              <button type="button" className="ps-vp-btn" onClick={(e) => { e.stopPropagation(); const v = internalRef.current; if (v) v.currentTime = Math.min(v.duration || 0, v.currentTime + 5) }} aria-label="Forward 5 seconds">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 17l5-5-5-5"/><path d="M6 17l5-5-5-5"/></svg>
+              <button type="button" data-skip className="ps-vp-btn" onClick={(e) => { e.stopPropagation(); const v = internalRef.current; if (v) v.currentTime = Math.min(v.duration || 0, v.currentTime + 5) }} aria-label="Forward 5 seconds">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 17l5-5-5-5"/><path d="M6 17l5-5-5-5"/></svg>
               </button>
 
               <span className="ps-vp-time">{formatTime(currentTime)} / {formatTime(duration)}</span>
