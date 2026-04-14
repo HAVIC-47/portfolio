@@ -222,7 +222,10 @@ function FlipCard({ card, index }) {
       onMouseLeave={() => setFlipped(false)}
       onFocus={() => setFlipped(true)}
       onBlur={() => setFlipped(false)}
+      onClick={() => setFlipped(f => !f)}
       tabIndex={0}
+      role="button"
+      aria-pressed={flipped}
     >
       <motion.div
         className="drives-card"

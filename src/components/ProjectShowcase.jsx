@@ -1083,6 +1083,7 @@ export default function ProjectShowcase() {
           .ps-grid-cards {
             gap: 0.6rem;
             max-width: 420px;
+            width: 100%;
           }
           .ps-card { border-radius: 10px; }
           .ps-grid-cards { grid-auto-rows: 160px; }
@@ -1092,9 +1093,9 @@ export default function ProjectShowcase() {
           .ps-grid-header { margin-bottom: 1.2rem; }
 
           .ps-slides-wrap {
-            width: 96%;
-            left: 2%;
-            right: auto;
+            width: calc(100% - 16px);
+            left: 8px;
+            right: 8px;
             height: calc(100% - 80px);
             max-height: none;
             top: auto;
@@ -1114,19 +1115,27 @@ export default function ProjectShowcase() {
 
           .ps-bookmarks {
             top: 52px;
-            right: 50%;
-            transform: translateX(50%);
+            left: 8px;
+            right: 8px;
+            transform: none;
             flex-direction: row;
             gap: 0.3rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: none;
           }
           .ps-bm {
             border-radius: 0 0 8px 8px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-top: none;
             width: auto;
+            min-width: 0;
             height: auto;
-            padding: 0.4rem 0.6rem;
+            padding: 0.4rem 0.55rem;
+            flex: 0 1 auto;
           }
+          .ps-bm-name { font-size: 0.72rem; }
+          .ps-bm-cat { font-size: 0.5rem; }
           .ps-bm-indicator {
             left: 0; right: 0;
             top: 0; bottom: auto;
@@ -1139,17 +1148,28 @@ export default function ProjectShowcase() {
 
         /* ===== RESPONSIVE: Small phones ===== */
         @media (max-width: 480px) {
-          .ps-grid-cards { gap: 0.45rem; max-width: 340px; }
+          .ps-grid { padding: 32px 0.75rem 0.75rem; }
+          .ps-grid-cards { gap: 0.45rem; max-width: 100%; }
           .ps-card { border-radius: 8px; }
           .ps-grid-cards { grid-auto-rows: 130px; }
           .ps-card:nth-child(5) { max-width: 168px; }
           .ps-card-meta h4 { font-size: 0.74rem; }
           .ps-card-cat { font-size: 0.54rem; }
+          .ps-bm { padding: 0.35rem 0.5rem; }
+          .ps-bm-name { font-size: 0.68rem; }
         }
 
         @media (max-width: 360px) {
-          .ps-grid-cards { max-width: 300px; }
-          .ps-grid-cards { grid-auto-rows: 110px; }
+          .ps-grid { padding: 28px 0.5rem 0.5rem; }
+          .ps-grid-cards { gap: 0.4rem; }
+          .ps-grid-cards { grid-auto-rows: 108px; }
+          .ps-card:nth-child(5) { max-width: 150px; }
+          .ps-card-meta { padding: 0.35rem 0.5rem; }
+          .ps-card-meta h4 { font-size: 0.68rem; }
+          .ps-slide { padding: 0.6rem; }
+          .ps-bm { padding: 0.3rem 0.45rem; }
+          .ps-bm-name { font-size: 0.64rem; }
+          .ps-bm-cat { display: none; }
         }
 
         /* Desktop: symmetric text-column voids.
