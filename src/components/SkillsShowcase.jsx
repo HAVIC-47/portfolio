@@ -72,23 +72,46 @@ function LogoTicker() {
     const inner = el.querySelector('.ticker-inner')
     if (!inner) return
 
-    const w = inner.scrollWidth / 2
-
-    tweenRef.current = gsap.to(inner, {
-      x: -w,
-      duration: 40,
-      ease: 'none',
-      repeat: -1,
-    })
-
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    if (mq.matches) tweenRef.current.pause()
-    const onChange = () => (mq.matches ? tweenRef.current.pause() : tweenRef.current.resume())
-    mq.addEventListener('change', onChange)
+
+    function start() {
+      const w = inner.scrollWidth / 2
+      if (!w) return
+      if (tweenRef.current) tweenRef.current.kill()
+      gsap.set(inner, { x: 0 })
+      tweenRef.current = gsap.to(inner, {
+        x: -w,
+        duration: 40,
+        ease: 'none',
+        repeat: -1,
+      })
+      if (mq.matches) tweenRef.current.pause()
+    }
+
+    /* Wait for logo images so scrollWidth is accurate. */
+    const imgs = Array.from(inner.querySelectorAll('img'))
+    const pending = imgs.filter(img => !img.complete)
+    if (pending.length === 0) {
+      start()
+    } else {
+      let left = pending.length
+      const done = () => { if (--left <= 0) start() }
+      pending.forEach(img => {
+        img.addEventListener('load', done, { once: true })
+        img.addEventListener('error', done, { once: true })
+      })
+    }
+
+    const onResize = () => start()
+    window.addEventListener('resize', onResize)
+
+    const onMqChange = () => (mq.matches ? tweenRef.current?.pause() : tweenRef.current?.resume())
+    mq.addEventListener('change', onMqChange)
 
     return () => {
-      tweenRef.current.kill()
-      mq.removeEventListener('change', onChange)
+      tweenRef.current?.kill()
+      mq.removeEventListener('change', onMqChange)
+      window.removeEventListener('resize', onResize)
     }
   }, [])
 
