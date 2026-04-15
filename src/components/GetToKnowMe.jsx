@@ -1,93 +1,78 @@
-import { useState, useCallback, useRef } from 'react'
-import { motion } from 'motion/react'
+import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 
 /*
- * "At a Glance" bento — 5 compact info cards with 3D hover tilt,
- * pointer-tracked spotlight, per-card SVG illustrations, and staggered
- * entry. Matches site theme (warm tan accent, Outfit/Satoshi/Mono fonts).
+ * "At a Glance" — 5 tall expanding cards side-by-side.
+ * Hover/focus expands a card (5fr) while others collapse (1fr) to vertical
+ * rotated labels. Full-bleed site-native SVG art behind each panel.
  */
 
 /* ─── per-card decorative SVG illustrations (currentColor = --accent) ─── */
 const IllustCurrently = () => (
-  <svg viewBox="0 0 120 90" fill="none" aria-hidden>
-    {/* dotted grid */}
+  <svg viewBox="0 0 120 90" fill="none" aria-hidden preserveAspectRatio="xMidYMid slice">
     {Array.from({ length: 4 }).map((_, r) =>
       Array.from({ length: 7 }).map((_, c) => (
         <circle key={`${r}-${c}`} cx={8 + c * 17} cy={10 + r * 20} r="0.8" fill="currentColor" opacity="0.35" />
       ))
     )}
-    {/* concentric radar rings */}
     <circle cx="92" cy="46" r="26" stroke="currentColor" strokeWidth="1" opacity="0.35" />
     <circle cx="92" cy="46" r="18" stroke="currentColor" strokeWidth="0.8" opacity="0.5" />
     <circle cx="92" cy="46" r="10" stroke="currentColor" strokeWidth="0.8" opacity="0.6" />
     <circle cx="92" cy="46" r="3" fill="currentColor" opacity="0.9" />
-    {/* radar sweep line */}
     <line x1="92" y1="46" x2="110" y2="34" stroke="currentColor" strokeWidth="1.2" opacity="0.7" />
   </svg>
 )
 
 const IllustBio = () => (
-  <svg viewBox="0 0 120 90" fill="none" aria-hidden>
-    {/* code brackets */}
+  <svg viewBox="0 0 120 90" fill="none" aria-hidden preserveAspectRatio="xMidYMid slice">
     <path d="M14 22L4 45L14 68" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" opacity="0.5" />
     <path d="M106 22L116 45L106 68" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" opacity="0.5" />
-    {/* layered windows — dynamic web */}
     <rect x="28" y="18" width="64" height="42" rx="5" stroke="currentColor" strokeWidth="1.2" opacity="0.5" />
     <rect x="36" y="26" width="48" height="28" rx="3" fill="currentColor" opacity="0.08" />
     <circle cx="34" cy="24" r="1.4" fill="currentColor" opacity="0.6" />
     <circle cx="39" cy="24" r="1.4" fill="currentColor" opacity="0.4" />
     <circle cx="44" cy="24" r="1.4" fill="currentColor" opacity="0.3" />
-    {/* mini bars */}
     <rect x="40" y="44" width="3" height="6" fill="currentColor" opacity="0.5" />
     <rect x="46" y="40" width="3" height="10" fill="currentColor" opacity="0.55" />
     <rect x="52" y="36" width="3" height="14" fill="currentColor" opacity="0.6" />
     <rect x="58" y="42" width="3" height="8" fill="currentColor" opacity="0.45" />
-    {/* spark */}
     <path d="M100 70L101 72L103 73L101 74L100 76L99 74L97 73L99 72Z" fill="currentColor" opacity="0.55" />
   </svg>
 )
 
 const IllustEducation = () => (
-  <svg viewBox="0 0 120 90" fill="none" aria-hidden>
-    {/* cap */}
+  <svg viewBox="0 0 120 90" fill="none" aria-hidden preserveAspectRatio="xMidYMid slice">
     <path d="M60 22L28 36L60 50L92 36Z" stroke="currentColor" strokeWidth="1.4" fill="currentColor" opacity="0.2" />
     <path d="M40 42V54C40 54 48 60 60 60C72 60 80 54 80 54V42" stroke="currentColor" strokeWidth="1.4" opacity="0.6" fill="none" />
     <line x1="60" y1="50" x2="60" y2="60" stroke="currentColor" strokeWidth="1.4" opacity="0.6" />
     <circle cx="60" cy="62" r="1.8" fill="currentColor" opacity="0.8" />
-    {/* tassel */}
     <line x1="92" y1="36" x2="92" y2="48" stroke="currentColor" strokeWidth="1.2" opacity="0.6" />
     <circle cx="92" cy="50" r="2" fill="currentColor" opacity="0.7" />
-    {/* sparks */}
     <path d="M20 20L21 22.5L23.5 23.5L21 24.5L20 27L19 24.5L16.5 23.5L19 22.5Z" fill="currentColor" opacity="0.45" />
     <path d="M104 70L105 72L107 73L105 74L104 76L103 74L101 73L103 72Z" fill="currentColor" opacity="0.4" />
   </svg>
 )
 
 const IllustLocation = () => (
-  <svg viewBox="0 0 120 90" fill="none" aria-hidden>
-    {/* globe grid */}
+  <svg viewBox="0 0 120 90" fill="none" aria-hidden preserveAspectRatio="xMidYMid slice">
     <circle cx="60" cy="45" r="28" stroke="currentColor" strokeWidth="1.2" opacity="0.55" />
     <ellipse cx="60" cy="45" rx="28" ry="10" stroke="currentColor" strokeWidth="0.9" opacity="0.4" />
     <ellipse cx="60" cy="45" rx="12" ry="28" stroke="currentColor" strokeWidth="0.9" opacity="0.4" />
     <line x1="32" y1="45" x2="88" y2="45" stroke="currentColor" strokeWidth="0.9" opacity="0.4" />
-    {/* pin on globe */}
     <path d="M60 30C56 30 54 33 54 36C54 40 60 46 60 46C60 46 66 40 66 36C66 33 64 30 60 30Z" fill="currentColor" opacity="0.85" />
     <circle cx="60" cy="36" r="1.6" fill="var(--bg-card)" />
-    {/* small pins */}
     <circle cx="96" cy="24" r="2" fill="currentColor" opacity="0.6" />
     <circle cx="22" cy="68" r="2" fill="currentColor" opacity="0.5" />
   </svg>
 )
 
 const IllustInterests = () => (
-  <svg viewBox="0 0 120 90" fill="none" aria-hidden>
-    {/* dotted grid */}
+  <svg viewBox="0 0 120 90" fill="none" aria-hidden preserveAspectRatio="xMidYMid slice">
     {Array.from({ length: 4 }).map((_, r) =>
       Array.from({ length: 7 }).map((_, c) => (
         <circle key={`${r}-${c}`} cx={8 + c * 17} cy={10 + r * 20} r="0.7" fill="currentColor" opacity="0.3" />
       ))
     )}
-    {/* neural cluster left */}
     <circle cx="32" cy="44" r="16" stroke="currentColor" strokeWidth="1" opacity="0.45" />
     <circle cx="26" cy="40" r="2" fill="currentColor" opacity="0.7" />
     <circle cx="38" cy="40" r="2" fill="currentColor" opacity="0.7" />
@@ -95,14 +80,11 @@ const IllustInterests = () => (
     <line x1="26" y1="40" x2="38" y2="40" stroke="currentColor" strokeWidth="0.8" opacity="0.5" />
     <line x1="26" y1="40" x2="32" y2="50" stroke="currentColor" strokeWidth="0.8" opacity="0.5" />
     <line x1="38" y1="40" x2="32" y2="50" stroke="currentColor" strokeWidth="0.8" opacity="0.5" />
-    {/* UI window right */}
     <rect x="62" y="28" width="46" height="32" rx="4" stroke="currentColor" strokeWidth="1.1" opacity="0.55" />
     <line x1="68" y1="36" x2="92" y2="36" stroke="currentColor" strokeWidth="1.1" opacity="0.5" />
     <line x1="68" y1="42" x2="86" y2="42" stroke="currentColor" strokeWidth="1.1" opacity="0.4" />
     <rect x="68" y="48" width="16" height="6" rx="1.5" fill="currentColor" opacity="0.5" />
-    {/* connecting flow */}
     <path d="M48 44C54 44 56 44 62 44" stroke="currentColor" strokeWidth="1" strokeDasharray="2 3" opacity="0.55" />
-    {/* spark */}
     <path d="M104 66L105 68L107 69L105 70L104 72L103 70L101 69L103 68Z" fill="currentColor" opacity="0.5" />
   </svg>
 )
@@ -111,8 +93,8 @@ const CARDS = [
   {
     id: 'currently',
     label: 'Currently',
+    title: 'Interning & Wrapping Up CSE',
     icon: 'ri-focus-3-line',
-    span: 'wide',
     illust: IllustCurrently,
     body: (
       <>
@@ -124,20 +106,20 @@ const CARDS = [
   {
     id: 'bio',
     label: 'Bio',
+    title: 'Builder, End-to-End',
     icon: 'ri-user-3-line',
-    span: 'wide',
     illust: IllustBio,
     body: (
       <>
-        Full-stack developer with a strong design sensibility — shipping dynamic, production-grade web products end-to-end. Focused on UI/UX, AI &amp; ML systems, LLM integration, and AI-assisted automation.
+        Full-stack developer with a strong design sensibility — shipping dynamic, production-grade web products. Focused on UI/UX, AI &amp; ML, LLM integration, and automation.
       </>
     ),
   },
   {
     id: 'education',
     label: 'Education',
+    title: 'CSE @ UAP',
     icon: 'ri-graduation-cap-line',
-    span: 'narrow',
     illust: IllustEducation,
     body: (
       <>
@@ -155,8 +137,8 @@ const CARDS = [
   {
     id: 'location',
     label: 'Location',
+    title: 'Dhaka & Beyond',
     icon: 'ri-map-pin-2-line',
-    span: 'narrow',
     illust: IllustLocation,
     body: (
       <ul className="gtk-list">
@@ -169,8 +151,8 @@ const CARDS = [
   {
     id: 'interests',
     label: 'Interests',
+    title: 'Where I Go Deep',
     icon: 'ri-sparkling-2-line',
-    span: 'wide',
     illust: IllustInterests,
     body: (
       <ul className="gtk-list">
@@ -182,82 +164,111 @@ const CARDS = [
   },
 ]
 
-const ENTRY = {
-  hidden: { opacity: 0, y: 28, rotateX: -8, scale: 0.97 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    rotateX: 0,
-    scale: 1,
-    transition: { type: 'spring', stiffness: 110, damping: 14, mass: 0.7, delay: i * 0.07 },
-  }),
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(
+    typeof window !== 'undefined' ? window.innerWidth >= 768 : true
+  )
+  useEffect(() => {
+    const onResize = () => setIsDesktop(window.innerWidth >= 768)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+  return isDesktop
 }
 
-function GTKCard({ card, index }) {
-  const ref = useRef(null)
-  const [tilt, setTilt] = useState({ x: 0, y: 0 })
-  const [spot, setSpot] = useState({ x: 50, y: 50 })
-  const [hover, setHover] = useState(false)
+function ExpandCard({ card, index, active, onActivate }) {
   const Illust = card.illust
+  const isActive = active === index
+  const cardRef = useRef(null)
 
-  const onMove = useCallback((e) => {
-    const el = ref.current
+  const onPointerMove = (e) => {
+    const el = cardRef.current
     if (!el) return
     const r = el.getBoundingClientRect()
-    const px = (e.clientX - r.left) / r.width
-    const py = (e.clientY - r.top) / r.height
-    setTilt({ x: (px - 0.5) * 12, y: (py - 0.5) * -8 })
-    setSpot({ x: px * 100, y: py * 100 })
-  }, [])
-
-  const onLeave = useCallback(() => {
-    setHover(false)
-    setTilt({ x: 0, y: 0 })
-  }, [])
+    el.style.setProperty('--gx', `${e.clientX - r.left}px`)
+    el.style.setProperty('--gy', `${e.clientY - r.top}px`)
+  }
 
   return (
-    <motion.div
-      ref={ref}
-      className={`gtk-card gtk-card--${card.span}`}
-      custom={index}
-      variants={ENTRY}
-      onMouseMove={onMove}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={onLeave}
-      animate={{ rotateX: tilt.y, rotateY: tilt.x, z: hover ? 14 : 0 }}
-      transition={{ type: 'spring', stiffness: 380, damping: 32, mass: 0.7 }}
-      style={{ transformStyle: 'preserve-3d' }}
+    <li
+      ref={cardRef}
+      className="gtk-exp-card"
+      data-active={isActive}
+      role="tab"
+      tabIndex={0}
+      aria-selected={isActive}
+      onMouseEnter={() => onActivate(index)}
+      onFocus={() => onActivate(index)}
+      onClick={() => onActivate(index)}
+      onPointerMove={onPointerMove}
     >
-      {/* pointer spotlight */}
-      <div
-        className="gtk-spot"
-        style={{
-          opacity: hover ? 1 : 0,
-          background: `radial-gradient(340px circle at ${spot.x}% ${spot.y}%, var(--accent-glow), transparent 55%)`,
-        }}
-      />
-      {/* rim light */}
-      <div className="gtk-rim" />
-
-      {/* corner illustration */}
-      <div className="gtk-illust" aria-hidden>
+      <div className="gtk-exp-spot" aria-hidden />
+      <div className="gtk-exp-rim" aria-hidden />
+      <div className="gtk-exp-bg" aria-hidden>
         <Illust />
       </div>
+      <div className="gtk-exp-vignette" aria-hidden />
 
-      <div className="gtk-head">
-        <span className="gtk-icon-wrap">
-          <i className={`gtk-icon ${card.icon}`} />
-        </span>
-        <span className="gtk-label">{card.label}</span>
-        <span className="gtk-pulse" />
-      </div>
+      <span className="gtk-exp-vlabel" aria-hidden>{card.label}</span>
 
-      <div className="gtk-body">{card.body}</div>
-    </motion.div>
+      <AnimatePresence mode="wait">
+        {isActive && (
+          <motion.article
+            key={card.id}
+            className="gtk-exp-content"
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={{
+              hidden: { transition: { staggerChildren: 0 } },
+              visible: { transition: { staggerChildren: 0.075, delayChildren: 0.05 } },
+            }}
+          >
+            <motion.div
+              className="gtk-exp-icon"
+              variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}
+            >
+              <i className={card.icon} />
+            </motion.div>
+            <motion.span
+              className="gtk-exp-label"
+              variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}
+            >
+              {card.label}
+            </motion.span>
+            <motion.h3
+              className="gtk-exp-title"
+              variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}
+            >
+              {card.title}
+            </motion.h3>
+            <motion.div
+              className="gtk-exp-body"
+              variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}
+            >
+              {card.body}
+            </motion.div>
+            <motion.span
+              className="gtk-exp-rule"
+              variants={{ hidden: { opacity: 0, scaleX: 0 }, visible: { opacity: 1, scaleX: 1 } }}
+              style={{ transformOrigin: 'left center' }}
+            />
+          </motion.article>
+        )}
+      </AnimatePresence>
+    </li>
   )
 }
 
 export default function GetToKnowMe() {
+  const [active, setActive] = useState(0)
+  const isDesktop = useIsDesktop()
+
+  const ladder = CARDS.map((_, i) => (i === active ? '5fr' : '1fr')).join(' ')
+  const gridStyle = isDesktop
+    ? { gridTemplateColumns: ladder, gridTemplateRows: '1fr' }
+    : { gridTemplateRows: ladder, gridTemplateColumns: '1fr' }
+
   return (
     <section className="gtk-section">
       <div className="container">
@@ -267,17 +278,19 @@ export default function GetToKnowMe() {
           <p>A concise look at my current focus, background, and the work I enjoy.</p>
         </div>
 
-        <motion.div
-          className="gtk-grid"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px', amount: 0.15 }}
-          style={{ perspective: 1400 }}
+        <motion.ul
+          className="gtk-expand"
+          role="tablist"
+          style={gridStyle}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
           {CARDS.map((c, i) => (
-            <GTKCard key={c.id} card={c} index={i} />
+            <ExpandCard key={c.id} card={c} index={i} active={active} onActivate={setActive} />
           ))}
-        </motion.div>
+        </motion.ul>
       </div>
 
       <style>{`
@@ -288,153 +301,218 @@ export default function GetToKnowMe() {
           font-family: var(--font-body);
         }
 
-        .gtk-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: clamp(12px, 1.3vw, 18px);
-          max-width: 1040px;
+        .gtk-expand {
+          list-style: none;
+          padding: 0;
           margin: 0 auto;
+          display: grid;
+          gap: 10px;
+          width: 100%;
+          max-width: 1180px;
+          height: clamp(440px, 52vh, 540px);
         }
 
-        /* bento placement */
-        .gtk-card:nth-child(1) { grid-column: 1 / span 2; grid-row: 1; }
-        .gtk-card:nth-child(2) { grid-column: 1 / span 2; grid-row: 2; }
-        .gtk-card:nth-child(3) { grid-column: 3; grid-row: 1; }
-        .gtk-card:nth-child(4) { grid-column: 3; grid-row: 2; }
-        .gtk-card:nth-child(5) { grid-column: 1 / -1; grid-row: 3; }
+        @media (prefers-reduced-motion: no-preference) {
+          .gtk-expand {
+            transition: grid-template-columns 520ms cubic-bezier(0.22, 1, 0.36, 1),
+                        grid-template-rows 520ms cubic-bezier(0.22, 1, 0.36, 1);
+          }
+        }
 
-        .gtk-card {
+        .gtk-exp-card {
+          --gx: 50%;
+          --gy: 50%;
+          --spot-size: 320px;
           position: relative;
-          padding: clamp(14px, 1.5vw, 20px) clamp(16px, 1.7vw, 22px);
-          background: var(--bg-card);
-          border: 1px solid var(--border);
-          border-radius: 14px;
-          box-shadow: var(--shadow-card);
           overflow: hidden;
-          will-change: transform;
-          transition: border-color 0.3s ease, box-shadow 0.3s ease;
-          color: var(--text-primary);
-          font-family: var(--font-body);
+          border-radius: 14px;
+          border: 1px solid var(--border);
+          background: var(--bg-card);
+          box-shadow: var(--shadow-card);
+          cursor: pointer;
+          min-width: 0;
+          min-height: 0;
+          outline: none;
+          isolation: isolate;
+          transition: border-color 0.35s ease, box-shadow 0.35s ease;
         }
 
-        .gtk-card:hover {
+        /* pointer-tracked spotlight wash (accent-tinted) */
+        .gtk-exp-spot {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          border-radius: inherit;
+          background: radial-gradient(
+            var(--spot-size) var(--spot-size) at var(--gx) var(--gy),
+            var(--accent-glow),
+            transparent 60%
+          );
+          opacity: 0;
+          transition: opacity 0.35s ease;
+        }
+        .gtk-exp-card:hover .gtk-exp-spot { opacity: 1; }
+
+        /* cursor-following bright accent rim (border-only via mask) */
+        .gtk-exp-rim {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          border-radius: inherit;
+          padding: 1px;
+          background: radial-gradient(
+            calc(var(--spot-size) * 0.7) calc(var(--spot-size) * 0.7) at var(--gx) var(--gy),
+            var(--accent),
+            transparent 65%
+          );
+          -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+                  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          -webkit-mask-composite: xor;
+                  mask-composite: exclude;
+          opacity: 0;
+          transition: opacity 0.35s ease;
+        }
+        .gtk-exp-card:hover .gtk-exp-rim,
+        .gtk-exp-card:focus-visible .gtk-exp-rim { opacity: 0.9; }
+
+        .gtk-exp-card:focus-visible { border-color: var(--accent); }
+        .gtk-exp-card[data-active="true"] {
           border-color: var(--accent);
-          box-shadow: 0 18px 50px -24px var(--accent-glow),
-                      0 10px 28px -12px rgba(0,0,0,0.35);
+          box-shadow: 0 22px 60px -24px var(--accent-glow),
+                      0 12px 32px -14px rgba(0, 0, 0, 0.35);
         }
 
-        /* accent stripe */
-        .gtk-card::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: clamp(16px, 1.7vw, 22px);
-          width: clamp(32px, 4vw, 48px);
-          height: 2px;
-          background: var(--accent);
-          opacity: 0.85;
-          border-radius: 2px;
-        }
-
-        /* pointer spotlight */
-        .gtk-spot {
+        /* background art */
+        .gtk-exp-bg {
           position: absolute;
           inset: 0;
-          pointer-events: none;
-          border-radius: inherit;
-          transition: opacity 0.3s ease;
-        }
-
-        /* surface rim light */
-        .gtk-rim {
-          position: absolute;
-          inset: 0;
-          border-radius: inherit;
-          pointer-events: none;
-          background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent 55%);
-        }
-
-        [data-theme="light"] .gtk-rim {
-          background: linear-gradient(135deg, rgba(255,255,255,0.5), transparent 60%);
-        }
-
-        /* corner illustration */
-        .gtk-illust {
-          position: absolute;
-          right: -10px;
-          bottom: -6px;
-          width: clamp(110px, 13vw, 160px);
           color: var(--accent);
-          opacity: 0.22;
+          opacity: 0.18;
+          transform: scale(1.08);
+          transition: opacity 0.45s ease, transform 0.6s ease;
           pointer-events: none;
-          transition: opacity 0.4s ease, transform 0.5s ease;
-          will-change: transform;
+        }
+        .gtk-exp-bg svg { width: 100%; height: 100%; display: block; }
+        .gtk-exp-card[data-active="true"] .gtk-exp-bg {
+          opacity: 0.48;
+          transform: scale(1);
         }
 
-        .gtk-illust svg { width: 100%; height: auto; display: block; }
-
-        .gtk-card:hover .gtk-illust {
-          opacity: 0.38;
-          transform: translate(-4px, -4px);
+        /* vignette for legibility */
+        .gtk-exp-vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: linear-gradient(
+            180deg,
+            var(--bg-card) 0%,
+            rgba(0, 0, 0, 0) 35%,
+            rgba(0, 0, 0, 0) 55%,
+            var(--bg-card) 100%
+          );
+        }
+        [data-theme="light"] .gtk-exp-vignette {
+          background: linear-gradient(
+            180deg,
+            var(--bg-card) 0%,
+            rgba(244, 239, 230, 0) 35%,
+            rgba(244, 239, 230, 0) 55%,
+            var(--bg-card) 100%
+          );
         }
 
-        .gtk-head {
+        /* collapsed vertical label */
+        .gtk-exp-vlabel {
+          position: absolute;
+          left: 18px;
+          bottom: 20px;
+          writing-mode: vertical-rl;
+          transform: rotate(180deg);
+          font-family: var(--font-mono);
+          font-size: 0.72rem;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          color: var(--text-secondary);
+          opacity: 1;
+          transition: opacity 0.3s ease;
+          pointer-events: none;
+          white-space: nowrap;
+        }
+        .gtk-exp-card[data-active="true"] .gtk-exp-vlabel { opacity: 0; }
+
+        @media (max-width: 767px) {
+          .gtk-exp-vlabel {
+            writing-mode: horizontal-tb;
+            transform: none;
+            left: 20px;
+            bottom: auto;
+            top: 50%;
+            translate: 0 -50%;
+          }
+        }
+
+        /* expanded content */
+        .gtk-exp-content {
+          position: absolute;
+          inset: auto 0 0 0;
+          padding: clamp(20px, 2.2vw, 32px);
           display: flex;
-          align-items: center;
-          gap: 9px;
-          margin-bottom: 0.65rem;
-          position: relative;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+          color: var(--text-primary);
         }
 
-        .gtk-icon-wrap {
+        .gtk-exp-icon {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 28px;
-          height: 28px;
-          border-radius: 8px;
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
           background: var(--accent-glow);
           border: 1px solid var(--border);
           color: var(--accent);
-          flex-shrink: 0;
+          font-size: 1.1rem;
+          margin-bottom: 2px;
         }
 
-        .gtk-icon { font-size: 0.95rem; }
-
-        .gtk-label {
+        .gtk-exp-label {
           font-family: var(--font-mono);
-          font-size: 0.68rem;
-          letter-spacing: 0.26em;
+          font-size: 0.7rem;
+          letter-spacing: 0.28em;
           text-transform: uppercase;
           color: var(--text-secondary);
           font-weight: 600;
         }
 
-        .gtk-pulse {
-          margin-left: auto;
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: var(--accent);
-          opacity: 0.65;
-          box-shadow: 0 0 0 0 var(--accent-glow);
-          animation: gtkPulse 2.4s ease-in-out infinite;
+        .gtk-exp-title {
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: clamp(1.4rem, 1.8vw, 1.95rem);
+          line-height: 1.15;
+          color: var(--text-primary);
+          margin: 0;
+          letter-spacing: -0.01em;
         }
 
-        @keyframes gtkPulse {
-          0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
-          50% { box-shadow: 0 0 0 6px transparent; }
-        }
-
-        .gtk-body {
-          position: relative;
+        .gtk-exp-body {
           color: var(--text-secondary);
           font-family: var(--font-body);
-          font-size: 0.9rem;
-          line-height: 1.55;
+          font-size: 0.95rem;
+          line-height: 1.6;
+          max-width: 42ch;
         }
+        .gtk-exp-body strong { font-weight: 600; }
 
-        .gtk-body strong { font-weight: 600; }
+        .gtk-exp-rule {
+          display: block;
+          width: 56px;
+          height: 2px;
+          background: var(--accent);
+          border-radius: 2px;
+          margin-top: 6px;
+        }
 
         .gtk-list {
           list-style: none;
@@ -444,14 +522,12 @@ export default function GetToKnowMe() {
           flex-direction: column;
           gap: 6px;
         }
-
         .gtk-list li {
           display: flex;
           align-items: center;
           gap: 9px;
-          font-size: 0.9rem;
+          font-size: 0.92rem;
         }
-
         .gtk-list li i {
           color: var(--accent);
           font-size: 0.95rem;
@@ -466,7 +542,6 @@ export default function GetToKnowMe() {
           gap: 8px;
           margin-top: 6px;
         }
-
         .gtk-kv-tag {
           font-family: var(--font-mono);
           font-size: 0.58rem;
@@ -478,7 +553,6 @@ export default function GetToKnowMe() {
           border: 1px solid var(--border);
           border-radius: 999px;
         }
-
         .gtk-kv-val {
           color: var(--text-primary);
           font-family: var(--font-display);
@@ -486,20 +560,23 @@ export default function GetToKnowMe() {
           font-size: 0.92rem;
         }
 
-        @media (max-width: 900px) {
-          .gtk-grid { grid-template-columns: repeat(2, 1fr); }
-          .gtk-card:nth-child(1) { grid-column: 1 / -1; grid-row: auto; }
-          .gtk-card:nth-child(2) { grid-column: 1 / -1; grid-row: auto; }
-          .gtk-card:nth-child(3) { grid-column: 1; grid-row: auto; }
-          .gtk-card:nth-child(4) { grid-column: 2; grid-row: auto; }
-          .gtk-card:nth-child(5) { grid-column: 1 / -1; grid-row: auto; }
+        /* ─── mobile ─── */
+        @media (max-width: 767px) {
+          .gtk-expand {
+            height: clamp(520px, 80vh, 700px);
+            max-width: 560px;
+          }
+          .gtk-exp-content {
+            padding: clamp(18px, 4vw, 24px);
+          }
+          .gtk-exp-title { font-size: 1.4rem; }
+          .gtk-exp-body { font-size: 0.9rem; }
         }
 
-        @media (max-width: 560px) {
-          .gtk-grid { grid-template-columns: 1fr; }
-          .gtk-card,
-          .gtk-card:nth-child(n) { grid-column: 1 / -1; }
-          .gtk-illust { width: 100px; }
+        @media (max-width: 480px) {
+          .gtk-expand { gap: 8px; }
+          .gtk-exp-bg { opacity: 0.14; }
+          .gtk-exp-card[data-active="true"] .gtk-exp-bg { opacity: 0.42; }
         }
       `}</style>
     </section>

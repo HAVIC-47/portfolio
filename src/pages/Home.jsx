@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 import ParticleCanvas from '../components/ParticleCanvas'
 import ScrollReveal from '../components/ScrollReveal'
 import TiltCard from '../components/TiltCard'
@@ -8,7 +9,16 @@ import ContactScrollSequence from '../components/ContactScrollSequence'
 import GetToKnowMe from '../components/GetToKnowMe'
 import WhatDrivesMe from '../components/WhatDrivesMe'
 import FutureInterests from '../components/FutureInterests'
+import GlowStat from '../components/GlowStat'
 import gsap from 'gsap'
+
+const roles = [
+  { label: 'Full-Stack Developer', icon: 'ri-code-s-slash-line' },
+  { label: 'AI / ML Engineer', icon: 'ri-brain-line' },
+  { label: 'UI / UX Designer', icon: 'ri-palette-line' },
+  { label: 'Problem Solver', icon: 'ri-lightbulb-flash-line' },
+]
+
 
 /* Fake code lines for the code editor panel */
 const codeLines = [
@@ -143,6 +153,19 @@ const socials = [
 export default function Home() {
   const heroRef = useRef(null)
   const [sent, setSent] = useState(false)
+  const [roleIdx, setRoleIdx] = useState(0)
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    const id = setInterval(() => setRoleIdx(i => (i + 1) % roles.length), 2600)
+    return () => clearInterval(id)
+  }, [])
+
+  function copyEmail() {
+    navigator.clipboard?.writeText('faisaladobe666@gmail.com')
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1600)
+  }
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -286,15 +309,15 @@ export default function Home() {
       )
 
       tl.fromTo('.avatar-glow-ring',
-        { opacity: 0, scale: 0.6, rotation: -120 },
-        { opacity: 1, scale: 1, rotation: 0, duration: 0.35, ease: 'power2.out' },
-        1.15
+        { opacity: 0 },
+        { opacity: 1, duration: 0.05, ease: 'none' },
+        0
       )
 
       tl.fromTo('.avatar-img',
-        { opacity: 0, scale: 0.7, filter: 'blur(10px)' },
-        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.3, ease: 'power2.out' },
-        1.25
+        { opacity: 0 },
+        { opacity: 1, duration: 0.05, ease: 'none' },
+        0
       )
 
       tl.to('.avatar-glow-ring', {
@@ -476,42 +499,155 @@ export default function Home() {
         <div className="hero-orb hero-orb--cool" />
 
         <div className="container hero-content-wrap">
-          <div className="hero-grid">
-            <div className="hero-text-col">
-              <p className="mono hero-mono" style={{ opacity: 0 }}>// hello, world</p>
-              <h1 className="hero-heading" style={{ opacity: 0 }}>
-                I'm <span className="accent-text">Faisal Hossain</span>
-              </h1>
-              <p className="hero-desc" style={{ opacity: 0 }}>
-                An aspiring <strong>Python full-stack developer</strong> who loves turning ideas into real-world applications — from AI projects to web platforms.
+          <div className="hero-split">
+            {/* ─── LEFT COLUMN ─── */}
+            <div className="hs-col hs-col--left">
+              <p className="mono hero-mono hs-mono" style={{ opacity: 0 }}>
+                // available · spring 2026
               </p>
-              <div className="hero-buttons" style={{ opacity: 0 }}>
-                <a href="#projects" className="btn btn-primary hero-btn">
-                  <i className="ri-code-s-slash-line"></i> View Projects
-                </a>
-                <a href="#about" className="btn btn-outline hero-btn">
-                  <i className="ri-user-line"></i> About Me
-                </a>
-              </div>
-              <div className="hero-socials">
-                <a href="https://github.com/HAVIC-47" target="_blank" rel="noopener noreferrer" className="social-icon hero-social-icon" style={{ opacity: 0 }}><i className="ri-github-fill"></i></a>
-                <a href="https://www.facebook.com/HAVIC47" target="_blank" rel="noopener noreferrer" className="social-icon hero-social-icon" style={{ opacity: 0 }}><i className="ri-facebook-fill"></i></a>
-                <a href="https://www.instagram.com/visuals_of_faisal" target="_blank" rel="noopener noreferrer" className="social-icon hero-social-icon" style={{ opacity: 0 }}><i className="ri-instagram-line"></i></a>
-                <a href="https://discord.gg/pgakM24PEs" target="_blank" rel="noopener noreferrer" className="social-icon hero-social-icon" style={{ opacity: 0 }}><i className="ri-discord-fill"></i></a>
-              </div>
+
+              <h1 className="hero-heading hs-heading" style={{ opacity: 0 }}>
+                <span className="hs-name-row">Faisal</span>
+                <span className="hs-name-row">
+                  <span className="accent-text hero-name">Hossain</span>
+                  <span className="hs-period">.</span>
+                </span>
+              </h1>
+
+              <motion.span
+                className="hs-rule"
+                initial={{ opacity: 0, scaleX: 0 }}
+                animate={{ opacity: 1, scaleX: 1 }}
+                transition={{ delay: 2.25, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                aria-hidden
+              />
+
+              <motion.div
+                className="hs-meta-stack"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 2.35, duration: 0.5 }}
+              >
+                <span className="hs-meta-line">
+                  <i className="ri-map-pin-2-line" /> Dhaka, BD · GMT+6
+                </span>
+                <span className="hs-meta-line">
+                  <i className="ri-graduation-cap-line" /> CSE · UAP — 2022→2026
+                </span>
+              </motion.div>
             </div>
-            <div className="hero-avatar-col">
-              <div className="avatar-wrap">
-                <div className="avatar-glow-ring" style={{ opacity: 0 }} />
-                <img
-                  src="https://avatars.githubusercontent.com/u/123256888?v=4"
-                  alt="Faisal Hossain"
-                  className="avatar-img"
-                  style={{ opacity: 0 }}
-                />
+
+            {/* ─── CENTER PORTRAIT ─── */}
+            <motion.div
+              className="hs-col hs-col--center"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.05, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="hs-frame">
+                <span className="hs-corner hs-corner--tl" aria-hidden />
+                <span className="hs-corner hs-corner--tr" aria-hidden />
+                <span className="hs-corner hs-corner--bl" aria-hidden />
+                <span className="hs-corner hs-corner--br" aria-hidden />
+
+                <div className="avatar-wrap hs-avatar-wrap">
+                  <div className="avatar-glow-ring hs-avatar-ring" style={{ opacity: 0 }} />
+                  <img
+                    src="https://avatars.githubusercontent.com/u/123256888?v=4"
+                    alt="Faisal Hossain"
+                    className="avatar-img hs-avatar-img"
+                    style={{ opacity: 0 }}
+                  />
+                </div>
+              </div>
+
+              <div className="hs-frame-cap">
+                <span className="hs-frame-name">Faisal Hossain</span>
+              </div>
+            </motion.div>
+
+            {/* ─── RIGHT COLUMN ─── */}
+            <div className="hs-col hs-col--right">
+              <motion.div
+                className="hs-role"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 2.32, duration: 0.5 }}
+                aria-live="polite"
+              >
+                <span className="hs-role-prefix">I'm a</span>
+                <span className="hs-role-rotator">
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={roleIdx}
+                      className="hs-role-chip"
+                      initial={{ y: 14, opacity: 0, filter: 'blur(6px)' }}
+                      animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+                      exit={{ y: -14, opacity: 0, filter: 'blur(6px)' }}
+                      transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <i className={roles[roleIdx].icon} />
+                      <span>{roles[roleIdx].label}</span>
+                    </motion.span>
+                  </AnimatePresence>
+                </span>
+              </motion.div>
+
+              <p className="hero-desc hs-desc" style={{ opacity: 0 }}>
+                A <strong>Python full-stack developer</strong> turning curious ideas into AI tools, clean web apps, and delightful interfaces.
+              </p>
+
+              <div className="hero-buttons hs-ctas" style={{ opacity: 0 }}>
+                <a href="#projects" className="btn btn-primary hero-btn hero-btn-cta">
+                  <span>View my work</span>
+                  <span className="hero-btn-arrow"><i className="ri-arrow-right-up-line" /></span>
+                </a>
+                <a href="#contact" className="btn btn-outline hero-btn hero-btn-ghost">
+                  <span>Say hi</span>
+                </a>
+              </div>
+
+              <motion.button
+                type="button"
+                className="hs-email"
+                onClick={copyEmail}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 2.5, duration: 0.5 }}
+                whileHover={{ y: -1 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <i className={copied ? 'ri-check-line' : 'ri-at-line'} />
+                <span>{copied ? 'Copied!' : 'faisaladobe666@gmail.com'}</span>
+              </motion.button>
+
+              <div className="hero-socials hs-socials">
+                <a href="https://github.com/HAVIC-47" target="_blank" rel="noopener noreferrer" className="social-icon hero-social-icon" style={{ opacity: 0 }} aria-label="GitHub"><i className="ri-github-fill"></i></a>
+                <a href="https://www.facebook.com/HAVIC47" target="_blank" rel="noopener noreferrer" className="social-icon hero-social-icon" style={{ opacity: 0 }} aria-label="Facebook"><i className="ri-facebook-fill"></i></a>
+                <a href="https://www.instagram.com/visuals_of_faisal" target="_blank" rel="noopener noreferrer" className="social-icon hero-social-icon" style={{ opacity: 0 }} aria-label="Instagram"><i className="ri-instagram-line"></i></a>
+                <a href="https://discord.gg/pgakM24PEs" target="_blank" rel="noopener noreferrer" className="social-icon hero-social-icon" style={{ opacity: 0 }} aria-label="Discord"><i className="ri-discord-fill"></i></a>
               </div>
             </div>
           </div>
+
+          {/* Scroll cue */}
+          <motion.a
+            href="#about"
+            className="hs-scroll"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2.7, duration: 0.6 }}
+            aria-label="Scroll to explore"
+          >
+            <span className="hs-scroll-label">Scroll</span>
+            <motion.span
+              className="hs-scroll-icon"
+              animate={{ y: [0, 5, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <i className="ri-arrow-down-line" />
+            </motion.span>
+          </motion.a>
         </div>
       </section>
 
@@ -552,9 +688,9 @@ export default function Home() {
                 </ScrollReveal>
                 <ScrollReveal>
                   <div className="about-stats">
-                    <div className="stat-item"><div className="stat-number">15+</div><div className="stat-label">Repositories</div></div>
-                    <div className="stat-item"><div className="stat-number">3+</div><div className="stat-label">Years Coding</div></div>
-                    <div className="stat-item"><div className="stat-number">6+</div><div className="stat-label">Languages</div></div>
+                    <GlowStat value="15+" label="Repositories" />
+                    <GlowStat value="3+" label="Years Coding" />
+                    <GlowStat value="6+" label="Languages" />
                   </div>
                 </ScrollReveal>
               </div>
@@ -1031,90 +1167,336 @@ export default function Home() {
           left: -6%;
         }
 
-        /* ── Hero content ── */
+        /* ── Hero content (3-column split with center portrait) ── */
         .hero-content-wrap {
           position: absolute;
           inset: 0;
           z-index: 8;
           display: flex;
-          align-items: center;
-          padding-top: 64px;
-          pointer-events: none;
-        }
-        .hero-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 4rem;
-          align-items: center;
-          width: 100%;
-        }
-        .hero-text-col {
-          display: flex;
           flex-direction: column;
-          pointer-events: auto;
-        }
-        .hero-mono {
-          color: var(--accent);
-          margin-bottom: 1rem;
-          will-change: transform, opacity;
-        }
-        .hero-heading {
-          margin-bottom: 1rem;
-          will-change: transform, opacity, filter;
-        }
-        .hero-desc {
-          font-size: 1.15rem;
-          color: var(--text-secondary);
-          margin-bottom: 2rem;
-          max-width: 440px;
-          will-change: transform, opacity;
-        }
-        .hero-desc strong { color: var(--text-primary); }
-        .hero-buttons {
-          display: flex;
-          gap: 1rem;
-          flex-wrap: wrap;
-        }
-        .hero-btn { will-change: transform, opacity; }
-        .hero-socials {
-          display: flex;
-          gap: 0.75rem;
-          margin-top: 2rem;
-        }
-        .hero-social-icon { will-change: transform, opacity; }
-
-        /* ── Avatar ── */
-        .hero-avatar-col {
-          display: flex;
           justify-content: center;
           align-items: center;
+          padding: 96px 24px 48px;
+          pointer-events: none;
+        }
+        .hero-split {
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          align-items: center;
+          gap: clamp(2.5rem, 6vw, 5.5rem);
+          width: 100%;
+          max-width: 1240px;
           pointer-events: auto;
         }
-        .avatar-wrap {
+
+        /* Pulse keyframe (used by online dot) */
+        @keyframes hero-pulse {
+          0%   { box-shadow: 0 0 0 0 rgba(62,207,142,0.55); }
+          70%  { box-shadow: 0 0 0 10px rgba(62,207,142,0); }
+          100% { box-shadow: 0 0 0 0 rgba(62,207,142,0); }
+        }
+
+        .hs-col { display: flex; flex-direction: column; }
+
+        /* ─ LEFT COLUMN ─ */
+        .hs-col--left {
+          align-items: flex-end;
+          text-align: right;
+          gap: 1rem;
+        }
+        .hero-mono.hs-mono {
+          margin: 0;
+          color: var(--text-muted);
+          font-family: var(--font-mono);
+          font-size: 0.78rem;
+          letter-spacing: 0.06em;
+          will-change: transform, opacity;
+        }
+        .hero-heading.hs-heading {
+          margin: 0;
+          font-family: var(--font-display);
+          font-weight: 600;
+          font-size: clamp(2.6rem, 5.4vw, 4.6rem);
+          line-height: 0.94;
+          letter-spacing: -0.04em;
+          color: var(--heading, var(--text-primary));
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 0.04em;
+          will-change: transform, opacity, filter;
+        }
+        .hs-name-row { display: inline-flex; align-items: baseline; }
+        .hero-name {
+          background: linear-gradient(95deg, var(--accent) 0%, color-mix(in oklab, var(--accent) 60%, var(--text-primary)) 55%, var(--accent) 100%);
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-size: 220% 100%;
+          animation: hero-shine 7s linear infinite;
+        }
+        @keyframes hero-shine {
+          0%   { background-position: 0% 0%; }
+          100% { background-position: 220% 0%; }
+        }
+        .hs-period { color: var(--accent); margin-left: 0.04em; }
+        .hs-rule {
+          display: block;
+          width: 64px;
+          height: 1px;
+          background: var(--accent);
+          opacity: 0.6;
+          transform-origin: right center;
+        }
+        .hs-meta-stack {
+          display: flex;
+          flex-direction: column;
+          gap: 0.35rem;
+          align-items: flex-end;
+        }
+        .hs-meta-line {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-family: var(--font-mono);
+          font-size: 0.72rem;
+          color: var(--text-muted);
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+        .hs-meta-line i { color: var(--accent); font-size: 0.95rem; }
+
+        /* ─ CENTER PORTRAIT ─ */
+        .hs-col--center {
+          align-items: center;
+          gap: 0.85rem;
+        }
+        .hs-frame {
           position: relative;
+          width: clamp(220px, 24vw, 320px);
+          aspect-ratio: 1 / 1;
+          padding: 14px;
+        }
+        .hs-corner {
+          position: absolute;
+          width: 18px;
+          height: 18px;
+          border: 1.5px solid var(--accent);
+          opacity: 0.85;
+        }
+        .hs-corner--tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+        .hs-corner--tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+        .hs-corner--bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+        .hs-corner--br { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+        .avatar-wrap.hs-avatar-wrap {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+        .avatar-glow-ring.hs-avatar-ring {
+          position: absolute;
+          inset: -1px;
+          border-radius: 22px;
+          border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+          box-shadow: 0 0 50px var(--accent-glow), inset 0 0 32px color-mix(in oklab, var(--accent) 10%, transparent);
+          will-change: transform, opacity;
+          z-index: 0;
+        }
+        .avatar-img.hs-avatar-img {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 20px;
+          border: 1px solid var(--border);
+          box-shadow: 0 24px 60px -22px rgba(0,0,0,0.55);
+          z-index: 1;
+          will-change: transform, opacity, filter;
+          filter: grayscale(0.08) contrast(1.02);
+        }
+        .hs-online {
+          position: absolute;
+          left: 50%;
+          bottom: -14px;
+          transform: translateX(-50%);
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          padding: 0.3rem 0.65rem;
+          border-radius: 999px;
+          background: color-mix(in oklab, var(--bg-card) 92%, transparent);
+          border: 1px solid var(--border);
+          backdrop-filter: blur(8px);
+          font-family: var(--font-mono);
+          font-size: 0.65rem;
+          color: var(--text-secondary);
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          z-index: 4;
+          box-shadow: 0 8px 24px -10px rgba(0,0,0,0.35);
+        }
+        .hs-online-dot {
+          width: 7px; height: 7px;
+          border-radius: 50%;
+          background: #3ecf8e;
+          animation: hero-pulse 2s ease-out infinite;
+        }
+        .hs-frame-cap {
+          margin-top: 1rem;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.6rem;
+          font-family: var(--font-mono);
+          font-size: 0.68rem;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: var(--text-muted);
+        }
+        .hs-frame-num { color: var(--accent); }
+        .hs-frame-name { color: var(--text-secondary); }
+
+        /* ─ RIGHT COLUMN ─ */
+        .hs-col--right {
+          align-items: flex-start;
+          text-align: left;
+          gap: 1rem;
+        }
+        .hs-role {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.55rem;
+        }
+        .hs-role-prefix {
+          font-family: var(--font-mono);
+          font-size: 0.78rem;
+          color: var(--text-muted);
+          letter-spacing: 0.04em;
+        }
+        .hs-role-rotator {
+          position: relative;
+          display: inline-flex;
+          height: 2rem;
+          overflow: hidden;
+          align-items: center;
+        }
+        .hs-role-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.45rem;
+          padding: 0.32rem 0.8rem;
+          border: 1px solid var(--border);
+          border-radius: 999px;
+          font-family: var(--font-body);
+          font-size: 0.88rem;
+          font-weight: 500;
+          color: var(--text-primary);
+          background: color-mix(in oklab, var(--bg-card) 50%, transparent);
+          backdrop-filter: blur(8px);
+          white-space: nowrap;
+        }
+        .hs-role-chip i { color: var(--accent); font-size: 0.95rem; }
+
+        .hero-desc.hs-desc {
+          margin: 0;
+          max-width: 320px;
+          font-size: 1rem;
+          line-height: 1.6;
+          color: var(--text-secondary);
+          will-change: transform, opacity;
+        }
+        .hero-desc.hs-desc strong {
+          color: var(--text-primary);
+          font-weight: 600;
+        }
+
+        .hero-buttons.hs-ctas {
+          display: inline-flex;
+          gap: 0.7rem;
+          flex-wrap: wrap;
+        }
+        .hero-btn {
+          will-change: transform, opacity;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.55rem;
+          font-weight: 600;
+          letter-spacing: 0.005em;
+          transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+        }
+        .hero-btn-cta { padding-right: 0.55rem; }
+        .hero-btn-arrow {
           display: inline-flex;
           align-items: center;
           justify-content: center;
+          width: 26px; height: 26px;
+          border-radius: 999px;
+          background: var(--text-on-accent, #ffffff);
+          color: var(--accent);
+          transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .avatar-glow-ring {
-          position: absolute;
-          width: 320px;
-          height: 320px;
-          border-radius: 50%;
-          border: 3px solid rgba(78, 205, 196, 0.5);
-          box-shadow: 0 0 60px rgba(78, 205, 196, 0.25), inset 0 0 60px rgba(78, 205, 196, 0.08);
-          will-change: transform, opacity;
+        .hero-btn-cta:hover .hero-btn-arrow {
+          transform: translate(2px, -2px) rotate(-8deg);
         }
-        .avatar-img {
-          width: 300px;
-          height: 300px;
+        .hero-btn-cta:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 18px 40px -16px var(--accent-glow), 0 6px 16px -6px rgba(0,0,0,0.25);
+        }
+        .hero-btn-ghost:hover {
+          transform: translateY(-2px);
+          border-color: var(--accent);
+          color: var(--accent);
+        }
+
+        .hs-email {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: transparent;
+          border: none;
+          padding: 0;
+          font-family: var(--font-mono);
+          font-size: 0.78rem;
+          color: var(--text-muted);
+          letter-spacing: 0.02em;
+          cursor: pointer;
+          transition: color 0.25s ease;
+        }
+        .hs-email i { color: var(--accent); font-size: 0.95rem; }
+        .hs-email:hover { color: var(--text-primary); }
+
+        .hero-socials.hs-socials {
+          display: inline-flex;
+          gap: 0.55rem;
+          margin-top: 0.1rem;
+        }
+        .hero-social-icon { will-change: transform, opacity; }
+
+        /* Scroll cue (under the split) */
+        .hs-scroll {
+          margin-top: 2rem;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.55rem;
+          font-family: var(--font-mono);
+          font-size: 0.7rem;
+          text-transform: uppercase;
+          letter-spacing: 0.22em;
+          color: var(--text-muted);
+          text-decoration: none;
+          transition: color 0.25s ease;
+          pointer-events: auto;
+        }
+        .hs-scroll:hover { color: var(--accent); }
+        .hs-scroll-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 24px; height: 24px;
           border-radius: 50%;
-          border: 3px solid var(--border);
-          object-fit: cover;
-          position: relative;
-          z-index: 1;
-          box-shadow: 0 0 60px var(--accent-glow);
-          will-change: transform, opacity, filter;
+          border: 1px solid var(--border);
+          color: var(--accent);
         }
 
         /* ===== RESPONSIVE ===== */
@@ -1124,32 +1506,41 @@ export default function Home() {
           .workspace-layer { transform: scale(0.85); }
           .energy-burst { transform: translate(-50%, -50%) scale(0.85); }
           .portal-ring { transform: translate(50%, -50%) scale(0.85); }
-          .avatar-img { width: 260px; height: 260px; }
-          .avatar-glow-ring { width: 280px; height: 280px; }
-          .hero-grid { gap: 2.5rem; }
+          .hero-split { gap: 1.75rem; max-width: 980px; }
+          .hero-heading.hs-heading { font-size: clamp(2.2rem, 5vw, 3.6rem); }
+          .hs-frame { width: clamp(200px, 22vw, 260px); }
+          .hero-desc.hs-desc { max-width: 280px; font-size: 0.95rem; }
         }
 
-        /* Small tablet / large phone landscape */
+        /* Tablet portrait — collapse to single column with portrait on top */
         @media (max-width: 768px) {
           .workspace-layer { transform: scale(0.65); }
           .energy-burst { transform: translate(-50%, -50%) scale(0.65); }
           .portal-ring { transform: translate(50%, -50%) scale(0.65); }
 
-          .hero-grid {
-            grid-template-columns: 1fr !important;
-            text-align: center;
-            gap: 1.5rem !important;
+          .hero-content-wrap { padding-top: 88px; padding-bottom: 32px; }
+          .hero-split {
+            grid-template-columns: 1fr;
+            gap: 2.25rem;
+            max-width: 560px;
+            justify-items: center;
           }
-          .hero-grid > .hero-text-col { order: 2; }
-          .hero-grid > .hero-avatar-col { order: 1; }
-          .hero-desc { margin-left: auto; margin-right: auto; font-size: 1rem; }
-          .hero-buttons { justify-content: center; }
-          .hero-socials { justify-content: center; }
-          .avatar-img { width: 200px !important; height: 200px !important; }
-          .avatar-glow-ring { width: 220px !important; height: 220px !important; }
+          .hs-col--left,
+          .hs-col--right {
+            align-items: center;
+            text-align: center;
+          }
+          .hero-heading.hs-heading {
+            align-items: center;
+            font-size: clamp(2.6rem, 9vw, 3.8rem);
+          }
+          .hs-rule { transform-origin: center; }
+          .hs-meta-stack { align-items: center; }
+          .hs-frame { order: -1; width: clamp(200px, 50vw, 260px); }
+          .hero-desc.hs-desc { max-width: 480px; }
+
           .hero-orb--warm { width: 300px; height: 300px; }
           .hero-orb--cool { width: 250px; height: 250px; }
-          .hero-content-wrap { padding-top: 56px; }
           .section-divider { padding-top: 4rem; }
         }
 
@@ -1159,13 +1550,23 @@ export default function Home() {
           .energy-burst { transform: translate(-50%, -50%) scale(0.5); }
           .portal-ring { transform: translate(50%, -50%) scale(0.5); }
 
-          .hero-grid { gap: 1.25rem !important; }
-          .avatar-img { width: 150px !important; height: 150px !important; }
-          .avatar-glow-ring { width: 165px !important; height: 165px !important; }
-          .hero-heading { font-size: 1.85rem !important; }
-          .hero-mono { font-size: 0.8rem !important; }
-          .hero-desc { font-size: 0.92rem !important; max-width: 90vw; }
-          .hero-content-wrap { padding-top: 48px; }
+          .hero-content-wrap { padding: 80px 16px 32px; }
+          .hero-split { gap: 1.15rem; }
+          .hs-col--left, .hs-col--right { gap: 0.8rem; }
+          .hs-frame { width: clamp(180px, 56vw, 220px); }
+          .hero-heading.hs-heading { font-size: clamp(2.2rem, 12vw, 3rem); }
+          .hero-mono.hs-mono { font-size: 0.72rem; }
+          .hero-desc.hs-desc { font-size: 0.92rem; max-width: 92vw; }
+          .hero-buttons.hs-ctas {
+            flex-direction: column;
+            width: 100%;
+            max-width: 280px;
+            gap: 0.55rem;
+          }
+          .hero-buttons.hs-ctas .btn {
+            width: 100%;
+            justify-content: center;
+          }
           .section-divider { padding-top: 3rem; }
         }
 
@@ -1175,34 +1576,29 @@ export default function Home() {
           .energy-burst { transform: translate(-50%, -50%) scale(0.4); }
           .portal-ring { transform: translate(50%, -50%) scale(0.4); }
 
-          .avatar-img { width: 130px !important; height: 130px !important; }
-          .avatar-glow-ring { width: 145px !important; height: 145px !important; }
-          .hero-heading { font-size: 1.6rem !important; }
-          .hero-buttons .btn { padding: 0.6rem 1rem; font-size: 0.8rem; }
+          .hs-frame { width: 170px; }
+          .hero-heading.hs-heading { font-size: 2.2rem; }
+          .hero-buttons.hs-ctas .btn { padding: 0.6rem 1rem; font-size: 0.82rem; }
+          .hero-btn-arrow { width: 22px; height: 22px; }
+          .hs-scroll-label { display: none; }
         }
 
-        /* Landscape phones */
+        /* Landscape phones — keep 3-col but tighter */
         @media (max-height: 500px) and (orientation: landscape) {
           .workspace-layer { transform: scale(0.55); }
           .energy-burst { transform: translate(-50%, -50%) scale(0.55); }
           .portal-ring { transform: translate(50%, -50%) scale(0.55); }
 
-          .hero-grid {
-            grid-template-columns: 1fr 1fr !important;
-            gap: 1.5rem !important;
-            text-align: left;
-          }
-          .hero-grid > .hero-text-col { order: 1; }
-          .hero-grid > .hero-avatar-col { order: 2; }
-          .avatar-img { width: 140px !important; height: 140px !important; }
-          .avatar-glow-ring { width: 155px !important; height: 155px !important; }
-          .hero-heading { font-size: 1.5rem !important; margin-bottom: 0.5rem !important; }
-          .hero-desc { font-size: 0.85rem !important; margin-bottom: 1rem; }
-          .hero-mono { margin-bottom: 0.5rem; }
-          .hero-buttons { gap: 0.5rem; }
-          .hero-buttons .btn { padding: 0.5rem 1rem; font-size: 0.8rem; }
-          .hero-socials { margin-top: 0.75rem; gap: 0.5rem; }
-          .hero-content-wrap { padding-top: 40px; }
+          .hero-content-wrap { padding-top: 56px; padding-bottom: 12px; }
+          .hero-split { grid-template-columns: 1fr auto 1fr; gap: 1rem; max-width: 880px; }
+          .hs-frame { width: 140px; padding: 8px; }
+          .hs-corner { width: 12px; height: 12px; }
+          .hero-heading.hs-heading { font-size: 1.8rem; }
+          .hero-mono.hs-mono { font-size: 0.65rem; }
+          .hero-desc.hs-desc { font-size: 0.8rem; max-width: 100%; }
+          .hs-meta-stack { gap: 0.2rem; }
+          .hero-buttons.hs-ctas .btn { padding: 0.45rem 0.85rem; font-size: 0.75rem; }
+          .hs-scroll { display: none; }
         }
         /* ═══════════════════════════════════════════
            LIGHT MODE OVERRIDES

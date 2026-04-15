@@ -1,5 +1,6 @@
 import ScrollReveal from '../components/ScrollReveal'
 import TiltCard from '../components/TiltCard'
+import GlowStat from '../components/GlowStat'
 
 const timeline = [
   { date: '2026 — Present', title: 'Full-Stack Engineering & Design', desc: 'Building full-stack web applications while refining expertise in dynamic web design and UI/UX. Currently serving as an SQA and UI/UX intern at Utopia IT Limited.' },
@@ -51,9 +52,9 @@ export default function About() {
               </ScrollReveal>
               <ScrollReveal>
                 <div className="about-stats">
-                  <div className="stat-item"><div className="stat-number">15+</div><div className="stat-label">Repositories</div></div>
-                  <div className="stat-item"><div className="stat-number">3+</div><div className="stat-label">Years Coding</div></div>
-                  <div className="stat-item"><div className="stat-number">6+</div><div className="stat-label">Languages</div></div>
+                  <GlowStat value="15+" label="Repositories" />
+                  <GlowStat value="3+" label="Years Coding" />
+                  <GlowStat value="6+" label="Languages" />
                 </div>
               </ScrollReveal>
             </div>

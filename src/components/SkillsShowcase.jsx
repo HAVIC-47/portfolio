@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -9,136 +10,313 @@ const skillCategories = [
   {
     title: 'Languages',
     icon: 'ri-code-s-slash-line',
-    count: 7,
-    items: ['C', 'C++', 'Python', 'JavaScript', 'TypeScript', 'C#', 'Java'],
+    items: ['C', 'C++', 'Python', 'JavaScript', 'Java'],
     accent: 'rgba(201,168,124,0.7)',
   },
   {
     title: 'Frameworks',
     icon: 'ri-stack-line',
-    count: 7,
-    items: ['Next.js', 'React', 'Django', '.NET', 'Angular', 'Tailwind CSS', 'Bootstrap'],
+    items: ['Next.js', 'React', 'Django', 'Bootstrap', 'Node.js'],
     accent: 'rgba(201,168,124,0.6)',
   },
   {
     title: 'Tools & Databases',
     icon: 'ri-tools-line',
-    count: 8,
-    items: ['SQLite', 'MySQL', 'PostgreSQL', 'Convex', 'Supabase', 'Git', 'Linux', 'Markdown'],
+    items: [
+      'SQLite', 'MySQL', 'PostgreSQL', 'Git', 'Linux', 'Markdown',
+      'GSAP', 'Figma', 'Vercel', 'MongoDB', 'Anaconda',
+      'TensorFlow', 'PyTorch', 'NumPy', 'Jupyter Notebook', 'VS Code',
+    ],
     accent: 'rgba(201,168,124,0.55)',
   },
   {
     title: 'Fundamentals',
     icon: 'ri-lightbulb-line',
-    count: 4,
-    items: ['OOP', 'Data Structures', 'Algorithms', 'System Design'],
+    items: [
+      'OOP', 'Data Structures', 'Algorithms', 'System Design & Development',
+      'DevOps', 'Development Methodologies', 'Operating Systems',
+      'AI / ML', 'Robotics & Peripherals', 'UI / UX', 'Compiler Design',
+      'Vectors & Computer Graphics', 'Computer Networks', 'VLSI',
+    ],
     accent: 'rgba(201,168,124,0.65)',
   },
-]
+].map(c => ({ ...c, count: c.items.length }))
 
-/* ── Tech logos for the ticker ── */
+/* ── Tech logos for the rotating globe ── */
 const techLogos = [
-  { name: 'C', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg' },
   { name: 'C++', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg' },
-  { name: 'Python', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
   { name: 'JavaScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
-  { name: 'TypeScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg' },
-  { name: 'C#', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg' },
   { name: 'Java', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg' },
-  { name: 'Next.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg' },
+  { name: 'HTML5', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg' },
+  { name: 'CSS3', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' },
   { name: 'React', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
+  { name: 'Next.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg' },
+  { name: 'Node.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
   { name: 'Django', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg' },
-  { name: '.NET', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dot-net/dot-net-original.svg' },
-  { name: 'Angular', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg' },
-  { name: 'Tailwind', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg' },
   { name: 'Bootstrap', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg' },
   { name: 'PostgreSQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg' },
   { name: 'MySQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg' },
-  { name: 'SQLite', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg' },
+  { name: 'MongoDB', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg' },
   { name: 'Git', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
   { name: 'Linux', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg' },
+  { name: 'Figma', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg' },
+  { name: 'Vercel', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vercel/vercel-original.svg' },
+  { name: 'Anaconda', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/anaconda/anaconda-original.svg' },
+  { name: 'TensorFlow', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg' },
+  { name: 'PyTorch', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg' },
+  { name: 'NumPy', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg' },
+  { name: 'Jupyter', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jupyter/jupyter-original.svg' },
+  { name: 'VS Code', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg' },
+  { name: 'PyCharm', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pycharm/pycharm-original.svg' },
 ]
 
 /* ═══════════════════════════════════════════
-   LOGO TICKER
+   TECH GLOBE — Fibonacci-distributed icons on a
+   3D rotating sphere. Auto-rotate around Y, drag
+   to spin, depth-based scale + opacity, hover
+   tooltip with tech name.
    ═══════════════════════════════════════════ */
-function LogoTicker() {
-  const tickerRef = useRef(null)
-  const tweenRef = useRef(null)
+function TechGlobe() {
+  const stageRef = useRef(null)
+  const nodeRefs = useRef([])
+  const meridianRefs = useRef([])
+  const parallelRefs = useRef([])
+  const rotRef = useRef({ x: -0.25, y: 0 })
+  const targetRef = useRef({ x: -0.25, y: 0 })
+  const draggingRef = useRef(false)
+  const hoverRef = useRef(false)
+  const lastPosRef = useRef({ x: 0, y: 0 })
+  const rafRef = useRef(0)
+  const [hovered, setHovered] = useState(null)
+  const [radius, setRadius] = useState(180)
+  const [stageSize, setStageSize] = useState(520)
 
-  useEffect(() => {
-    const el = tickerRef.current
-    if (!el) return
-    const inner = el.querySelector('.ticker-inner')
-    if (!inner) return
+  // Wireframe sphere geometry (unit-sphere points)
+  // Dense mesh: 16 meridians + 11 parallels + 16 perpendicular meridians
+  // = diamond-tile lattice across the surface.
+  const MERIDIAN_COUNT = 16
+  const MERIDIAN_SEGMENTS = 40
+  const PARALLEL_COUNT = 11
+  const PARALLEL_SEGMENTS = 56
 
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-
-    function start() {
-      const w = inner.scrollWidth / 2
-      if (!w) return
-      if (tweenRef.current) tweenRef.current.kill()
-      gsap.set(inner, { x: 0 })
-      tweenRef.current = gsap.to(inner, {
-        x: -w,
-        duration: 40,
-        ease: 'none',
-        repeat: -1,
+  const meridians = useMemo(() => {
+    const build = (axisSwap) => (
+      Array.from({ length: MERIDIAN_COUNT }, (_, m) => {
+        const lng = (m / MERIDIAN_COUNT) * Math.PI * 2
+        const pts = []
+        for (let i = 0; i <= MERIDIAN_SEGMENTS; i++) {
+          const lat = (i / MERIDIAN_SEGMENTS) * Math.PI - Math.PI / 2
+          const cl = Math.cos(lat)
+          const x = Math.cos(lng) * cl
+          const y = Math.sin(lat)
+          const z = Math.sin(lng) * cl
+          // axisSwap=true rotates this family 90° around Z so its "poles"
+          // sit on the equator — produces the crossing diamond lattice.
+          pts.push(axisSwap ? [y, x, z] : [x, y, z])
+        }
+        return pts
       })
-      if (mq.matches) tweenRef.current.pause()
-    }
-
-    /* Wait for logo images so scrollWidth is accurate. */
-    const imgs = Array.from(inner.querySelectorAll('img'))
-    const pending = imgs.filter(img => !img.complete)
-    if (pending.length === 0) {
-      start()
-    } else {
-      let left = pending.length
-      const done = () => { if (--left <= 0) start() }
-      pending.forEach(img => {
-        img.addEventListener('load', done, { once: true })
-        img.addEventListener('error', done, { once: true })
-      })
-    }
-
-    const onResize = () => start()
-    window.addEventListener('resize', onResize)
-
-    const onMqChange = () => (mq.matches ? tweenRef.current?.pause() : tweenRef.current?.resume())
-    mq.addEventListener('change', onMqChange)
-
-    return () => {
-      tweenRef.current?.kill()
-      mq.removeEventListener('change', onMqChange)
-      window.removeEventListener('resize', onResize)
-    }
+    )
+    return [...build(false), ...build(true)]
   }, [])
 
-  function handleEnter() {
-    if (tweenRef.current) gsap.to(tweenRef.current, { timeScale: 0, duration: 0.6, ease: 'power2.out' })
-  }
-  function handleLeave() {
-    if (tweenRef.current) gsap.to(tweenRef.current, { timeScale: 1, duration: 0.6, ease: 'power2.out' })
-  }
+  const parallels = useMemo(() => {
+    return Array.from({ length: PARALLEL_COUNT }, (_, p) => {
+      const lat = ((p + 1) / (PARALLEL_COUNT + 1)) * Math.PI - Math.PI / 2
+      const y = Math.sin(lat)
+      const r = Math.cos(lat)
+      const pts = []
+      for (let i = 0; i <= PARALLEL_SEGMENTS; i++) {
+        const t = (i / PARALLEL_SEGMENTS) * Math.PI * 2
+        pts.push([Math.cos(t) * r, y, Math.sin(t) * r])
+      }
+      return pts
+    })
+  }, [])
 
-  const doubled = [...techLogos, ...techLogos]
+  // Fibonacci sphere positions (unit sphere)
+  const points = useMemo(() => {
+    const N = techLogos.length
+    const phi = Math.PI * (Math.sqrt(5) - 1)
+    return techLogos.map((tech, i) => {
+      const y = 1 - (i / (N - 1)) * 2
+      const r = Math.sqrt(1 - y * y)
+      const theta = phi * i
+      return { ...tech, ux: Math.cos(theta) * r, uy: y, uz: Math.sin(theta) * r }
+    })
+  }, [])
+
+  // Responsive radius
+  useEffect(() => {
+    const compute = () => {
+      const w = stageRef.current?.clientWidth || 480
+      setStageSize(w)
+      setRadius(Math.min(180, Math.max(110, w * 0.33)))
+    }
+    compute()
+    window.addEventListener('resize', compute)
+    return () => window.removeEventListener('resize', compute)
+  }, [])
+
+  // rAF rotation loop
+  useEffect(() => {
+    const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const tick = () => {
+      if (!draggingRef.current && !hoverRef.current && !reduceMq.matches) {
+        targetRef.current.y += 0.009 // auto-rotate
+      }
+      rotRef.current.x += (targetRef.current.x - rotRef.current.x) * 0.08
+      rotRef.current.y += (targetRef.current.y - rotRef.current.y) * 0.08
+
+      const cx = Math.cos(rotRef.current.x), sx = Math.sin(rotRef.current.x)
+      const cy = Math.cos(rotRef.current.y), sy = Math.sin(rotRef.current.y)
+
+      const rotate = (ux, uy, uz) => {
+        const x1 = ux * cy + uz * sy
+        const z1 = -ux * sy + uz * cy
+        const y2 = uy * cx - z1 * sx
+        const z2 = uy * sx + z1 * cx
+        return [x1, y2, z2]
+      }
+
+      points.forEach((p, i) => {
+        const [x1, y2, z2] = rotate(p.ux, p.uy, p.uz)
+        const depth = (z2 + 1) / 2 // 0 (back) → 1 (front)
+        const scale = 0.55 + depth * 0.55
+        const opacity = 0.35 + depth * 0.65
+        const node = nodeRefs.current[i]
+        if (node) {
+          node.style.transform =
+            `translate3d(${x1 * radius}px, ${y2 * radius}px, 0) translate(-50%, -50%) scale(${scale})`
+          node.style.opacity = opacity
+          node.style.zIndex = String(Math.round(depth * 100))
+          node.style.filter = `blur(${(1 - depth) * 0.6}px)`
+        }
+      })
+
+      // Update wireframe meridians (split into front/back halves for depth fade)
+      meridians.forEach((pts, mi) => {
+        const path = meridianRefs.current[mi]
+        if (!path) return
+        let d = ''
+        let depthSum = 0
+        for (let i = 0; i < pts.length; i++) {
+          const [x, y, z] = rotate(pts[i][0], pts[i][1], pts[i][2])
+          d += (i === 0 ? 'M' : 'L') + (x * radius).toFixed(1) + ' ' + (y * radius).toFixed(1) + ' '
+          depthSum += z
+        }
+        const avgDepth = (depthSum / pts.length + 1) / 2
+        path.setAttribute('d', d)
+        path.style.opacity = String(0.12 + avgDepth * 0.5)
+      })
+
+      parallels.forEach((pts, pi) => {
+        const path = parallelRefs.current[pi]
+        if (!path) return
+        let d = ''
+        let depthSum = 0
+        for (let i = 0; i < pts.length; i++) {
+          const [x, y, z] = rotate(pts[i][0], pts[i][1], pts[i][2])
+          d += (i === 0 ? 'M' : 'L') + (x * radius).toFixed(1) + ' ' + (y * radius).toFixed(1) + ' '
+          depthSum += z
+        }
+        const avgDepth = (depthSum / pts.length + 1) / 2
+        path.setAttribute('d', d)
+        path.style.opacity = String(0.1 + avgDepth * 0.4)
+      })
+      rafRef.current = requestAnimationFrame(tick)
+    }
+    rafRef.current = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [points, meridians, parallels, radius])
+
+  // Pointer drag handlers
+  const onPointerDown = (e) => {
+    draggingRef.current = true
+    lastPosRef.current = { x: e.clientX, y: e.clientY }
+    stageRef.current?.setPointerCapture?.(e.pointerId)
+  }
+  const onPointerMove = (e) => {
+    if (!draggingRef.current) return
+    const dx = e.clientX - lastPosRef.current.x
+    const dy = e.clientY - lastPosRef.current.y
+    targetRef.current.y += dx * 0.006
+    targetRef.current.x += dy * 0.006
+    targetRef.current.x = Math.max(-1.1, Math.min(1.1, targetRef.current.x))
+    lastPosRef.current = { x: e.clientX, y: e.clientY }
+  }
+  const onPointerUp = (e) => {
+    draggingRef.current = false
+    stageRef.current?.releasePointerCapture?.(e.pointerId)
+  }
 
   return (
-    <div
-      ref={tickerRef}
-      className="sk-ticker"
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-    >
-      <div className="ticker-inner">
-        {doubled.map((logo, i) => (
-          <div key={i} className="ticker-logo">
-            <img src={logo.icon} alt={logo.name} />
-            <span>{logo.name}</span>
-          </div>
-        ))}
+    <div className="tg-wrap">
+      <div className="tg-glow tg-glow--a" aria-hidden />
+      <div className="tg-glow tg-glow--b" aria-hidden />
+      <div
+        ref={stageRef}
+        className="tg-stage"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerLeave={(e) => { onPointerUp(e); hoverRef.current = false }}
+        onPointerEnter={() => { hoverRef.current = true }}
+        role="img"
+        aria-label="Rotating sphere of technologies I work with"
+      >
+        <svg
+          className="tg-wire"
+          viewBox={`${-stageSize / 2} ${-stageSize / 2} ${stageSize} ${stageSize}`}
+          aria-hidden
+        >
+          <circle cx="0" cy="0" r={radius} className="tg-wire-rim" />
+          {parallels.map((_, i) => (
+            <path
+              key={`par-${i}`}
+              ref={(el) => (parallelRefs.current[i] = el)}
+              className="tg-wire-line"
+              fill="none"
+            />
+          ))}
+          {meridians.map((_, i) => (
+            <path
+              key={`mer-${i}`}
+              ref={(el) => (meridianRefs.current[i] = el)}
+              className="tg-wire-line"
+              fill="none"
+            />
+          ))}
+        </svg>
+        <div className="tg-globe">
+          {points.map((p, i) => (
+            <div
+              key={p.name}
+              ref={(el) => (nodeRefs.current[i] = el)}
+              className="tg-node"
+              onMouseEnter={() => setHovered(p.name)}
+              onMouseLeave={() => setHovered(h => (h === p.name ? null : h))}
+            >
+              <img src={p.icon} alt={p.name} draggable={false} />
+            </div>
+          ))}
+        </div>
+        <AnimatePresence>
+          {hovered && (
+            <motion.div
+              key={hovered}
+              className="tg-tip"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 6 }}
+              transition={{ duration: 0.18 }}
+            >
+              {hovered}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
+      <p className="tg-hint">Drag to spin · hover a logo</p>
     </div>
   )
 }
@@ -382,7 +560,7 @@ export default function SkillsShowcase() {
         <p className="sk-subtitle">The stack I use to ship clean, reliable products</p>
       </div>
 
-      <LogoTicker />
+      <TechGlobe />
 
       <div className="glass-cards-section">
         {skillCategories.map((cat, i) => (
@@ -427,59 +605,152 @@ const skillsStyles = `
     line-height: 1.6;
   }
 
-  /* ═══ LOGO TICKER ═══ */
-  .sk-ticker {
-    width: 100%;
-    overflow: hidden;
-    padding: 1.2rem 0;
+  /* ═══ TECH GLOBE ═══ */
+  .tg-wrap {
     position: relative;
     z-index: 2;
-    cursor: pointer;
-    mask-image: linear-gradient(90deg, transparent 0%, black 6%, black 94%, transparent 100%);
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 6%, black 94%, transparent 100%);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .ticker-inner {
+    width: 100%;
+    max-width: 640px;
+    margin: 2.2rem auto 3rem;
+    padding: 0 1rem;
     display: flex;
-    gap: 0;
-    width: max-content;
-    will-change: transform;
-  }
-
-  .ticker-logo {
-    display: inline-flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.4rem 2rem;
-    white-space: nowrap;
-    transition: opacity 0.3s;
+    gap: 0.8rem;
   }
 
-  .ticker-logo img {
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
-    filter: grayscale(0.4) brightness(0.85);
-    transition: filter 0.3s, transform 0.3s;
+  .tg-stage {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    aspect-ratio: 1 / 1;
+    touch-action: none;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .tg-stage:active { cursor: grabbing; }
+
+  .tg-glow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 70%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    filter: blur(44px);
+    opacity: 0.55;
+    z-index: 0;
+  }
+  .tg-glow--a { background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); }
+  .tg-glow--b {
+    width: 42%;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 65%);
+    opacity: 0.7;
+    animation: tgPulse 5.5s ease-in-out infinite;
+  }
+  @keyframes tgPulse {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 0.8; }
   }
 
-  .ticker-logo:hover img {
-    filter: grayscale(0) brightness(1.1) drop-shadow(0 0 6px rgba(201,168,124,0.4));
-    transform: scale(1.15);
+  .tg-globe {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
   }
 
-  .ticker-logo span {
-    font-size: 0.78rem;
-    font-weight: 600;
+  .tg-wire {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .tg-wire-rim {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1;
+    opacity: 0.35;
+  }
+  .tg-wire-line {
+    stroke: var(--accent);
+    stroke-width: 0.9;
+    vector-effect: non-scaling-stroke;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    will-change: opacity;
+  }
+  [data-theme="light"] .tg-wire-rim { opacity: 0.5; }
+  [data-theme="light"] .tg-wire-line { stroke-width: 1; }
+
+  .tg-node {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.28);
+    cursor: pointer;
+    will-change: transform, opacity, filter;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  }
+  .tg-node:hover {
+    border-color: var(--accent);
+    background: var(--bg-card-hover, var(--bg-card));
+    box-shadow: 0 10px 26px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .tg-node img {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+    pointer-events: none;
+    -webkit-user-drag: none;
+  }
+
+  .tg-tip {
+    position: absolute;
+    left: 50%;
+    bottom: 8%;
+    transform: translateX(-50%);
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--bg-card);
+    border: 1px solid var(--accent);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: 0 8px 22px var(--accent-glow);
+  }
+
+  .tg-hint {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
     color: var(--text-secondary);
-    letter-spacing: 0.02em;
-    transition: color 0.3s;
+    opacity: 0.6;
+    margin: 0;
   }
 
-  .ticker-logo:hover span {
-    color: var(--accent);
+  [data-theme="light"] .tg-node {
+    box-shadow: 0 6px 18px rgba(60,40,15,0.1);
+  }
+  [data-theme="light"] .tg-node:hover {
+    box-shadow: 0 10px 26px var(--accent-glow), 0 4px 12px rgba(60,40,15,0.14);
   }
 
   /* ═══════════════════════════════════════════
@@ -760,9 +1031,8 @@ const skillsStyles = `
     .glass-card-title-row h3 { font-size: 1.15rem; }
     .glass-chip { padding: 0.4rem 0.85rem; font-size: 0.8rem; }
 
-    .ticker-logo { padding: 0.4rem 1.4rem; }
-    .ticker-logo img { width: 24px; height: 24px; }
-    .ticker-logo span { font-size: 0.72rem; }
+    .tg-node { width: 40px; height: 40px; border-radius: 10px; }
+    .tg-tip { font-size: 0.68rem; padding: 5px 11px; }
   }
 
   @media (max-width: 480px) {
@@ -780,7 +1050,7 @@ const skillsStyles = `
   /* ═══ REDUCED MOTION ═══ */
   @media (prefers-reduced-motion: reduce) {
     .glass-card-wrapper { transform: none !important; transition: opacity 0.3s ease !important; }
-    .ticker-inner { animation: none !important; }
+    .tg-glow--b { animation: none !important; }
   }
 
   /* ═══════════════════════════════════════════
@@ -856,11 +1126,4 @@ const skillsStyles = `
     border-color: var(--border);
   }
 
-  [data-theme="light"] .ticker-logo img {
-    filter: grayscale(0.3) brightness(0.9);
-  }
-
-  [data-theme="light"] .ticker-logo:hover img {
-    filter: grayscale(0) brightness(1) drop-shadow(0 0 6px rgba(146,64,14,0.3));
-  }
 `
