@@ -185,8 +185,18 @@ function ExpandCard({ card, index, active, onActivate }) {
     const el = cardRef.current
     if (!el) return
     const r = el.getBoundingClientRect()
-    el.style.setProperty('--gx', `${e.clientX - r.left}px`)
-    el.style.setProperty('--gy', `${e.clientY - r.top}px`)
+    const lx = e.clientX - r.left
+    const ly = e.clientY - r.top
+    el.style.setProperty('--gx', `${lx}px`)
+    el.style.setProperty('--gy', `${ly}px`)
+    const ang = Math.atan2(ly - r.height / 2, lx - r.width / 2)
+    el.style.setProperty('--rot', `${ang}rad`)
+  }
+
+  const onPointerLeave = () => {
+    const el = cardRef.current
+    if (!el) return
+    el.style.setProperty('--rot', `0rad`)
   }
 
   return (
@@ -201,7 +211,9 @@ function ExpandCard({ card, index, active, onActivate }) {
       onFocus={() => onActivate(index)}
       onClick={() => onActivate(index)}
       onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
     >
+      <div className="gtk-exp-arc" aria-hidden />
       <div className="gtk-exp-spot" aria-hidden />
       <div className="gtk-exp-rim" aria-hidden />
       <div className="gtk-exp-bg" aria-hidden>
@@ -336,6 +348,32 @@ export default function GetToKnowMe() {
           isolation: isolate;
           transition: border-color 0.35s ease, box-shadow 0.35s ease;
         }
+
+        /* cursor-angle rotating conic arc — 90° bright accent sweep */
+        .gtk-exp-arc {
+          position: absolute;
+          inset: -1.5px;
+          border-radius: 15.5px;
+          pointer-events: none;
+          padding: 1.5px;
+          background: conic-gradient(
+            from var(--rot, 0rad),
+            var(--accent) 0deg,
+            var(--accent) 90deg,
+            transparent 90deg,
+            transparent 360deg
+          );
+          -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+                  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          -webkit-mask-composite: xor;
+                  mask-composite: exclude;
+          opacity: 0;
+          filter: drop-shadow(0 0 6px var(--accent-glow));
+          transition: opacity 0.35s ease;
+        }
+        .gtk-exp-card:hover .gtk-exp-arc,
+        .gtk-exp-card:focus-visible .gtk-exp-arc,
+        .gtk-exp-card[data-active="true"] .gtk-exp-arc { opacity: 1; }
 
         /* pointer-tracked spotlight wash (accent-tinted) */
         .gtk-exp-spot {
