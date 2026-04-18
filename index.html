@@ -10,7 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Satoshi:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
-  <link rel="prefetch" href="/models/gaming_desktop_pc.glb">
+  <link rel="preload" as="fetch" type="model/gltf-binary" href="/models/gaming_desktop_pc.glb" crossorigin="anonymous" fetchpriority="high">
+  <link rel="preload" as="image" type="image/png" href="/models/MY_SCREEN_2.png" fetchpriority="high">
+  <link rel="preload" as="fetch" type="application/wasm" href="/draco/draco_decoder.wasm" crossorigin="anonymous" fetchpriority="high">
+  <link rel="preload" as="script" href="/draco/draco_wasm_wrapper.js" crossorigin="anonymous">
+  <link rel="preload" as="fetch" type="application/wasm" href="/basis/basis_transcoder.wasm" crossorigin="anonymous" fetchpriority="high">
+  <link rel="preload" as="script" href="/basis/basis_transcoder.js" crossorigin="anonymous">
 </head>
 <body>
   <div id="root"></div>

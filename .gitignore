@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local tooling and sandbox folders
+.agents/
+.claude/
+backups/
+projetcts/
+SESSION_SUMMARY.md
+DESIGN.md
+Let's build something together/
+public/lets-build/
+public/models/source/
+public/models/textures/

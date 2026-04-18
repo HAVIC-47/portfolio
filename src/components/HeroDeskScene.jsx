@@ -1,9 +1,11 @@
 import { Suspense, useRef, useEffect, useMemo } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber'
 import { OrbitControls, Environment, useGLTF, Center, ContactShadows } from '@react-three/drei'
+import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js'
 import * as THREE from 'three'
 
 const MODEL_URL = '/models/gaming_desktop_pc.glb'
+const SCREEN_TEXTURE_URL = '/models/MY_SCREEN_2.png'
 
 /* ═══════════════════════════════════════════
    Off-axis camera frustum: shifts the rendered
@@ -29,12 +31,22 @@ function ViewShift({ factor = 1.7 }) {
    Gaming Desktop PC model (GLB)
    ═══════════════════════════════════════════ */
 function GamingDesktop({ scale = 0.25 }) {
-  const { scene } = useGLTF(MODEL_URL)
   const gl = useThree((s) => s.gl)
+  const ktx2Loader = useMemo(
+    () => new KTX2Loader().setTranscoderPath('/basis/').detectSupport(gl),
+    [gl]
+  )
+  const { scene } = useGLTF(
+    MODEL_URL,
+    '/draco/',
+    false,
+    (loader) => loader.setKTX2Loader(ktx2Loader)
+  )
+  const screenTex = useLoader(THREE.TextureLoader, SCREEN_TEXTURE_URL)
   const cloned = useMemo(() => scene.clone(true), [scene])
 
   useEffect(() => {
-    if (!cloned) return
+    if (!cloned || !screenTex) return
     const maxAniso = gl.capabilities.getMaxAnisotropy?.() || 16
     const colorKeys = ['map', 'emissiveMap']
     const allKeys = ['map', 'emissiveMap', 'normalMap', 'roughnessMap', 'metalnessMap', 'aoMap', 'bumpMap', 'alphaMap']
@@ -44,6 +56,30 @@ function GamingDesktop({ scale = 0.25 }) {
         child.castShadow = true
         child.receiveShadow = true
         child.frustumCulled = false
+        const matName = (Array.isArray(child.material) ? child.material[0] : child.material)?.name || ''
+        const isScreenMesh = /screen/i.test(child.name) || /screen/i.test(matName)
+        if (isScreenMesh) {
+          const original = Array.isArray(child.material) ? child.material[0] : child.material
+          const screenMat = original.clone()
+          const prev = original.map || original.emissiveMap
+          const next = screenTex.clone()
+          next.colorSpace = THREE.SRGBColorSpace
+          next.flipY = true
+          next.wrapS = prev ? prev.wrapS : THREE.ClampToEdgeWrapping
+          next.wrapT = prev ? prev.wrapT : THREE.ClampToEdgeWrapping
+          next.repeat.copy(prev ? prev.repeat : new THREE.Vector2(1, 1))
+          next.offset.copy(prev ? prev.offset : new THREE.Vector2(0, 0))
+          next.center.copy(prev ? prev.center : new THREE.Vector2(0, 0))
+          next.rotation = prev ? prev.rotation : 0
+          next.channel = prev ? prev.channel : 0
+          next.needsUpdate = true
+          screenMat.map = next
+          if (original.emissiveMap) screenMat.emissiveMap = next
+          screenMat.emissive = new THREE.Color(0xffffff)
+          screenMat.emissiveIntensity = Math.max(original.emissiveIntensity || 0, 1.6)
+          screenMat.needsUpdate = true
+          child.material = screenMat
+        }
         const mats = Array.isArray(child.material) ? child.material : [child.material]
         mats.forEach((m) => {
           if (!m) return
@@ -66,7 +102,7 @@ function GamingDesktop({ scale = 0.25 }) {
         })
       }
     })
-  }, [cloned, gl])
+  }, [cloned, gl, screenTex])
 
   return (
     <Center disableY>
@@ -116,7 +152,7 @@ function Scene() {
         position={[4, 6, 5]}
         intensity={1.3}
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[1024, 1024]}
         shadow-camera-far={20}
         shadow-camera-left={-4}
         shadow-camera-right={4}
@@ -211,4 +247,6 @@ export default function HeroDeskScene() {
   )
 }
 
-useGLTF.preload(MODEL_URL)
+// Preload is driven by <link rel="preload"> in index.html.
+// Can't call useGLTF.preload here without the KTX2Loader (needs gl context),
+// and calling it with only Draco poisons the useLoader cache with a decode error.
