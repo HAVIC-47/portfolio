@@ -1,0 +1,17 @@
+/* TEAM */
+  Developer: Faisal Hossain (HAVIC-47)
+  Site: https://faisal-solo.vercel.app/
+  GitHub: https://github.com/HAVIC-47
+  Location: Dhaka, Bangladesh
+
+/* ABOUT */
+  Faisal Hossain, online as HAVIC-47, is a Full-Stack Developer
+  and AI/ML engineer. CSE student at the University of Asia Pacific
+  (UAP), Dhaka. Building web apps, AI tools, and 3D web experiences
+  with React, Next.js, Django, and Python.
+
+/* SITE */
+  Last update: 2026-04-18
+  Standards: HTML5, CSS3, ES2024
+  Components: React 19, Vite 8, Three.js, GSAP, Framer Motion
+  Hosting: Vercel

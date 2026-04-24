@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://faisal-solo.vercel.app/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faisal-solo.vercel.app/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://faisal-solo.vercel.app/"/>
     <lastmod>2026-04-18</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://faisal-solo.vercel.app/og-image.png</image:loc>
-      <image:title>Faisal Hossain — Developer Portfolio</image:title>
-      <image:caption>Full-Stack Developer, AI/ML, UI/UX — Dhaka, Bangladesh</image:caption>
+      <image:title>Faisal Hossain (HAVIC-47) — Developer Portfolio</image:title>
+      <image:caption>Faisal Hossain (HAVIC-47), Full-Stack Developer, AI/ML, UI/UX — Dhaka, Bangladesh</image:caption>
     </image:image>
   </url>
 </urlset>

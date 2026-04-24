@@ -4,12 +4,17 @@ Disallow: /draco/
 Disallow: /basis/
 Disallow: /models/
 
-# Allow social embedders to fetch the OG card
+# Let social embedders fetch preview assets
 Allow: /og-image.png
 Allow: /favicon.svg
 Allow: /favicon-32.png
 Allow: /favicon-192.png
 Allow: /favicon-512.png
 Allow: /apple-touch-icon.png
+Allow: /humans.txt
+Allow: /site.webmanifest
+
+# Explicit host hint for some crawlers
+Host: faisal-solo.vercel.app
 
 Sitemap: https://faisal-solo.vercel.app/sitemap.xml
