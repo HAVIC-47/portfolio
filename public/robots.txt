@@ -14,7 +14,4 @@ Allow: /apple-touch-icon.png
 Allow: /humans.txt
 Allow: /site.webmanifest
 
-# Explicit host hint for some crawlers
-Host: faisal-solo.vercel.app
-
 Sitemap: https://faisal-solo.vercel.app/sitemap.xml
