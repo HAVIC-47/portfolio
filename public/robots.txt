@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Disallow: /draco/
+Disallow: /basis/
+Disallow: /models/
+
+# Allow social embedders to fetch the OG card
+Allow: /og-image.png
+Allow: /favicon.svg
+Allow: /favicon-32.png
+Allow: /favicon-192.png
+Allow: /favicon-512.png
+Allow: /apple-touch-icon.png
+
+Sitemap: https://faisal-solo.vercel.app/sitemap.xml

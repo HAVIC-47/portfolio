@@ -1,0 +1,21 @@
+{
+  "name": "Faisal Hossain — Developer Portfolio",
+  "short_name": "Faisal Hossain",
+  "description": "Portfolio of Faisal Hossain — Full-Stack Developer, AI/ML, UI/UX. Building web apps, AI tools and 3D experiences from Dhaka.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "minimal-ui",
+  "orientation": "portrait-primary",
+  "background_color": "#0e0e12",
+  "theme_color": "#c9a87c",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["portfolio", "developer", "personal"],
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "/favicon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any" },
+    { "src": "/favicon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" },
+    { "src": "/favicon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" },
+    { "src": "/apple-touch-icon.png", "type": "image/png", "sizes": "180x180", "purpose": "any" }
+  ]
+}
