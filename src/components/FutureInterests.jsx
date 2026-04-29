@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
+import useIsMobile from '../hooks/useIsMobile'
 
 /*
  * "Future Focus" — 3 flip cards for AI Automation, AI Agents, SQA.
@@ -157,19 +158,23 @@ const ENTRY = {
   }),
 }
 
-function FlipCard({ card, index }) {
+function FlipCard({ card, index, isMobile }) {
   const [flipped, setFlipped] = useState(false)
   const { Front, Back } = card
+
+  const hoverHandlers = isMobile ? {} : {
+    onMouseEnter: () => setFlipped(true),
+    onMouseLeave: () => setFlipped(false),
+    onFocus: () => setFlipped(true),
+    onBlur: () => setFlipped(false),
+  }
 
   return (
     <motion.div
       className="fut-card-wrap"
       custom={index}
       variants={ENTRY}
-      onMouseEnter={() => setFlipped(true)}
-      onMouseLeave={() => setFlipped(false)}
-      onFocus={() => setFlipped(true)}
-      onBlur={() => setFlipped(false)}
+      {...hoverHandlers}
       onClick={() => setFlipped(f => !f)}
       tabIndex={0}
       role="button"
@@ -220,6 +225,7 @@ function FlipCard({ card, index }) {
 }
 
 export default function FutureInterests() {
+  const isMobile = useIsMobile()
   return (
     <section className="fut-section">
       <div className="container">
@@ -237,7 +243,7 @@ export default function FutureInterests() {
           style={{ perspective: 1600 }}
         >
           {FUTURE.map((c, i) => (
-            <FlipCard key={c.id} card={c} index={i} />
+            <FlipCard key={c.id} card={c} index={i} isMobile={isMobile} />
           ))}
         </motion.div>
       </div>
