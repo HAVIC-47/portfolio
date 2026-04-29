@@ -420,7 +420,7 @@ export default function ContactScrollSequence({ children }) {
           transition: box-shadow 0.35s ease;
         }
 
-        [data-theme="light"] .css-card {
+        :is([data-theme="day"], [data-theme="desert"]) .css-card {
           background: rgba(255, 255, 255, 0.78);
           backdrop-filter: blur(14px);
           -webkit-backdrop-filter: blur(14px);
@@ -441,7 +441,7 @@ export default function ContactScrollSequence({ children }) {
           border-radius: 50%;
         }
 
-        [data-theme="light"] .css-card-glow {
+        :is([data-theme="day"], [data-theme="desert"]) .css-card-glow {
           opacity: 0.22;
         }
 
@@ -465,7 +465,7 @@ export default function ContactScrollSequence({ children }) {
           will-change: transform, opacity;
         }
 
-        [data-theme="light"] .css-card-particles span {
+        :is([data-theme="day"], [data-theme="desert"]) .css-card-particles span {
           opacity: 0.45;
         }
 
@@ -491,7 +491,7 @@ export default function ContactScrollSequence({ children }) {
             drop-shadow(0 5px 10px rgba(0, 0, 0, 0.22));
         }
 
-        [data-theme="light"] .css-card-illust {
+        :is([data-theme="day"], [data-theme="desert"]) .css-card-illust {
           filter:
             drop-shadow(0 12px 20px rgba(0, 0, 0, 0.16))
             drop-shadow(0 4px 7px rgba(0, 0, 0, 0.09));
@@ -513,7 +513,7 @@ export default function ContactScrollSequence({ children }) {
           will-change: transform;
         }
 
-        [data-theme="light"] .css-card-subicon {
+        :is([data-theme="day"], [data-theme="desert"]) .css-card-subicon {
           filter: drop-shadow(0 4px 10px rgba(0,0,0,0.18));
           opacity: 0.7;
         }
@@ -547,7 +547,7 @@ export default function ContactScrollSequence({ children }) {
           text-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.25);
         }
 
-        [data-theme="light"] .css-card-word {
+        :is([data-theme="day"], [data-theme="desert"]) .css-card-word {
           text-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }
 
@@ -610,7 +610,7 @@ export default function ContactScrollSequence({ children }) {
         .css-card-wrap.is-active .css-card-chip:nth-child(2) { transition-delay: 0.15s; }
         .css-card-wrap.is-active .css-card-chip:nth-child(3) { transition-delay: 0.25s; }
 
-        [data-theme="light"] .css-card-chip {
+        :is([data-theme="day"], [data-theme="desert"]) .css-card-chip {
           background: rgba(0,0,0,0.04);
           border-color: rgba(0,0,0,0.08);
           color: var(--text-primary);
@@ -628,7 +628,7 @@ export default function ContactScrollSequence({ children }) {
           filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.45));
         }
 
-        [data-theme="light"] .css-card-icon {
+        :is([data-theme="day"], [data-theme="desert"]) .css-card-icon {
           filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.2));
         }
 
@@ -658,7 +658,7 @@ export default function ContactScrollSequence({ children }) {
           transform: translateZ(1px);
         }
 
-        [data-theme="light"] .css-card::after {
+        :is([data-theme="day"], [data-theme="desert"]) .css-card::after {
           background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), transparent 55%);
         }
 
@@ -709,7 +709,7 @@ export default function ContactScrollSequence({ children }) {
           z-index: 5;
         }
 
-        [data-theme="light"] .css-bar { background: rgba(0, 0, 0, 0.06); }
+        :is([data-theme="day"], [data-theme="desert"]) .css-bar { background: rgba(0, 0, 0, 0.06); }
 
         .css-bar-fill {
           height: 100%;

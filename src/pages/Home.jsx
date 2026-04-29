@@ -3,6 +3,10 @@ import { motion, AnimatePresence } from 'motion/react'
 import ParticleCanvas from '../components/ParticleCanvas'
 import ScrollReveal from '../components/ScrollReveal'
 import TiltCard from '../components/TiltCard'
+import MobileHero from '../components/MobileHero'
+import MobileProjects from '../components/MobileProjects'
+import MobileSkills from '../components/MobileSkills'
+import useIsMobile from '../hooks/useIsMobile'
 import ProjectShowcase from '../components/ProjectShowcase'
 import SkillsShowcase from '../components/SkillsShowcase'
 import ContactScrollSequence from '../components/ContactScrollSequence'
@@ -137,6 +141,7 @@ export default function Home() {
   const [roleIdx, setRoleIdx] = useState(0)
   const [copied, setCopied] = useState(false)
   const [introDone, setIntroDone] = useState(false)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     if (introDone) return
@@ -236,6 +241,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════
           HERO SECTION (scroll animation)
           ═══════════════════════════════════════════ */}
+      {isMobile ? <MobileHero /> : (
       <section id="home" ref={heroRef} className="hero-scroll-section">
 
         {/* ── HERO ORBS (animated by GSAP) ── */}
@@ -366,6 +372,7 @@ export default function Home() {
           </motion.a>
         </div>
       </section>
+      )}
 
       {/* ═══════════════════════════════════════════
           ABOUT SECTION
@@ -449,16 +456,20 @@ export default function Home() {
       {/* ═══════════════════════════════════════════
           PROJECTS SECTION
           ═══════════════════════════════════════════ */}
+      {isMobile ? <MobileProjects /> : (
       <section id="projects" style={{ position: 'relative', zIndex: 2 }}>
         <ProjectShowcase />
       </section>
+      )}
 
       {/* ═══════════════════════════════════════════
           SKILLS SECTION
           ═══════════════════════════════════════════ */}
+      {isMobile ? <MobileSkills /> : (
       <section id="skills" style={{ position: 'relative', zIndex: 1 }}>
         <SkillsShowcase />
       </section>
+      )}
 
       {/* ═══════════════════════════════════════════
           FUTURE FOCUS SECTION
@@ -561,9 +572,9 @@ export default function Home() {
         .css-outro-title { color: #fff; }
         .css-outro-sub { color: rgba(255,255,255,0.6); }
         .css-outro-social { color: #fff; border-color: rgba(255,255,255,0.18); }
-        [data-theme="light"] .css-outro-title { color: var(--text-primary); }
-        [data-theme="light"] .css-outro-sub { color: var(--text-secondary); }
-        [data-theme="light"] .css-outro-social { color: var(--text-primary); border-color: var(--border); }
+        :is([data-theme="day"], [data-theme="desert"]) .css-outro-title { color: var(--text-primary); }
+        :is([data-theme="day"], [data-theme="desert"]) .css-outro-sub { color: var(--text-secondary); }
+        :is([data-theme="day"], [data-theme="desert"]) .css-outro-social { color: var(--text-primary); border-color: var(--border); }
 
         /* ===== PAGE WRAPPER ===== */
         .home-page {

@@ -373,7 +373,7 @@ export default function WhatDrivesMe() {
           background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent 55%);
         }
 
-        [data-theme="light"] .drives-rim {
+        :is([data-theme="day"], [data-theme="desert"]) .drives-rim {
           background: linear-gradient(135deg, rgba(255,255,255,0.55), transparent 60%);
         }
 

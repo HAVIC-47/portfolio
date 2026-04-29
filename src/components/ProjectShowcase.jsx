@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
    DATA
    ═══════════════════════════════════════════ */
 
-const projects = [
+export const projects = [
   {
     id: 'noteswap',
     title: 'NoteSwap',
@@ -1192,17 +1192,17 @@ export default function ProjectShowcase() {
         /* ═══════════════════════════════════════════
            LIGHT MODE OVERRIDES
            ═══════════════════════════════════════════ */
-        [data-theme="light"] .ps-card {
+        :is([data-theme="day"], [data-theme="desert"]) .ps-card {
           background: rgba(255, 255, 255, 0.92);
           border-color: var(--border);
           box-shadow: 0 2px 12px rgba(28,25,23,0.06);
         }
-        [data-theme="light"] .ps-card:hover {
+        :is([data-theme="day"], [data-theme="desert"]) .ps-card:hover {
           box-shadow: 0 12px 40px rgba(28,25,23,0.1),
                       0 0 0 1px color-mix(in srgb, var(--pc) 25%, transparent),
                       0 0 50px -10px color-mix(in srgb, var(--pc) 10%, transparent);
         }
-        [data-theme="light"] .ps-card-water-highlight {
+        :is([data-theme="day"], [data-theme="desert"]) .ps-card-water-highlight {
           background: radial-gradient(
             circle 140px at var(--mx, 50%) var(--my, 50%),
             rgba(28,25,23,0.06),
@@ -1210,30 +1210,30 @@ export default function ProjectShowcase() {
             transparent 65%
           );
         }
-        [data-theme="light"] .ps-card-caustics {
+        :is([data-theme="day"], [data-theme="desert"]) .ps-card-caustics {
           background:
             radial-gradient(ellipse 90px 70px at 22% 30%, rgba(146,64,14,0.08), transparent),
             radial-gradient(ellipse 70px 90px at 72% 68%, rgba(146,64,14,0.06), transparent),
             radial-gradient(ellipse 100px 55px at 58% 18%, rgba(146,64,14,0.05), transparent);
         }
-        [data-theme="light"] .ps-card-meta {
+        :is([data-theme="day"], [data-theme="desert"]) .ps-card-meta {
           border-top-color: var(--border);
         }
-        [data-theme="light"] .ps-bm {
+        :is([data-theme="day"], [data-theme="desert"]) .ps-bm {
           background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(250,250,249,0.98));
           border-color: var(--border);
         }
-        [data-theme="light"] .ps-bm:hover {
+        :is([data-theme="day"], [data-theme="desert"]) .ps-bm:hover {
           border-color: var(--border-hover);
           box-shadow: 0 4px 20px rgba(28,25,23,0.08), 0 0 0 1px rgba(0,0,0,0.03);
         }
-        [data-theme="light"] .ps-ripple-ring {
+        :is([data-theme="day"], [data-theme="desert"]) .ps-ripple-ring {
           border-color: rgba(146,64,14,0.25);
           box-shadow: 0 0 20px rgba(146,64,14,0.06),
                       inset 0 0 20px rgba(146,64,14,0.03);
         }
-        [data-theme="light"] .ps-ripple-ring-2 { border-color: rgba(146,64,14,0.15); }
-        [data-theme="light"] .ps-ripple-ring-3 { border-color: rgba(146,64,14,0.08); }
+        :is([data-theme="day"], [data-theme="desert"]) .ps-ripple-ring-2 { border-color: rgba(146,64,14,0.15); }
+        :is([data-theme="day"], [data-theme="desert"]) .ps-ripple-ring-3 { border-color: rgba(146,64,14,0.08); }
       `}</style>
     </div>
   )

@@ -205,14 +205,14 @@ export default function ProjectSlideshow({ media, color }) {
           letter-spacing: 0.05em;
         }
 
-        [data-theme="light"] .ps-slideshow { background: rgba(245, 245, 244, 0.92); }
-        [data-theme="light"] .ps-slideshow-counter {
+        :is([data-theme="day"], [data-theme="desert"]) .ps-slideshow { background: rgba(245, 245, 244, 0.92); }
+        :is([data-theme="day"], [data-theme="desert"]) .ps-slideshow-counter {
           color: rgba(28, 25, 23, 0.7);
           background: rgba(255, 255, 255, 0.85);
         }
-        [data-theme="light"] .ps-slideshow-dot { background: rgba(28, 25, 23, 0.2); }
-        [data-theme="light"] .ps-slideshow-dot:hover { background: rgba(28, 25, 23, 0.5); }
-        [data-theme="light"] .ps-slideshow-progress { background: rgba(28, 25, 23, 0.06); }
+        :is([data-theme="day"], [data-theme="desert"]) .ps-slideshow-dot { background: rgba(28, 25, 23, 0.2); }
+        :is([data-theme="day"], [data-theme="desert"]) .ps-slideshow-dot:hover { background: rgba(28, 25, 23, 0.5); }
+        :is([data-theme="day"], [data-theme="desert"]) .ps-slideshow-progress { background: rgba(28, 25, 23, 0.06); }
 
         /* ===== Custom video player ===== */
         .ps-vp {

@@ -449,7 +449,7 @@ export default function GetToKnowMe() {
             var(--bg-card) 100%
           );
         }
-        [data-theme="light"] .gtk-exp-vignette {
+        :is([data-theme="day"], [data-theme="desert"]) .gtk-exp-vignette {
           background: linear-gradient(
             180deg,
             var(--bg-card) 0%,

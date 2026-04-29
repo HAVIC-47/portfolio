@@ -59,8 +59,7 @@ export default function ParticleCanvas() {
         if (this.y > canvas.height) this.y = 0
       }
       draw() {
-        const theme = document.documentElement.getAttribute('data-theme')
-        const c = theme === 'light' ? '146,64,14' : '201,168,124'
+        const c = getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim() || '201,168,124'
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
         ctx.fillStyle = `rgba(${c},${this.opacity})`
@@ -74,8 +73,7 @@ export default function ParticleCanvas() {
     }
 
     function drawConnections() {
-      const theme = document.documentElement.getAttribute('data-theme')
-      const c = theme === 'light' ? '146,64,14' : '201,168,124'
+      const c = getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim() || '201,168,124'
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x

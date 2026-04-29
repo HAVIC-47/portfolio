@@ -6,7 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 /* ── Skill categories ── */
-const skillCategories = [
+export const skillCategories = [
   {
     title: 'Languages',
     icon: 'ri-code-s-slash-line',
@@ -76,7 +76,7 @@ const techLogos = [
    to spin, depth-based scale + opacity, hover
    tooltip with tech name.
    ═══════════════════════════════════════════ */
-function TechGlobe() {
+export function TechGlobe() {
   const stageRef = useRef(null)
   const nodeRefs = useRef([])
   const meridianRefs = useRef([])
@@ -416,8 +416,10 @@ function GlassSkillCard({ category, index, totalCards }) {
     const nx = x / width
     const ny = y / height
     if (glowRef.current) {
-      const isLight = document.documentElement.getAttribute('data-theme') === 'light'
-      const glowC = isLight ? 'rgba(146,64,14,0.08)' : 'rgba(201,168,124,0.12)'
+      const theme = document.documentElement.getAttribute('data-theme')
+      const isLightBg = theme === 'day' || theme === 'desert'
+      const rgb = getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim() || '201,168,124'
+      const glowC = `rgba(${rgb},${isLightBg ? 0.08 : 0.12})`
       glowRef.current.style.background =
         `radial-gradient(600px circle at ${nx * 100}% ${ny * 100}%, ${glowC} 0%, transparent 55%)`
     }
@@ -684,8 +686,8 @@ const skillsStyles = `
     stroke-linejoin: round;
     will-change: opacity;
   }
-  [data-theme="light"] .tg-wire-rim { opacity: 0.5; }
-  [data-theme="light"] .tg-wire-line { stroke-width: 1; }
+  :is([data-theme="day"], [data-theme="desert"]) .tg-wire-rim { opacity: 0.5; }
+  :is([data-theme="day"], [data-theme="desert"]) .tg-wire-line { stroke-width: 1; }
 
   .tg-node {
     position: absolute;
@@ -746,10 +748,10 @@ const skillsStyles = `
     margin: 0;
   }
 
-  [data-theme="light"] .tg-node {
+  :is([data-theme="day"], [data-theme="desert"]) .tg-node {
     box-shadow: 0 6px 18px rgba(60,40,15,0.1);
   }
-  [data-theme="light"] .tg-node:hover {
+  :is([data-theme="day"], [data-theme="desert"]) .tg-node:hover {
     box-shadow: 0 10px 26px var(--accent-glow), 0 4px 12px rgba(60,40,15,0.14);
   }
 
@@ -1058,7 +1060,7 @@ const skillsStyles = `
      Glass cards become white-glass with visible
      borders and warm shadows instead of dark glass
      ═══════════════════════════════════════════ */
-  [data-theme="light"] .glass-card-body {
+  :is([data-theme="day"], [data-theme="desert"]) .glass-card-body {
     background: linear-gradient(
       145deg,
       rgba(255, 255, 255, 0.85) 0%,
@@ -1073,7 +1075,7 @@ const skillsStyles = `
       inset 0 -1px 0 rgba(255, 255, 255, 0.4);
   }
 
-  [data-theme="light"] .glass-card-body--hovered {
+  :is([data-theme="day"], [data-theme="desert"]) .glass-card-body--hovered {
     border-color: var(--border-hover);
     box-shadow:
       0 30px 80px rgba(28,25,23,0.12),
@@ -1082,7 +1084,7 @@ const skillsStyles = `
       inset 0 -1px 0 rgba(255, 255, 255, 0.6);
   }
 
-  [data-theme="light"] .glass-reflection {
+  :is([data-theme="day"], [data-theme="desert"]) .glass-reflection {
     background: linear-gradient(
       135deg,
       rgba(255, 255, 255, 0.6) 0%,
@@ -1091,7 +1093,7 @@ const skillsStyles = `
     );
   }
 
-  [data-theme="light"] .glass-shine {
+  :is([data-theme="day"], [data-theme="desert"]) .glass-shine {
     background: linear-gradient(
       90deg,
       transparent 0%,
@@ -1102,27 +1104,27 @@ const skillsStyles = `
     );
   }
 
-  [data-theme="light"] .glass-side-reflection {
+  :is([data-theme="day"], [data-theme="desert"]) .glass-side-reflection {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, transparent 60%);
   }
 
-  [data-theme="light"] .glass-frosted-texture {
+  :is([data-theme="day"], [data-theme="desert"]) .glass-frosted-texture {
     opacity: 0.3;
   }
 
-  [data-theme="light"] .glass-chip {
+  :is([data-theme="day"], [data-theme="desert"]) .glass-chip {
     background: rgba(28, 25, 23, 0.04);
     border-color: var(--border);
     color: var(--text-primary);
   }
 
-  [data-theme="light"] .glass-chip:hover {
+  :is([data-theme="day"], [data-theme="desert"]) .glass-chip:hover {
     background: var(--accent-glow);
     border-color: var(--accent);
     color: var(--accent);
   }
 
-  [data-theme="light"] .glass-card-icon {
+  :is([data-theme="day"], [data-theme="desert"]) .glass-card-icon {
     border-color: var(--border);
   }
 

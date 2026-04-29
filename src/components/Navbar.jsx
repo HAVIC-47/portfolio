@@ -8,10 +8,14 @@ const navLinks = [
   { href: '#contact', label: 'Contact' },
 ]
 
+const THEMES = ['night', 'day', 'forest', 'desert']
+const LEGACY_THEMES = { dark: 'night', light: 'day' }
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState('#home')
+  const [theme, setTheme] = useState('night')
 
   useEffect(() => {
     const onScroll = () => {
@@ -33,17 +37,22 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  function toggleTheme() {
-    const html = document.documentElement
-    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
-    html.setAttribute('data-theme', next)
+  function cycleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'night'
+    const idx = THEMES.indexOf(current)
+    const next = THEMES[(idx + 1) % THEMES.length]
+    document.documentElement.setAttribute('data-theme', next)
     localStorage.setItem('theme', next)
+    setTheme(next)
   }
 
-  // Restore theme on mount
+  // Restore theme on mount (with legacy migration: dark→night, light→day)
   useEffect(() => {
-    const saved = localStorage.getItem('theme') || 'dark'
-    document.documentElement.setAttribute('data-theme', saved)
+    const saved = localStorage.getItem('theme')
+    const resolved = THEMES.includes(saved) ? saved : (LEGACY_THEMES[saved] ?? 'night')
+    document.documentElement.setAttribute('data-theme', resolved)
+    if (resolved !== saved) localStorage.setItem('theme', resolved)
+    setTheme(resolved)
   }, [])
 
   function handleNavClick(e, href) {
@@ -93,7 +102,7 @@ export default function Navbar() {
           </ul>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme" style={{
+            <button className="theme-toggle" onClick={cycleTheme} aria-label="Cycle theme" title={`Theme: ${theme}`} style={{
               width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center',
               background: 'transparent', border: '1px solid var(--border)', borderRadius: 10,
               color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1.1rem',

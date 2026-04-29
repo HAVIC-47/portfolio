@@ -319,7 +319,7 @@ export default function FutureInterests() {
           background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent 55%);
         }
 
-        [data-theme="light"] .fut-rim {
+        :is([data-theme="day"], [data-theme="desert"]) .fut-rim {
           background: linear-gradient(135deg, rgba(255,255,255,0.55), transparent 60%);
         }
 
