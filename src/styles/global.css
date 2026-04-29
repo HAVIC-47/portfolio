@@ -49,23 +49,23 @@
 }
 
 [data-theme="forest"] {
-  --bg-primary: #020F06;
-  --bg-secondary: #051509;
-  --bg-card: #081D0E;
-  --bg-card-hover: #0E2715;
+  --bg-primary: #031400;
+  --bg-secondary: #061A04;
+  --bg-card: #0A2208;
+  --bg-card-hover: #0F2C0D;
   --text-primary: #E8DFC3;
   --text-secondary: #8FA084;
-  --text-muted: #56664E;
+  --text-muted: #566850;
   --accent: #E8C76B;
   --accent-hover: #FFE08A;
   --accent-glow: rgba(232,199,107,0.32);
   --accent-rgb: 232,199,107;
-  --border: #143020;
-  --border-hover: #1F4530;
-  --nav-bg: rgba(2,15,6,0.92);
-  --shadow: 0 4px 30px rgba(0,0,0,0.65);
-  --shadow-card: 0 8px 32px rgba(0,0,0,0.75);
-  --text-on-accent: #020F06;
+  --border: #143618;
+  --border-hover: #1E481F;
+  --nav-bg: rgba(3,20,0,0.92);
+  --shadow: 0 4px 30px rgba(0,0,0,0.70);
+  --shadow-card: 0 8px 32px rgba(0,0,0,0.80);
+  --text-on-accent: #031400;
   --heading: var(--text-primary);
 }
 
