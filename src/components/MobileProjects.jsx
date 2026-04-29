@@ -7,12 +7,13 @@ export default function MobileProjects() {
   const carouselRef = useRef(null)
   const open = projects.find((p) => p.id === openId) || null
 
-  // Build slides: media if available, else fall back to thumbnail
+  // Build slides: thumbnail first, then media
   const slides = useMemo(() => {
     if (!open) return []
-    if (Array.isArray(open.media) && open.media.length > 0) return open.media
-    if (open.thumbnail) return [{ type: 'image', src: open.thumbnail }]
-    return []
+    const list = []
+    if (open.thumbnail) list.push({ type: 'image', src: open.thumbnail })
+    if (Array.isArray(open.media)) list.push(...open.media)
+    return list
   }, [open])
 
   const closeModal = useCallback(() => {
