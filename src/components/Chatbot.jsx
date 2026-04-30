@@ -169,7 +169,7 @@ export default function Chatbot() {
   // --- Styles ---
   const toggleBtnStyle = {
     position: 'fixed',
-    bottom: isMobile ? 16 : 24,
+    bottom: isMobile ? 14 + 56 + 14 : 24,
     right: isMobile ? 16 : 24,
     zIndex: 1100,
     width: isMobile ? 50 : 56,

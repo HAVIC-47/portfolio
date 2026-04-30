@@ -25,7 +25,7 @@ export default function BackToTop() {
 
   const size = isMobile ? 46 : 52
   const bottom = isMobile
-    ? 16 + 50 + 10 /* chatbot size + gap */
+    ? 14 + 56 + 14 + 50 + 10 /* nav margin + nav pill + gap + chatbot + gap */
     : 24 + 56 + 12
   const right = isMobile ? 16 : 24
 

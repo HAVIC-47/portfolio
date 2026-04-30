@@ -158,6 +158,8 @@ export default function Navbar() {
         @media(max-width:768px){
           .nav-links{display:none !important}
           .hamburger{display:flex !important}
+          .navbar{display:none !important}
+          .mobile-nav{display:none !important}
         }
         @media(max-width:480px){
           .nav-inner{padding:0 1rem !important}
