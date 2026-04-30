@@ -50,8 +50,11 @@ export default function MobileHero() {
         animate="visible"
       >
         <motion.h1 variants={itemVariants} className="m2-name">
-          Faisal <span className="accent-text">Hossain</span>
-          <span className="m2-name-dot">.</span>
+          <span className="m2-name-line">Faisal</span>
+          <span className="m2-name-line">
+            <span className="accent-text">Hossain</span>
+            <span className="m2-name-dot">.</span>
+          </span>
         </motion.h1>
 
         <motion.div variants={itemVariants} className="m2-role" aria-live="polite">
@@ -171,6 +174,14 @@ export default function MobileHero() {
           letter-spacing: -0.045em;
           color: var(--text-primary);
           margin: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.05em;
+        }
+        .m2-name-line {
+          display: block;
+          line-height: 1;
         }
         .m2-name-dot {
           color: var(--accent);
