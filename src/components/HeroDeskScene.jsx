@@ -192,7 +192,8 @@ function Scene() {
         enablePan={false}
         minPolarAngle={Math.PI / 4}
         maxPolarAngle={Math.PI / 2.05}
-        autoRotate={false}
+        autoRotate
+        autoRotateSpeed={0.25}
         dampingFactor={0.08}
         enableDamping
         target={[0, 0, 0]}

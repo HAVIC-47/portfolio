@@ -85,7 +85,6 @@ const TRANS = 0.055
 export default function ProjectShowcase() {
   const sectionRef = useRef(null)
   const stRef = useRef(null)
-  const rippleTweens = useRef({})
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -393,16 +392,6 @@ export default function ProjectShowcase() {
 
   function handleCardEnter(e, i) {
     const card = e.currentTarget
-    const disp = sectionRef.current?.querySelector(`.ps-wdisp-${i}`)
-    // Apply per-card water filter
-    gsap.set(card, { filter: `url(#ps-water-${i})` })
-    if (disp) {
-      rippleTweens.current[i]?.kill()
-      // Ripple burst: surge then settle to gentle sway
-      rippleTweens.current[i] = gsap.timeline()
-        .to(disp, { attr: { scale: 38 }, duration: 0.3, ease: 'power2.out' })
-        .to(disp, { attr: { scale: 6 }, duration: 0.8, ease: 'elastic.out(1, 0.3)' })
-    }
     // Lift card with spring
     gsap.to(card, {
       z: 30,
@@ -434,8 +423,6 @@ export default function ProjectShowcase() {
 
   function handleCardLeave(e, i) {
     const card = e.currentTarget
-    const disp = sectionRef.current?.querySelector(`.ps-wdisp-${i}`)
-    rippleTweens.current[i]?.kill()
     // Spring back to rest
     gsap.to(card, {
       rotateX: 0,
@@ -445,14 +432,6 @@ export default function ProjectShowcase() {
       ease: 'elastic.out(1, 0.45)',
       overwrite: 'auto',
     })
-    if (disp) {
-      // Final ripple echo then clear
-      rippleTweens.current[i] = gsap.timeline()
-        .to(disp, { attr: { scale: 12 }, duration: 0.15, ease: 'power2.out' })
-        .to(disp, { attr: { scale: 0 }, duration: 0.45, ease: 'power3.inOut',
-          onComplete: () => gsap.set(card, { filter: 'none' }),
-        })
-    }
   }
 
   return (
