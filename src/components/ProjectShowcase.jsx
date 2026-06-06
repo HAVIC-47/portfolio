@@ -541,10 +541,29 @@ export default function ProjectShowcase() {
               style={i > 0 ? { opacity: 0, visibility: 'hidden' } : {}}
             >
               <div className="ps-slide-visual">
-                <ProjectSlideshow
-                  media={[{ type: 'image', src: p.thumbnail }, ...p.media]}
-                  color={p.color}
-                />
+                <div className="ps-window-wrap">
+                  {/* Scroll hint — floats 50px above the window */}
+                  <div className="ps-scroll-hint" aria-hidden="true">
+                    <span className="ps-hint-chip">
+                      <svg viewBox="0 0 24 24" className="ps-hint-mouse">
+                        <rect x="7.5" y="3.5" width="9" height="17" rx="4.5" />
+                        <circle className="ps-hint-wheel" cx="12" cy="8" r="1.3" />
+                      </svg>
+                      <span>Scroll <b>inside</b> · more images</span>
+                    </span>
+                    <span className="ps-hint-chip">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M8 10l4-4 4 4" />
+                        <path d="M8 14l4 4 4-4" />
+                      </svg>
+                      <span>Scroll <b>outside</b> · next project</span>
+                    </span>
+                  </div>
+                  <ProjectSlideshow
+                    media={[{ type: 'image', src: p.thumbnail }, ...p.media]}
+                    color={p.color}
+                  />
+                </div>
               </div>
 
               <div className="ps-slide-detail">
@@ -862,8 +881,94 @@ export default function ProjectShowcase() {
           display: flex;
           align-items: center;
           border-radius: 12px;
-          overflow: hidden;
+          overflow: visible;
         }
+
+        .ps-window-wrap {
+          position: relative;
+          width: 100%;
+        }
+
+        /* ===== Scroll interaction hint — floats 50px above the window ===== */
+        .ps-scroll-hint {
+          position: absolute;
+          bottom: 100%;
+          margin-bottom: 50px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 6;
+          display: flex;
+          gap: 0.5rem;
+          flex-wrap: nowrap;
+          justify-content: center;
+          width: max-content;
+          max-width: 100%;
+          pointer-events: none;
+        }
+
+        .ps-hint-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          padding: 0.3rem 0.62rem;
+          font-family: var(--font-mono);
+          font-size: 0.62rem;
+          line-height: 1;
+          letter-spacing: 0.03em;
+          color: rgba(255, 255, 255, 0.66);
+          background: rgba(16, 16, 28, 0.55);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          border: 1px solid rgba(201, 168, 124, 0.2);
+          border-radius: 999px;
+          white-space: nowrap;
+        }
+
+        .ps-hint-chip b {
+          color: #c9a87c;
+          font-weight: 600;
+        }
+
+        .ps-hint-chip svg {
+          width: 13px;
+          height: 13px;
+          color: rgba(201, 168, 124, 0.85);
+          fill: none;
+          stroke: currentColor;
+          stroke-width: 1.6;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          flex-shrink: 0;
+        }
+
+        .ps-hint-wheel {
+          fill: currentColor;
+          stroke: none;
+          transform-box: fill-box;
+          transform-origin: center;
+          animation: ps-hint-bob 1.6s ease-in-out infinite;
+        }
+
+        @keyframes ps-hint-bob {
+          0%, 100% { transform: translateY(-2px); opacity: 1; }
+          50% { transform: translateY(3px); opacity: 0.35; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .ps-hint-wheel { animation: none; }
+        }
+
+        @media (max-width: 768px) {
+          .ps-scroll-hint { display: none; }
+        }
+
+        :is([data-theme="day"], [data-theme="desert"]) .ps-hint-chip {
+          color: rgba(28, 25, 23, 0.72);
+          background: rgba(255, 255, 255, 0.78);
+          border-color: rgba(146, 64, 14, 0.24);
+        }
+        :is([data-theme="day"], [data-theme="desert"]) .ps-hint-chip b { color: #92400e; }
+        :is([data-theme="day"], [data-theme="desert"]) .ps-hint-chip svg { color: rgba(146, 64, 14, 0.85); }
 
         .ps-slide-detail {
           flex: 1;

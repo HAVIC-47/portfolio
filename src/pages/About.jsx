@@ -32,7 +32,7 @@ export default function About() {
           <div className="about-grid">
             <ScrollReveal className="about-image-container">
               <img
-                src="https://avatars.githubusercontent.com/u/123256888?v=4"
+                src="/faisal.jpg"
                 alt="Faisal Hossain"
                 className="about-image"
               />
