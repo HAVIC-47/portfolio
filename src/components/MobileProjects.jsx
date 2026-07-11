@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
-import { projects } from './ProjectShowcase'
+import { projects, webProjects, gameProjects } from './ProjectShowcase'
 
 export default function MobileProjects() {
   const [openId, setOpenId] = useState(null)
@@ -89,29 +89,37 @@ export default function MobileProjects() {
         <p className="m-projects-sub">Tap a card for the full story. Swipe through every shot.</p>
       </div>
 
-      <ul className="m-projects-list">
-        {projects.map((p) => (
-          <li key={p.id}>
-            <button
-              type="button"
-              className="m-project-card"
-              onClick={() => openModal(p.id)}
-              aria-label={`Open ${p.title}`}
-            >
-              <div className="m-project-thumb" style={{ background: `linear-gradient(135deg, ${p.color}33, transparent 70%)` }}>
-                {p.thumbnail && (
-                  <img src={p.thumbnail} alt={p.title} loading="lazy" />
-                )}
-              </div>
-              <div className="m-project-meta">
-                <span className="m-project-cat">{p.category}</span>
-                <h3 className="m-project-title">{p.title}</h3>
-                <span className="m-project-arrow"><i className="ri-arrow-right-up-line" /></span>
-              </div>
-            </button>
-          </li>
-        ))}
-      </ul>
+      {[
+        { label: 'Web Projects', items: webProjects },
+        { label: 'Games', items: gameProjects },
+      ].map((group) => (
+        <div className="m-projects-group" key={group.label}>
+          <span className="m-group-label">{group.label}</span>
+          <ul className="m-projects-list">
+            {group.items.map((p) => (
+              <li key={p.id}>
+                <button
+                  type="button"
+                  className="m-project-card"
+                  onClick={() => openModal(p.id)}
+                  aria-label={`Open ${p.title}`}
+                >
+                  <div className="m-project-thumb" style={{ background: `linear-gradient(135deg, ${p.color}33, transparent 70%)` }}>
+                    {p.thumbnail && (
+                      <img src={p.thumbnail} alt={p.title} loading="lazy" />
+                    )}
+                  </div>
+                  <div className="m-project-meta">
+                    <span className="m-project-cat">{p.category}</span>
+                    <h3 className="m-project-title">{p.title}</h3>
+                    <span className="m-project-arrow"><i className="ri-arrow-right-up-line" /></span>
+                  </div>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
 
       {open && (
         <div className="m-modal" role="dialog" aria-modal="true" aria-labelledby={`m-modal-title-${open.id}`}>
@@ -259,6 +267,30 @@ export default function MobileProjects() {
           gap: 0.85rem;
           list-style: none;
           padding: 0;
+        }
+        .m-projects-group {
+          max-width: 520px;
+          margin: 0 auto;
+        }
+        .m-projects-group + .m-projects-group {
+          margin-top: 1.9rem;
+        }
+        .m-group-label {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          margin: 0 0 0.75rem;
+          font-family: var(--font-mono);
+          font-size: 0.7rem;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--accent);
+        }
+        .m-group-label::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background: linear-gradient(to right, color-mix(in srgb, var(--accent) 35%, transparent), transparent);
         }
         .m-project-card {
           width: 100%;

@@ -81,7 +81,23 @@ export const projects = [
     thumbnail: '/projects/machinestrike/thumbnail.png',
     media: Array.from({ length: 3 }, (_, i) => ({ type: 'image', src: `/projects/machinestrike/${i + 1}.png` })),
   },
+  {
+    id: 'catcheggs',
+    title: 'Catch The Eggs',
+    category: 'Arcade Game · C++',
+    desc: 'A 2D arcade catch game built in C++ with OpenGL and FreeGLUT. Move a basket to catch eggs dropped by chickens on sticks, dodge hazards, and grab power-ups across six difficulty levels that ramp from a sunny farm to a stormy blood moon.\n\nEverything on screen is drawn from raw OpenGL primitives — chickens, eggs, barn, clouds, sun, moon, lightning, and UI. No image assets at all. Even the music and thunder are synthesized at runtime by additive sine synthesis, a different track per level. Power-ups like Large Basket, Slow Time, Magnet, and Shield — plus power-downs, wind physics, combo multipliers, and per-level high scores — round out the systems.\n\nA data-driven level table defines each stage: chicken count, fall speed, hazard mix, score multiplier, sky theme, and music. Grown incrementally across nine staged versions on a fixed 60 FPS step, with juice throughout: particle bursts, floating score text, screen shake, twinkling stars, fireflies, and randomized lightning.',
+    tags: ['C++', 'OpenGL', 'FreeGLUT', 'Game Dev'],
+    color: '#f2b705',
+    link: 'https://github.com/HAVIC-47',
+    thumbnail: '/projects/catcheggs/thumbnail.png',
+    media: Array.from({ length: 8 }, (_, i) => ({ type: 'image', src: `/projects/catcheggs/${i + 1}.png` })),
+  },
 ]
+
+/* Section grouping: web projects vs games */
+const GAME_IDS = new Set(['machinestrike', 'catcheggs'])
+export const webProjects = projects.filter((p) => !GAME_IDS.has(p.id))
+export const gameProjects = projects.filter((p) => GAME_IDS.has(p.id))
 
 /* ═══════════════════════════════════════════
    TIMELINE CONSTANTS
@@ -446,6 +462,35 @@ export default function ProjectShowcase() {
     })
   }
 
+  /* Grid card — `i` is the global project index (drives the scroll timeline classes) */
+  const renderCard = (p, i) => (
+    <div
+      key={p.id}
+      className={`ps-card ps-card-${i}`}
+      style={{ '--pc': p.color }}
+      onClick={() => scrollToProject(i)}
+      onMouseEnter={(e) => handleCardEnter(e, i)}
+      onMouseMove={(e) => handleCardMove(e, i)}
+      onMouseLeave={(e) => handleCardLeave(e, i)}
+    >
+      {/* Water surface highlight — follows cursor */}
+      <div className="ps-card-water-highlight" />
+      {/* Caustic light refraction overlay */}
+      <div className="ps-card-caustics" />
+      <div className="ps-card-accent" />
+      <div className="ps-card-preview">
+        <img src={p.thumbnail} alt={p.title} className="ps-card-thumb" loading="lazy" />
+      </div>
+      <div className="ps-card-meta">
+        <div className="ps-card-meta-left">
+          <h4>{p.title}</h4>
+          <span className="ps-card-cat">{p.category}</span>
+        </div>
+        <span className="ps-card-num">0{i + 1}</span>
+      </div>
+    </div>
+  )
+
   return (
     <div ref={sectionRef} className="ps-section">
 
@@ -512,34 +557,18 @@ export default function ProjectShowcase() {
           <span className="section-label">My Work</span>
           <h2>Featured <span className="accent-text">Projects</span></h2>
         </div>
-        <div className="ps-grid-cards">
-          {projects.map((p, i) => (
-            <div
-              key={p.id}
-              className={`ps-card ps-card-${i}`}
-              style={{ '--pc': p.color }}
-              onClick={() => scrollToProject(i)}
-              onMouseEnter={(e) => handleCardEnter(e, i)}
-              onMouseMove={(e) => handleCardMove(e, i)}
-              onMouseLeave={(e) => handleCardLeave(e, i)}
-            >
-              {/* Water surface highlight — follows cursor */}
-              <div className="ps-card-water-highlight" />
-              {/* Caustic light refraction overlay */}
-              <div className="ps-card-caustics" />
-              <div className="ps-card-accent" />
-              <div className="ps-card-preview">
-                <img src={p.thumbnail} alt={p.title} className="ps-card-thumb" loading="lazy" />
-              </div>
-              <div className="ps-card-meta">
-                <div className="ps-card-meta-left">
-                  <h4>{p.title}</h4>
-                  <span className="ps-card-cat">{p.category}</span>
-                </div>
-                <span className="ps-card-num">0{i + 1}</span>
-              </div>
-            </div>
-          ))}
+        <div className="ps-grid-group">
+          <span className="ps-group-label">Web Projects</span>
+          <div className="ps-grid-cards">
+            {webProjects.map((p, i) => renderCard(p, i))}
+          </div>
+        </div>
+
+        <div className="ps-grid-group ps-grid-group--games">
+          <span className="ps-group-label">Games</span>
+          <div className="ps-grid-cards ps-grid-cards--games">
+            {gameProjects.map((p, i) => renderCard(p, webProjects.length + i))}
+          </div>
         </div>
       </div>
 
@@ -695,7 +724,7 @@ export default function ProjectShowcase() {
 
         .ps-grid-header {
           text-align: center;
-          margin-bottom: 2vh;
+          margin-bottom: 1.2vh;
           will-change: transform, opacity;
           flex-shrink: 0;
         }
@@ -703,12 +732,45 @@ export default function ProjectShowcase() {
         .ps-grid-cards {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
-          grid-auto-rows: 22vh;
-          gap: 1.3vh 1.2vw;
+          grid-auto-rows: 16vh;
+          gap: 1.2vh 1.2vw;
           width: 100%;
           max-width: 860px;
           flex-shrink: 0;
           perspective: 900px;
+        }
+
+        .ps-grid-group {
+          width: 100%;
+          max-width: 860px;
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          flex-shrink: 0;
+        }
+
+        .ps-grid-group--games {
+          margin-top: 1.8vh;
+        }
+
+        .ps-group-label {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.6rem;
+          font-family: var(--font-mono);
+          font-size: 0.66rem;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: var(--accent);
+          opacity: 0.9;
+          margin-bottom: 0.9vh;
+        }
+
+        .ps-group-label::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background: linear-gradient(to right, color-mix(in srgb, var(--accent) 35%, transparent), transparent);
         }
 
         .ps-slide-actions {
