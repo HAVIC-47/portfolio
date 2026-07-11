@@ -12,6 +12,18 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 
 export const projects = [
   {
+    id: 'catalyst',
+    title: 'Catalyst',
+    category: 'Fintech · SaaS',
+    desc: 'Most finance apps count money. Catalyst also counts how you felt spending it — an honest ledger that maps every taka against how the day actually felt, built for Bangladesh (৳).\n\nA multi-user web app where daily spending, income, savings, and mood live side by side. The calendar tints each day by mood with spend and income overlays, so problem days glow without reading a number. The dashboard drives seven charts from one shared period selector — including a mood×money overlap quantified with a Pearson correlation — plus budgets, savings goals, bills, and a journal.\n\nBuilt with Next.js 14 (App Router), TypeScript, and Supabase — serverless Postgres with row-level security scoping every row to its owner. Recharts for data, Framer Motion and GSAP for motion, deployed on Vercel. Design language: Editorial Almanac — a printed financial diary, not the generic AI-SaaS look.',
+    tags: ['Next.js', 'TypeScript', 'Supabase', 'Recharts'],
+    color: '#e28670',
+    link: 'https://github.com/HAVIC-47/catalyst',
+    live: 'https://catalyst-hishab.vercel.app/',
+    thumbnail: '/projects/catalyst/thumbnail.png',
+    media: Array.from({ length: 14 }, (_, i) => ({ type: 'image', src: `/projects/catalyst/${i + 1}.png` })),
+  },
+  {
     id: 'noteswap',
     title: 'NoteSwap',
     category: 'EdTech',
@@ -573,15 +585,26 @@ export default function ProjectShowcase() {
                 <div className="ps-tags">
                   {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
                 </div>
-                <a
-                  href={p.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary"
-                  style={{ marginTop: '1.5rem', alignSelf: 'flex-start' }}
-                >
-                  <i className="ri-github-fill" /> View Project
-                </a>
+                <div className="ps-slide-actions">
+                  {p.live && (
+                    <a
+                      href={p.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary"
+                    >
+                      <i className="ri-external-link-line" /> Live Demo
+                    </a>
+                  )}
+                  <a
+                    href={p.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={p.live ? 'btn btn-outline' : 'btn btn-primary'}
+                  >
+                    <i className="ri-github-fill" /> {p.live ? 'Code' : 'View Project'}
+                  </a>
+                </div>
               </div>
             </div>
           ))}
@@ -688,11 +711,12 @@ export default function ProjectShowcase() {
           perspective: 900px;
         }
 
-        .ps-card:nth-child(5) {
-          grid-column: 1 / -1;
-          max-width: calc(50% - 0.6vw);
-          width: 100%;
-          justify-self: center;
+        .ps-slide-actions {
+          display: flex;
+          gap: 0.75rem;
+          flex-wrap: wrap;
+          margin-top: 1.5rem;
+          align-self: flex-start;
         }
 
         .ps-card {

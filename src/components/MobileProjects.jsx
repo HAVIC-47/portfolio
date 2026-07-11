@@ -184,17 +184,30 @@ export default function MobileProjects() {
                   ))}
                 </div>
 
-                {open.link && (
-                  <a
-                    href={open.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-primary m-modal-cta"
-                  >
-                    <span>View on GitHub</span>
-                    <i className="ri-external-link-line" />
-                  </a>
-                )}
+                <div className="m-modal-actions">
+                  {open.live && (
+                    <a
+                      href={open.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary m-modal-cta"
+                    >
+                      <span>Live Demo</span>
+                      <i className="ri-external-link-line" />
+                    </a>
+                  )}
+                  {open.link && (
+                    <a
+                      href={open.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`btn ${open.live ? 'btn-outline' : 'btn-primary'} m-modal-cta`}
+                    >
+                      <span>{open.live ? 'View Code' : 'View on GitHub'}</span>
+                      <i className="ri-github-fill" />
+                    </a>
+                  )}
+                </div>
 
                 {/* Quick jump dots — only when slide count is reasonable */}
                 {slides.length > 1 && slides.length <= 12 && (
@@ -538,6 +551,11 @@ export default function MobileProjects() {
           line-height: 1.65;
         }
         .m-modal-desc p + p { margin-top: 0.7rem; }
+        .m-modal-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.6rem;
+        }
         .m-modal-cta {
           align-self: flex-start;
           display: inline-flex !important;
