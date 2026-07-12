@@ -134,8 +134,6 @@ export default function ProjectShowcase() {
          PHASE 1: Grid → Expanded (water ripple swish)
          ═══════════════════════════════════════ */
 
-      const rippleDisplace = sectionRef.current.querySelector('.ps-ripple-displace')
-
       // Header dissolves upward
       tl.to('.ps-grid-header', {
         yPercent: -150,
@@ -144,50 +142,10 @@ export default function ProjectShowcase() {
         ease: 'power2.in',
       }, 0.008)
 
-      // ── Ripple rings expand from grid center ──
-      tl.fromTo('.ps-ripple-ring-1', {
-        scale: 0, autoAlpha: 0.7,
-      }, {
-        scale: 6, autoAlpha: 0,
-        duration: 0.09,
-        ease: 'power1.out',
-      }, 0.02)
-      tl.fromTo('.ps-ripple-ring-2', {
-        scale: 0, autoAlpha: 0.5,
-      }, {
-        scale: 8, autoAlpha: 0,
-        duration: 0.10,
-        ease: 'power1.out',
-      }, 0.03)
-      tl.fromTo('.ps-ripple-ring-3', {
-        scale: 0, autoAlpha: 0.3,
-      }, {
-        scale: 10, autoAlpha: 0,
-        duration: 0.10,
-        ease: 'power1.out',
-      }, 0.04)
-
-      // ── SVG water displacement: ramp up then settle ──
-      if (rippleDisplace) {
-        tl.fromTo(rippleDisplace, {
-          attr: { scale: 0 },
-        }, {
-          attr: { scale: 45 },
-          duration: 0.04,
-          ease: 'power2.in',
-        }, 0.02)
-        tl.to(rippleDisplace, {
-          attr: { scale: 0 },
-          duration: 0.05,
-          ease: 'power2.out',
-        }, 0.06)
-      }
-
       // ── Card 0: expand in-place into hero slide ──
       tl.to('.ps-card-0', {
         scale: 1.08,
         autoAlpha: 0.6,
-        filter: 'url(#ps-ripple)',
         duration: 0.04,
         ease: 'power2.in',
       }, 0.02)
@@ -230,7 +188,7 @@ export default function ProjectShowcase() {
         const stagger = idx * 0.006
         const card = `.ps-card-${i}`
 
-        tl.set(card, { transformOrigin: '50% 50%', filter: 'url(#ps-ripple)' }, 0.02 + stagger)
+        tl.set(card, { transformOrigin: '50% 50%' }, 0.02 + stagger)
 
         // Text label fades immediately; the thumbnail rides the warp and vanishes on suck-in
         tl.to(`${card} .ps-card-meta`, { autoAlpha: 0, duration: 0.018, ease: 'power2.in' }, 0.022 + stagger)
@@ -270,8 +228,6 @@ export default function ProjectShowcase() {
             duration: 0.02, ease: 'power2.in',
           }, 0.092 + stagger)
         }
-
-        tl.set(card, { filter: 'none' }, 0.12 + stagger)
       }
 
       // ── Crossfade: grid out (after the genie suck-ins), expanded in ──
@@ -505,63 +461,6 @@ export default function ProjectShowcase() {
   return (
     <div ref={sectionRef} className="ps-section">
 
-      {/* ── SVG Water Ripple Filters ── */}
-      <svg className="ps-svg-defs" aria-hidden="true">
-        <defs>
-          {/* Original scroll-transition filter */}
-          <filter id="ps-ripple" x="-25%" y="-25%" width="150%" height="150%">
-            <feTurbulence
-              type="turbulence"
-              baseFrequency="0.018 0.055"
-              numOctaves="3"
-              seed="4"
-              result="noise"
-            />
-            <feDisplacementMap
-              className="ps-ripple-displace"
-              in="SourceGraphic"
-              in2="noise"
-              scale="0"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
-
-          {/* Per-card interactive water filters */}
-          {projects.map((_, i) => (
-            <filter id={`ps-water-${i}`} key={`w${i}`} x="-15%" y="-15%" width="130%" height="130%">
-              <feTurbulence
-                type="fractalNoise"
-                baseFrequency="0.012 0.032"
-                numOctaves="3"
-                seed={i * 11 + 3}
-                result="waterNoise"
-              >
-                <animate
-                  attributeName="baseFrequency"
-                  dur={`${5 + i * 0.7}s`}
-                  values="0.012 0.032;0.022 0.055;0.012 0.032"
-                  repeatCount="indefinite"
-                />
-              </feTurbulence>
-              <feDisplacementMap
-                className={`ps-wdisp-${i}`}
-                in="SourceGraphic"
-                in2="waterNoise"
-                scale="0"
-                xChannelSelector="R"
-                yChannelSelector="G"
-              />
-            </filter>
-          ))}
-        </defs>
-      </svg>
-
-      {/* ── Ripple Ring Overlays ── */}
-      <div className="ps-ripple-ring ps-ripple-ring-1" />
-      <div className="ps-ripple-ring ps-ripple-ring-2" />
-      <div className="ps-ripple-ring ps-ripple-ring-3" />
-
       {/* ── Grid View ── */}
       <div className="ps-grid">
         <div className="ps-grid-header">
@@ -681,42 +580,6 @@ export default function ProjectShowcase() {
           position: relative;
           z-index: 2;
           overflow: hidden;
-        }
-
-        .ps-svg-defs {
-          position: absolute;
-          width: 0;
-          height: 0;
-          pointer-events: none;
-        }
-
-        .ps-ripple-ring {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          border: 1.5px solid rgba(201, 168, 124, 0.35);
-          transform: translate(-50%, -50%) scale(0);
-          pointer-events: none;
-          z-index: 7;
-          opacity: 0;
-          will-change: transform, opacity;
-          box-shadow: 0 0 20px rgba(201, 168, 124, 0.08),
-                      inset 0 0 20px rgba(201, 168, 124, 0.04);
-        }
-
-        .ps-ripple-ring-2 {
-          border-color: rgba(201, 168, 124, 0.2);
-          width: 60px;
-          height: 60px;
-        }
-
-        .ps-ripple-ring-3 {
-          border-color: rgba(201, 168, 124, 0.12);
-          width: 40px;
-          height: 40px;
         }
 
         /* ===== GRID VIEW ===== */
@@ -1408,13 +1271,6 @@ export default function ProjectShowcase() {
           border-color: var(--border-hover);
           box-shadow: 0 4px 20px rgba(28,25,23,0.08), 0 0 0 1px rgba(0,0,0,0.03);
         }
-        :is([data-theme="day"], [data-theme="desert"]) .ps-ripple-ring {
-          border-color: rgba(146,64,14,0.25);
-          box-shadow: 0 0 20px rgba(146,64,14,0.06),
-                      inset 0 0 20px rgba(146,64,14,0.03);
-        }
-        :is([data-theme="day"], [data-theme="desert"]) .ps-ripple-ring-2 { border-color: rgba(146,64,14,0.15); }
-        :is([data-theme="day"], [data-theme="desert"]) .ps-ripple-ring-3 { border-color: rgba(146,64,14,0.08); }
       `}</style>
     </div>
   )
