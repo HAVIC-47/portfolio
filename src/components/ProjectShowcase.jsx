@@ -116,6 +116,7 @@ export default function ProjectShowcase() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -197,79 +198,87 @@ export default function ProjectShowcase() {
         ease: 'power2.out',
       }, 0.06)
 
-      // ── Cards 1–4: water-swish right → bookmark positions ──
-      for (let i = 1; i < projects.length; i++) {
-        const idx = i - 1
-        const stagger = idx * 0.008
-
-        // Apply SVG ripple filter during movement
-        tl.set(`.ps-card-${i}`, { filter: 'url(#ps-ripple)' }, 0.02 + stagger)
-
-        // Horizontal skew: water-drag distortion
-        tl.to(`.ps-card-${i}`, {
-          skewX: -14,
-          scaleX: 1.15,
-          scaleY: 0.92,
-          duration: 0.035,
-          ease: 'power2.in',
-        }, 0.02 + stagger)
-
-        // Settle skew back while moving to final position
-        tl.to(`.ps-card-${i}`, {
-          skewX: 0,
-          scaleX: 1,
-          scaleY: 1,
-          duration: 0.04,
-          ease: 'power2.out',
-        }, 0.055 + stagger)
-
-        // Physical movement: shrink + fly right to bookmark slot
-        tl.to(`.ps-card-${i}`, {
-          width: '116px',
-          height: '66px',
-          x: () => {
-            const card = document.querySelector(`.ps-card-${i}`)
-            if (!card) return 0
-            const rect = card.getBoundingClientRect()
-            return window.innerWidth - 122 - rect.left
-          },
-          y: () => {
-            const card = document.querySelector(`.ps-card-${i}`)
-            if (!card) return 0
-            const rect = card.getBoundingClientRect()
-            const centerY = window.innerHeight * 0.5
-            const totalBookmarks = projects.length
-            const totalHeight = totalBookmarks * 66 + (totalBookmarks - 1) * 5
-            const startY = centerY - totalHeight / 2
-            return startY + i * (66 + 5) - rect.top
-          },
-          borderRadius: '14px 0 0 14px',
-          duration: 0.07,
-          ease: 'power3.inOut',
-        }, 0.025 + stagger)
-
-        // Fade card content (meta text) during morph
-        tl.to(`.ps-card-${i} .ps-card-meta`, {
-          autoAlpha: 0,
-          duration: 0.025,
-          ease: 'power2.in',
-        }, 0.02 + stagger)
-
-        tl.to(`.ps-card-${i} .ps-card-preview`, {
-          autoAlpha: 0,
-          duration: 0.03,
-          ease: 'power2.in',
-        }, 0.03 + stagger)
-
-        // Remove filter after settling
-        tl.set(`.ps-card-${i}`, { filter: 'none' }, 0.10 + stagger)
+      // ── Cards 1–N: macOS "Genie" warp — stretch, curve, and get sucked into the bookmark ──
+      // End point = the real bookmark-icon centre (getBoundingClientRect). Motion is transform+opacity only.
+      const genieDX = (i) => {
+        const card = document.querySelector(`.ps-card-${i}`)
+        const bm = document.querySelector(`.ps-bm-${i}`)
+        if (!card || !bm) return 0
+        const c = card.getBoundingClientRect()
+        const b = bm.getBoundingClientRect()
+        return (b.left + b.width / 2) - (c.left + c.width / 2)
+      }
+      const genieDY = (i) => {
+        const card = document.querySelector(`.ps-card-${i}`)
+        const bm = document.querySelector(`.ps-bm-${i}`)
+        if (!card || !bm) return 0
+        const c = card.getBoundingClientRect()
+        const b = bm.getBoundingClientRect()
+        return (b.top + b.height / 2) - (c.top + c.height / 2)
+      }
+      const genieScale = (i) => {
+        const card = document.querySelector(`.ps-card-${i}`)
+        const bm = document.querySelector(`.ps-bm-${i}`)
+        if (!card || !bm) return 0.12
+        const c = card.getBoundingClientRect()
+        const b = bm.getBoundingClientRect()
+        return Math.max(0.08, (b.height * 0.92) / c.height)
       }
 
-      // ── Crossfade: grid out, expanded in ──
+      for (let i = 1; i < projects.length; i++) {
+        const idx = i - 1
+        const stagger = idx * 0.006
+        const card = `.ps-card-${i}`
+
+        tl.set(card, { transformOrigin: '50% 50%', filter: 'url(#ps-ripple)' }, 0.02 + stagger)
+
+        // Text label fades immediately; the thumbnail rides the warp and vanishes on suck-in
+        tl.to(`${card} .ps-card-meta`, { autoAlpha: 0, duration: 0.018, ease: 'power2.in' }, 0.022 + stagger)
+
+        if (reduce) {
+          // prefers-reduced-motion → simple fade toward the bookmark, no warp
+          tl.to(`${card} .ps-card-preview`, { autoAlpha: 0, duration: 0.03 }, 0.03 + stagger)
+          tl.to(card, {
+            x: () => genieDX(i),
+            y: () => genieDY(i),
+            scale: 0.22,
+            autoAlpha: 0,
+            duration: 0.06,
+            ease: 'power1.in',
+          }, 0.03 + stagger)
+        } else {
+          // 1) Pinch into a thin neck (accelerating in)
+          tl.to(card, {
+            skewX: -16, scaleX: 1.2, scaleY: 0.8,
+            duration: 0.024, ease: 'power2.in',
+          }, 0.02 + stagger)
+
+          // 2) Curve + travel + shrink toward the bookmark — ease-in accelerates into the target
+          tl.to(card, {
+            x: () => genieDX(i),
+            y: () => genieDY(i),
+            scaleX: () => genieScale(i),
+            scaleY: () => genieScale(i) * 0.8,
+            skewX: 9,
+            duration: 0.05, ease: 'power2.in',
+          }, 0.044 + stagger)
+
+          // 3) Suck-in finale — thumbnail fades and the sliver collapses into the icon
+          tl.to(`${card} .ps-card-preview`, { autoAlpha: 0, duration: 0.018, ease: 'power2.in' }, 0.094 + stagger)
+          tl.to(card, {
+            scaleX: 0.05, scaleY: 0.03, skewX: 0, autoAlpha: 0,
+            duration: 0.02, ease: 'power2.in',
+          }, 0.092 + stagger)
+        }
+
+        tl.set(card, { filter: 'none' }, 0.12 + stagger)
+      }
+
+      // ── Crossfade: grid out (after the genie suck-ins), expanded in ──
       tl.to('.ps-grid', {
         autoAlpha: 0,
-        duration: 0.015,
-      }, 0.10)
+        duration: 0.01,
+      }, 0.15)
 
       tl.to('.ps-expanded', {
         autoAlpha: 1,
@@ -288,17 +297,19 @@ export default function ProjectShowcase() {
         ease: 'power2.out',
       }, 0.10)
 
-      // ── Bookmarks appear exactly where cards landed ──
+      // ── Bookmarks appear exactly where cards landed, with a pulse/bounce as each card is sucked in ──
       projects.forEach((_, i) => {
         tl.fromTo(`.ps-bm-${i}`, {
           autoAlpha: 0,
           x: 20,
+          scale: reduce ? 1 : 0.55,
         }, {
           autoAlpha: 1,
           x: 0,
-          duration: 0.02,
-          ease: 'power2.out',
-        }, 0.105 + i * 0.004)
+          scale: 1,
+          duration: reduce ? 0.02 : 0.028,
+          ease: reduce ? 'power2.out' : 'back.out(2.4)',
+        }, 0.11 + i * 0.006)
       })
 
       tl.fromTo('.ps-bm-0 .ps-bm-indicator', {
