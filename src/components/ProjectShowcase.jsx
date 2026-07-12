@@ -142,6 +142,13 @@ export default function ProjectShowcase() {
         ease: 'power2.in',
       }, 0.008)
 
+      // Section labels (Web Projects / Games) fade as the warp begins — gone by ~50% of the transition
+      tl.to('.ps-group-label', {
+        autoAlpha: 0,
+        duration: 0.06,
+        ease: 'power2.in',
+      }, 0.02)
+
       // ── Card 0: expand in-place into hero slide ──
       tl.to('.ps-card-0', {
         scale: 1.08,

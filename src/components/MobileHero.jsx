@@ -82,9 +82,9 @@ export default function MobileHero() {
             <span>View my work</span>
             <i className="ri-arrow-right-up-line" />
           </a>
-          <a href="#contact" className="m2-cta m2-cta--ghost">
-            <i className="ri-chat-3-line" />
-            <span>Get in touch</span>
+          <a href="/Faisal_Hossain_CV.pdf" target="_blank" rel="noopener noreferrer" className="m2-cta m2-cta--ghost">
+            <i className="ri-file-text-line" />
+            <span>Resume</span>
           </a>
         </motion.div>
 

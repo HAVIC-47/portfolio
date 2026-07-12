@@ -207,6 +207,8 @@ export default function Home() {
         0.8
       )
 
+      // Reveal the CTA wrapper (it starts at opacity:0) together with its buttons
+      tl.set('.hd-ctas', { opacity: 1 }, 1.0)
       tl.fromTo('.hero-btn',
         { opacity: 0, y: 15, scale: 0.95 },
         { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: 'power2.out', stagger: 0.06 },
@@ -323,8 +325,9 @@ export default function Home() {
                   <span>View my work</span>
                   <span className="hero-btn-arrow"><i className="ri-arrow-right-up-line" /></span>
                 </a>
-                <a href="#contact" className="btn btn-outline hero-btn hero-btn-ghost">
-                  <span>Say hi</span>
+                <a href="/Faisal_Hossain_CV.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-outline hero-btn hero-btn-ghost">
+                  <span>Resume</span>
+                  <span className="hero-btn-arrow"><i className="ri-external-link-line" /></span>
                 </a>
               </div>
 
@@ -806,42 +809,70 @@ export default function Home() {
         }
 
         /* CTAs */
+        /* Equal-size CTA pair */
         .hero-buttons.hd-ctas {
-          display: inline-flex;
-          gap: 0.75rem;
-          flex-wrap: wrap;
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.6rem;
+          width: fit-content;
+          perspective: 700px;
         }
         .hero-btn {
           will-change: transform, opacity;
           display: inline-flex;
           align-items: center;
-          gap: 0.55rem;
+          justify-content: center;
+          width: 100%;
+          gap: 0.4rem;
+          padding: 0.5rem 1.05rem;
+          font-size: 0.8rem;
           font-weight: 600;
           letter-spacing: 0.005em;
-          transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+          border-radius: 9px;
+          box-shadow: none;
+          transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                      box-shadow 0.3s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
         }
-        .hero-btn-cta { padding-right: 0.55rem; }
+        /* Contrast outlines */
+        .hero-btn-cta {
+          padding-right: 0.4rem;
+          border: 1.5px solid rgba(14, 14, 18, 0.75);
+        }
+        .hero-btn-ghost {
+          border: 1.5px solid var(--accent);
+        }
         .hero-btn-arrow {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 26px; height: 26px;
+          width: 22px; height: 22px;
           border-radius: 999px;
           background: var(--text-on-accent, #ffffff);
           color: var(--accent);
           transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
         }
+
+        /* Hover 3D tilt (lifts off the page) */
+        .hero-btn:hover {
+          transform: rotateX(-13deg) translateY(-3px) scale(1.03);
+        }
+        .hero-btn:active {
+          transform: rotateX(-5deg) translateY(0) scale(0.99);
+        }
+        .hero-btn-cta:hover {
+          box-shadow: 0 16px 26px -10px var(--accent-glow), 0 14px 24px -12px rgba(0,0,0,0.55);
+        }
         .hero-btn-cta:hover .hero-btn-arrow {
           transform: translate(2px, -2px) rotate(-8deg);
         }
-        .hero-btn-cta:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 18px 40px -16px var(--accent-glow), 0 6px 16px -6px rgba(0,0,0,0.25);
-        }
         .hero-btn-ghost:hover {
-          transform: translateY(-2px);
           border-color: var(--accent);
           color: var(--accent);
+          box-shadow: 0 16px 26px -12px rgba(0,0,0,0.5);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-btn { transition: opacity 0.3s ease; }
+          .hero-btn:hover, .hero-btn:active { transform: none; }
         }
 
         .hd-email {
