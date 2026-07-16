@@ -325,7 +325,7 @@ export default function Home() {
                   <span>View my work</span>
                   <span className="hero-btn-arrow"><i className="ri-arrow-right-up-line" /></span>
                 </a>
-                <a href="/Faisal_Hossain_CV.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-outline hero-btn hero-btn-ghost">
+                <a href="/Faisal_Hossain_CV_v2.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-outline hero-btn hero-btn-ghost">
                   <span>Resume</span>
                   <span className="hero-btn-arrow"><i className="ri-external-link-line" /></span>
                 </a>

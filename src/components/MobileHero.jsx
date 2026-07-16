@@ -82,7 +82,7 @@ export default function MobileHero() {
             <span>View my work</span>
             <i className="ri-arrow-right-up-line" />
           </a>
-          <a href="/Faisal_Hossain_CV.pdf" target="_blank" rel="noopener noreferrer" className="m2-cta m2-cta--ghost">
+          <a href="/Faisal_Hossain_CV_v2.pdf" target="_blank" rel="noopener noreferrer" className="m2-cta m2-cta--ghost">
             <i className="ri-file-text-line" />
             <span>Resume</span>
           </a>
