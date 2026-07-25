@@ -254,6 +254,16 @@ export default function HeroCinematic() {
         }
         .cine-social:hover { transform: translateY(-3px) scale(1.06); color: #f4cf8f; }
         .cine-social:active { transform: translateY(0) scale(0.98); }
+        /* Gold glass ring for socials (overrides the white liquid-glass border/reflection) */
+        .cine-socials .cine-social {
+          box-shadow: inset 0 1px 1px rgba(244, 207, 143, 0.28);
+        }
+        .cine-socials .cine-social::before {
+          background: linear-gradient(180deg,
+            rgba(244,207,143,0.8) 0%, rgba(233,184,119,0.32) 20%,
+            rgba(233,184,119,0) 40%, rgba(233,184,119,0) 60%,
+            rgba(233,184,119,0.32) 80%, rgba(244,207,143,0.8) 100%);
+        }
 
         /* Liquid glass */
         .liquid-glass {
