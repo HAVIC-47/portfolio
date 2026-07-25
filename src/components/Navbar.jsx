@@ -8,7 +8,7 @@ const navLinks = [
   { href: '#contact', label: 'Contact' },
 ]
 
-const THEMES = ['night', 'day', 'forest', 'desert']
+const THEMES = ['night', 'day']
 const LEGACY_THEMES = { dark: 'night', light: 'day' }
 
 export default function Navbar() {

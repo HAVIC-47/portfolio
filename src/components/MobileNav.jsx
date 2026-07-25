@@ -9,7 +9,7 @@ const navLinks = [
   { href: '#contact', label: 'Contact', icon: 'ri-mail-line' },
 ]
 
-const THEMES = ['night', 'day', 'forest', 'desert']
+const THEMES = ['night', 'day']
 const LEGACY_THEMES = { dark: 'night', light: 'day' }
 
 export default function MobileNav() {
