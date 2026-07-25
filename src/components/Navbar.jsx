@@ -66,16 +66,22 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="navbar" style={scrolled ? { boxShadow: 'var(--shadow)' } : {}}>
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="nav-inner" style={{
-          maxWidth: 1100, margin: '0 auto', padding: '0 2rem',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64
+          maxWidth: 1000, margin: '0 auto',
+          padding: '0.4rem 0.5rem 0.4rem 1.4rem',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          borderRadius: 999,
+          background: 'rgba(18, 20, 28, 0.5)',
+          backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+          border: '1px solid rgba(255, 255, 255, 0.14)',
+          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.12), 0 10px 34px -14px rgba(0,0,0,0.65)'
         }}>
           <a href="#home" onClick={(e) => handleNavClick(e, '#home')} className="nav-logo" style={{
-            fontFamily: 'var(--font-display)', fontSize: '1.25rem',
-            fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.03em'
+            fontFamily: "'Instrument Serif', serif", fontSize: '1.65rem',
+            fontWeight: 400, color: '#ffffff', letterSpacing: '0'
           }}>
-            faisal<span style={{ color: 'var(--accent)' }}>.</span>
+            faisal<span style={{ color: '#f4cf8f' }}>.</span>
           </a>
 
           <ul className="nav-links" style={{
@@ -86,13 +92,10 @@ export default function Navbar() {
                 <a
                   href={href}
                   onClick={(e) => handleNavClick(e, href)}
-                  className={activeSection === href ? 'active' : ''}
+                  className={`nav-link ${activeSection === href ? 'active' : ''}`}
                   style={{
-                    color: activeSection === href ? 'var(--text-primary)' : 'var(--text-secondary)',
-                    fontSize: '0.9rem', fontWeight: 500, padding: '0.5rem 1rem',
-                    borderRadius: 8, transition: 'all var(--transition)',
-                    background: activeSection === href ? 'var(--accent-glow)' : 'transparent',
-                    display: 'block'
+                    fontSize: '0.85rem', fontWeight: 500, padding: '0.45rem 0.95rem',
+                    borderRadius: 999, display: 'block'
                   }}
                 >
                   {label}
@@ -103,9 +106,9 @@ export default function Navbar() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <button className="theme-toggle" onClick={cycleTheme} aria-label="Cycle theme" title={`Theme: ${theme}`} style={{
-              width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'transparent', border: '1px solid var(--border)', borderRadius: 10,
-              color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1.1rem',
+              width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.16)', borderRadius: 999,
+              color: 'rgba(255,255,255,0.82)', cursor: 'pointer', fontSize: '1.05rem',
               transition: 'all var(--transition)'
             }}>
               <i className="ri-contrast-2-line"></i>
@@ -154,7 +157,15 @@ export default function Navbar() {
       </div>
 
       <style>{`
-        .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:background var(--transition),border var(--transition)}
+        .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:transparent;border:none;padding:0.7rem 1rem 0;transition:padding var(--transition)}
+        .navbar.scrolled{padding-top:0.5rem}
+        .navbar.scrolled .nav-inner{background:rgba(14,16,22,0.66) !important}
+        .nav-logo{transition:opacity 0.2s ease}
+        .nav-logo:hover{opacity:0.85}
+        .nav-link{color:rgba(255,255,255,0.7);transition:color 0.2s ease, background 0.2s ease}
+        .nav-link:hover{color:#ffffff;background:rgba(255,255,255,0.06)}
+        .nav-link.active{color:#f4cf8f;background:rgba(233,184,119,0.13)}
+        .theme-toggle:hover{color:#f4cf8f !important;border-color:rgba(244,207,143,0.4) !important}
         @media(max-width:768px){
           .nav-links{display:none !important}
           .hamburger{display:flex !important}
