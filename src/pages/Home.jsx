@@ -14,7 +14,7 @@ import GetToKnowMe from '../components/GetToKnowMe'
 import WhatDrivesMe from '../components/WhatDrivesMe'
 import FutureInterests from '../components/FutureInterests'
 import GlowStat from '../components/GlowStat'
-import HeroDeskScene from '../components/HeroDeskScene'
+import HeroCinematic from '../components/HeroCinematic'
 import IntroLoader from '../components/IntroLoader'
 import gsap from 'gsap'
 
@@ -172,59 +172,6 @@ export default function Home() {
     }, 2500)
   }
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.2 })
-
-      /* Orbs fade in */
-      tl.fromTo('.hero-orb--warm',
-        { opacity: 0, scale: 0.5 },
-        { opacity: 0.15, scale: 1, duration: 0.4, ease: 'power2.out' },
-        0
-      )
-      tl.fromTo('.hero-orb--cool',
-        { opacity: 0, scale: 0.5 },
-        { opacity: 0.1, scale: 1, duration: 0.4, ease: 'power2.out' },
-        0.1
-      )
-
-      /* Text stagger */
-      tl.fromTo('.hero-mono',
-        { opacity: 0, x: -30 },
-        { opacity: 1, x: 0, duration: 0.3, ease: 'power2.out' },
-        0.3
-      )
-
-      tl.fromTo('.hero-heading',
-        { opacity: 0, y: 30, filter: 'blur(8px)' },
-        { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.4, ease: 'power2.out' },
-        0.5
-      )
-
-      tl.fromTo('.hero-desc',
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' },
-        0.8
-      )
-
-      // Reveal the CTA wrapper (it starts at opacity:0) together with its buttons
-      tl.set('.hd-ctas', { opacity: 1 }, 1.0)
-      tl.fromTo('.hero-btn',
-        { opacity: 0, y: 15, scale: 0.95 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: 'power2.out', stagger: 0.06 },
-        1.0
-      )
-
-      tl.fromTo('.hero-social-icon',
-        { opacity: 0, y: 10, scale: 0.8 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.2, ease: 'power2.out', stagger: 0.04 },
-        1.2
-      )
-
-    }, heroRef)
-
-    return () => ctx.revert()
-  }, [])
 
   return (
     <div className="home-page">
@@ -243,139 +190,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════
           HERO SECTION (scroll animation)
           ═══════════════════════════════════════════ */}
-      {isMobile ? <MobileHero /> : (
-      <section id="home" ref={heroRef} className="hero-scroll-section">
-
-        {/* ── HERO ORBS (animated by GSAP) ── */}
-        <div className="hero-orb hero-orb--warm" />
-        <div className="hero-orb hero-orb--cool" />
-
-        {/* ─── FULL-SECTION 3D SCENE LAYER ─── */}
-        <motion.div
-          className="hd-scene"
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1.0, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <HeroDeskScene />
-        </motion.div>
-
-        <div className="container hero-content-wrap">
-          <div className="hero-duo">
-            {/* ─── LEFT: TEXT ─── */}
-            <div className="hd-text">
-              <p className="mono hero-mono hd-mono" style={{ opacity: 0 }}>
-                // available for work · 2026
-              </p>
-
-              <h1 className="hero-heading hd-heading" style={{ opacity: 0 }}>
-                <span className="hd-name-first">Faisal</span>
-                <span className="hd-name-last">
-                  <span className="accent-text hero-name">Hossain</span>
-                  <span className="hd-period">.</span>
-                </span>
-              </h1>
-
-              <motion.div
-                className="hd-role"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.6, duration: 0.5 }}
-                aria-live="polite"
-              >
-                <span className="hd-role-prefix">I'm a</span>
-                <span className="hd-role-rotator">
-                  <AnimatePresence mode="wait">
-                    <motion.span
-                      key={roleIdx}
-                      className="hd-role-chip"
-                      initial={{ y: 14, opacity: 0, filter: 'blur(6px)' }}
-                      animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
-                      exit={{ y: -14, opacity: 0, filter: 'blur(6px)' }}
-                      transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                      <i className={roles[roleIdx].icon} />
-                      <span>{roles[roleIdx].label}</span>
-                    </motion.span>
-                  </AnimatePresence>
-                </span>
-              </motion.div>
-
-              <p className="hero-desc hd-desc" style={{ opacity: 0 }}>
-                A <strong>Python full-stack developer</strong> turning curious ideas into AI tools, clean web apps, and delightful interfaces.
-              </p>
-
-              <motion.div
-                className="hd-meta"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.9, duration: 0.5 }}
-              >
-                <span className="hd-meta-item">
-                  <i className="ri-map-pin-2-line" /> Dhaka, BD
-                </span>
-                <span className="hd-meta-sep" aria-hidden />
-                <span className="hd-meta-item">
-                  <i className="ri-graduation-cap-line" /> CSE · UAP
-                </span>
-              </motion.div>
-
-              <div className="hero-buttons hd-ctas" style={{ opacity: 0 }}>
-                <a href="#projects" className="btn btn-primary hero-btn hero-btn-cta">
-                  <span>View my work</span>
-                  <span className="hero-btn-arrow"><i className="ri-arrow-right-up-line" /></span>
-                </a>
-                <a href="/Faisal_Hossain_CV_v2.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-outline hero-btn hero-btn-ghost">
-                  <span>Resume</span>
-                  <span className="hero-btn-arrow"><i className="ri-external-link-line" /></span>
-                </a>
-              </div>
-
-              <motion.button
-                type="button"
-                className="hd-email"
-                onClick={copyEmail}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 2.1, duration: 0.5 }}
-                whileHover={{ y: -1 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                <i className={copied ? 'ri-check-line' : 'ri-at-line'} />
-                <span>{copied ? 'Copied!' : 'faisaladobe666@gmail.com'}</span>
-              </motion.button>
-
-              <div className="hero-socials hd-socials">
-                <a href="https://github.com/HAVIC-47" target="_blank" rel="noopener noreferrer" className="social-icon hero-social-icon" style={{ opacity: 0 }} aria-label="GitHub"><i className="ri-github-fill"></i></a>
-                <a href="https://www.facebook.com/HAVIC47" target="_blank" rel="noopener noreferrer" className="social-icon hero-social-icon" style={{ opacity: 0 }} aria-label="Facebook"><i className="ri-facebook-fill"></i></a>
-                <a href="https://www.instagram.com/visuals_of_faisal" target="_blank" rel="noopener noreferrer" className="social-icon hero-social-icon" style={{ opacity: 0 }} aria-label="Instagram"><i className="ri-instagram-line"></i></a>
-                <a href="https://discord.gg/pgakM24PEs" target="_blank" rel="noopener noreferrer" className="social-icon hero-social-icon" style={{ opacity: 0 }} aria-label="Discord"><i className="ri-discord-fill"></i></a>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Scroll cue */}
-          <motion.a
-            href="#about"
-            className="hd-scroll"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2.4, duration: 0.6 }}
-            aria-label="Scroll to explore"
-          >
-            <span className="hd-scroll-label">Scroll</span>
-            <motion.span
-              className="hd-scroll-icon"
-              animate={{ y: [0, 5, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <i className="ri-arrow-down-line" />
-            </motion.span>
-          </motion.a>
-        </div>
-      </section>
-      )}
+      {isMobile ? <MobileHero /> : <HeroCinematic />}
 
       {/* ═══════════════════════════════════════════
           ABOUT SECTION
