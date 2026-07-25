@@ -1,8 +1,24 @@
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
+
 /*
   Cinematic hero — fullscreen looping video, cinematic Instrument Serif type,
   liquid-glass CTAs. Personalized for Faisal Hossain.
 */
+const roles = [
+  { label: 'Full-Stack Developer', icon: 'ri-code-s-slash-line' },
+  { label: 'Problem Solver', icon: 'ri-lightbulb-flash-line' },
+  { label: 'UI / UX Designer', icon: 'ri-palette-line' },
+  { label: 'AI / ML Engineer', icon: 'ri-brain-line' },
+]
+
 export default function HeroCinematic() {
+  const [roleIdx, setRoleIdx] = useState(0)
+  useEffect(() => {
+    const id = setInterval(() => setRoleIdx((i) => (i + 1) % roles.length), 2600)
+    return () => clearInterval(id)
+  }, [])
+
   return (
     <section id="home" className="cine-hero">
       {/* Fullscreen looping background video */}
@@ -24,11 +40,30 @@ export default function HeroCinematic() {
           Faisal Hossain
         </h1>
 
-        <p className="cine-sub animate-fade-rise-delay">
+        <div className="cine-role animate-fade-rise-delay" aria-live="polite">
+          <span className="cine-role-pre">I&apos;m a</span>
+          <span className="cine-role-rot">
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={roleIdx}
+                className="cine-role-chip"
+                initial={{ y: 14, opacity: 0, filter: 'blur(6px)' }}
+                animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+                exit={{ y: -14, opacity: 0, filter: 'blur(6px)' }}
+                transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <i className={roles[roleIdx].icon} />
+                <span>{roles[roleIdx].label}</span>
+              </motion.span>
+            </AnimatePresence>
+          </span>
+        </div>
+
+        <p className="cine-sub animate-fade-rise-delay-2">
           A full-stack developer turning curious ideas into AI tools, clean web apps, and delightful interfaces.
         </p>
 
-        <div className="cine-ctas animate-fade-rise-delay-2">
+        <div className="cine-ctas animate-fade-rise-delay-3">
           <a href="#projects" className="liquid-glass cine-btn">View my work</a>
           <a
             href="/Faisal_Hossain_CV_v2.pdf"
@@ -40,7 +75,7 @@ export default function HeroCinematic() {
           </a>
         </div>
 
-        <div className="cine-meta animate-fade-rise-delay-3">
+        <div className="cine-meta animate-fade-rise-delay-4">
           <span className="cine-meta-item"><i className="ri-map-pin-2-line" /> Dhaka, BD</span>
           <span className="cine-dot" aria-hidden="true" />
           <a className="cine-meta-item cine-mail" href="mailto:faisaladobe666@gmail.com">
@@ -48,7 +83,7 @@ export default function HeroCinematic() {
           </a>
         </div>
 
-        <div className="cine-socials animate-fade-rise-delay-3">
+        <div className="cine-socials animate-fade-rise-delay-4">
           <a href="https://github.com/HAVIC-47" target="_blank" rel="noopener noreferrer" className="liquid-glass cine-social" aria-label="GitHub"><i className="ri-github-fill" /></a>
           <a href="https://www.facebook.com/HAVIC47" target="_blank" rel="noopener noreferrer" className="liquid-glass cine-social" aria-label="Facebook"><i className="ri-facebook-fill" /></a>
           <a href="https://www.instagram.com/havic._._/" target="_blank" rel="noopener noreferrer" className="liquid-glass cine-social" aria-label="Instagram"><i className="ri-instagram-line" /></a>
@@ -107,6 +142,34 @@ export default function HeroCinematic() {
           font-style: normal;
           color: hsl(240 4% 74%);
         }
+        /* Rotating role */
+        .cine-role {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-top: 1rem;
+          font-family: 'Inter', var(--font-body, sans-serif);
+          font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+          color: hsl(240 5% 78%);
+          text-shadow: 0 1px 12px rgba(0,0,0,0.5);
+        }
+        .cine-role-pre { opacity: 0.8; }
+        .cine-role-rot {
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          height: 1.7em;
+          overflow: hidden;
+        }
+        .cine-role-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          white-space: nowrap;
+          color: #f4cf8f;
+          font-weight: 600;
+        }
+        .cine-role-chip i { color: #e9b877; font-size: 1.05em; }
         .cine-sub {
           font-family: 'Inter', var(--font-body, sans-serif);
           color: hsl(240 5% 80%);
@@ -228,19 +291,26 @@ export default function HeroCinematic() {
         .animate-fade-rise-delay { animation: fade-rise 0.8s ease-out 0.2s both; }
         .animate-fade-rise-delay-2 { animation: fade-rise 0.8s ease-out 0.4s both; }
         .animate-fade-rise-delay-3 { animation: fade-rise 0.8s ease-out 0.6s both; }
+        .animate-fade-rise-delay-4 { animation: fade-rise 0.8s ease-out 0.8s both; }
 
         @media (prefers-reduced-motion: reduce) {
           .animate-fade-rise,
           .animate-fade-rise-delay,
           .animate-fade-rise-delay-2,
-          .animate-fade-rise-delay-3 { animation: none; }
+          .animate-fade-rise-delay-3,
+          .animate-fade-rise-delay-4 { animation: none; }
           .cine-btn:hover, .cine-btn:active,
           .cine-social:hover, .cine-social:active { transform: none; }
         }
         @media (max-width: 640px) {
-          .cine-hero { padding: 6rem 1.25rem 7rem; }
-          .cine-h1 { max-width: 100%; }
-          .cine-btn { padding: 0.85rem 2rem; }
+          .cine-hero { padding: 5.5rem 1.25rem 4.5rem; min-height: 100svh; }
+          .cine-h1 { font-size: clamp(2.2rem, 11vw, 3.3rem); max-width: 100%; }
+          .cine-sub { font-size: 0.95rem; line-height: 1.6; margin-top: 1.4rem; }
+          .cine-ctas { margin-top: 2rem; width: 100%; }
+          .cine-btn { flex: 1 1 auto; padding: 0.85rem 1.5rem; }
+          .cine-meta { font-size: 0.8rem; gap: 0.4rem 0.7rem; margin-top: 1.8rem; }
+          .cine-social { width: 40px; height: 40px; font-size: 1rem; }
+          .cine-socials { margin-top: 1.1rem; flex-wrap: wrap; }
         }
       `}</style>
     </section>

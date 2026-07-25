@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'motion/react'
 import ParticleCanvas from '../components/ParticleCanvas'
 import ScrollReveal from '../components/ScrollReveal'
 import TiltCard from '../components/TiltCard'
-import MobileHero from '../components/MobileHero'
 import MobileProjects from '../components/MobileProjects'
 import MobileSkills from '../components/MobileSkills'
 import useIsMobile from '../hooks/useIsMobile'
@@ -190,7 +189,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════
           HERO SECTION (scroll animation)
           ═══════════════════════════════════════════ */}
-      {isMobile ? <MobileHero /> : <HeroCinematic />}
+      <HeroCinematic />
 
       {/* ═══════════════════════════════════════════
           ABOUT SECTION

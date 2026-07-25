@@ -153,12 +153,12 @@ export default function MobileNav() {
           align-items: center;
           gap: 4px;
           padding: 6px;
-          border: 1px solid var(--border);
+          border: 1px solid rgba(255,255,255,0.14);
           border-radius: 999px;
-          background: var(--nav-bg);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          box-shadow: var(--shadow-card), 0 4px 18px rgba(0,0,0,0.18);
+          background: rgba(16,18,26,0.55);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          box-shadow: inset 0 1px 1px rgba(255,255,255,0.12), 0 12px 34px -12px rgba(0,0,0,0.7);
           max-width: calc(100vw - 24px);
         }
 
@@ -171,7 +171,7 @@ export default function MobileNav() {
           background: transparent;
           border: none;
           border-radius: 999px;
-          color: var(--text-secondary);
+          color: rgba(255,255,255,0.7);
           font-size: 1.2rem;
           cursor: pointer;
           transition: background var(--transition), color var(--transition), transform 160ms ease;
@@ -181,12 +181,12 @@ export default function MobileNav() {
           transform: scale(0.92);
         }
         .mn-tile.active {
-          background: var(--accent-glow);
-          color: var(--accent);
+          background: rgba(233,184,119,0.14);
+          color: #f4cf8f;
         }
         .mn-tile--menu.active {
-          background: var(--accent);
-          color: var(--text-on-accent);
+          background: rgba(233,184,119,0.2);
+          color: #f4cf8f;
         }
 
         .mn-backdrop {
@@ -204,17 +204,19 @@ export default function MobileNav() {
           right: 14px;
           bottom: 76px;
           z-index: 999;
-          background: var(--bg-card);
-          border: 1px solid var(--border);
+          background: rgba(16,18,26,0.92);
+          backdrop-filter: blur(18px);
+          -webkit-backdrop-filter: blur(18px);
+          border: 1px solid rgba(255,255,255,0.12);
           border-radius: 20px;
           padding: 14px 10px 10px;
-          box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+          box-shadow: 0 24px 60px rgba(0,0,0,0.55);
         }
         .mn-drawer-handle {
           width: 38px;
           height: 4px;
           border-radius: 999px;
-          background: var(--border);
+          background: rgba(255,255,255,0.2);
           margin: 0 auto 12px;
         }
         .mn-drawer-list {
@@ -231,7 +233,7 @@ export default function MobileNav() {
           gap: 14px;
           padding: 14px 14px;
           border-radius: 14px;
-          color: var(--text-secondary);
+          color: rgba(255,255,255,0.72);
           font-family: var(--font-display);
           font-weight: 500;
           font-size: 1rem;
@@ -239,23 +241,23 @@ export default function MobileNav() {
         }
         .mn-drawer-list a i {
           font-size: 1.25rem;
-          color: var(--text-muted);
+          color: rgba(255,255,255,0.55);
           transition: color var(--transition);
         }
         .mn-drawer-list a.active {
-          background: var(--accent-glow);
-          color: var(--text-primary);
+          background: rgba(233,184,119,0.13);
+          color: #ffffff;
         }
         .mn-drawer-list a.active i {
-          color: var(--accent);
+          color: #f4cf8f;
         }
         .mn-drawer-dot {
           margin-left: auto;
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          background: var(--accent);
-          box-shadow: 0 0 0 4px var(--accent-glow);
+          background: #f4cf8f;
+          box-shadow: 0 0 0 4px rgba(233,184,119,0.18);
         }
 
         :is([data-theme="day"], [data-theme="desert"]) .mn-pill {
